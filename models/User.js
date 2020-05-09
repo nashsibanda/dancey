@@ -1,6 +1,8 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
+const countries = require("../validation/countries");
+
 const UserSchema = new Schema({
   username: {
     type: String,
@@ -28,6 +30,7 @@ const UserSchema = new Schema({
   },
   location: {
     type: String,
+    enum: Object.keys(countries),
     required: true,
   },
   birthday: {
