@@ -38,7 +38,7 @@ app.use("/api/tracks", tracks);
 const products = require("./routes/api/products");
 app.use("/api/products", products);
 
-const personnel = require("./routes/api/personnel");
+const personnel = require("./routes/api/personnelRoutes");
 app.use("/api/personnel", personnel);
 
 const comments = require("./routes/api/comments");
