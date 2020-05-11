@@ -7,7 +7,7 @@ const Release = require("../../models/Release");
 const {
   validateNewReleaseInput,
   validateUpdateReleaseInput,
-} = require("../../validation/release");
+} = require("../../validation/releaseInputValidation");
 
 // GET all releases
 router.get("/", (req, res) => {
