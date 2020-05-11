@@ -77,6 +77,10 @@ const ReleaseSchema = new Schema({
     type: String,
     enum: Object.keys(countries),
   },
+  originalReleaseCountry: {
+    type: String,
+    enum: Object.keys(countries),
+  },
 });
 
 module.exports = Release = mongoose.model("Release", ReleaseSchema);
