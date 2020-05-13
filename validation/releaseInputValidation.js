@@ -100,6 +100,10 @@ module.exports = {
 
     // Title validation
     if (title) {
+      if (Validator.isEmpty(title)) {
+        errors.title = "Title is a required field";
+      }
+
       if (!Validator.isLength(title, { max: 200 })) {
         errors.title = "Title must be 200 characters or less";
       }
