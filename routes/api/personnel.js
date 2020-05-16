@@ -95,4 +95,15 @@ router.patch(
   }
 );
 
+router.delete(
+  "/:id",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    Personnel.findByIdAndDelete(req.params.id, (err, deletedPersonnel) => {
+      if (err) return res.status(400).json(err);
+      return res.json(deletedPersonnel);
+    });
+  }
+);
+
 module.exports = router;
