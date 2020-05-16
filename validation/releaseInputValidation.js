@@ -166,4 +166,30 @@ module.exports = {
       isValid: Object.keys(errors).length === 0,
     };
   },
+  validateNewReleasePersonnel: function (data) {
+    let errors = {};
+
+    personnel = data.personnel ? data.personnel : [];
+
+    if (personnel) {
+      personnel.forEach(entry => {
+        const role = validText(entry.role) ? entry.role : "";
+        const { personnelId } = entry;
+
+        if (Validator.isEmpty(role)) {
+          errors[personnelId] = "Personnel role field is required";
+        }
+
+        if (!Validator.isLength(role, { max: 200 })) {
+          errors[personnelId] = "Personnel role must be 200 characters or less";
+        }
+      });
+    }
+
+    // Return validation
+    return {
+      errors,
+      isValid: Object.keys(errors).length === 0,
+    };
+  },
 };
