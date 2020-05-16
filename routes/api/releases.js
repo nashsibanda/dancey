@@ -7,6 +7,7 @@ const Release = require("../../models/Release");
 const {
   validateNewReleaseInput,
   validateUpdateReleaseInput,
+  validateNewReleasePersonnel,
 } = require("../../validation/releaseInputValidation");
 
 // GET all releases
@@ -78,7 +79,108 @@ router.patch(
           }
         );
       })
-      .catch(err => console.log(err));
+      .catch(err =>
+        res.status(400).json({ noReleaseFound: "No release found" })
+      );
+  }
+);
+
+// PATCH a release with new main artists
+router.patch(
+  "/:id/add_artists",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    Release.findById(req.params.id)
+      .then(release => {
+        Release.findOneAndUpdate(
+          { _id: release._id },
+          {
+            $addToSet: {
+              mainArtists: { $each: req.body.mainArtists },
+            },
+            $set: {
+              modifiedAt: Date.now(),
+            },
+          },
+          { new: true },
+          (err, updatedRelease) => {
+            if (err) return res.status(400).json(err);
+            return res.json(updatedRelease);
+          }
+        );
+      })
+      .catch(err =>
+        res.status(400).json({ noReleaseFound: "No release found" })
+      );
+  }
+);
+
+// PATCH a release with new personnel
+router.patch(
+  "/:id/add_personnel",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    Release.findById(req.params.id)
+      .then(release => {
+        const { errors, isValid } = validateNewReleasePersonnel(req.body);
+        if (!isValid) return res.status(400).json(errors);
+        Release.findOneAndUpdate(
+          { _id: release._id },
+          {
+            $addToSet: {
+              personnel: { $each: req.body.personnel },
+            },
+            $set: {
+              modifiedAt: Date.now(),
+            },
+          },
+          { new: true },
+          (err, updatedRelease) => {
+            if (err) return res.status(400).json(err);
+            return res.json(updatedRelease);
+          }
+        );
+      })
+      .catch(err =>
+        res.status(400).json({ noReleasesFound: "No release found" })
+      );
+  }
+);
+
+router.patch(
+  "/:id/remove_personnel",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    Release.findById(req.params.id)
+      .then(release => {
+        Release.findOneAndUpdate(
+          { _id: release._id },
+          {
+            $pull: {
+              personnel: { _id: req.body.releasePersonnelId },
+            },
+          },
+          { new: true },
+          (err, updatedRelease) => {
+            if (err) return res.status(400).json(err);
+            return res.json(updatedRelease);
+          }
+        );
+      })
+      .catch(err =>
+        res.status(400).json({ noReleaseFound: "No release found" })
+      );
+  }
+);
+
+router.delete(
+  "/:id",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    Release.findByIdAndDelete(req.params.id, (err, deletedRelease) => {
+      if (err) return res.status(400).json(err);
+      return res.json(deletedRelease);
+    });
   }
 );
 
