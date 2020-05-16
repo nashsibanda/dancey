@@ -57,11 +57,10 @@ router.patch(
   "/:id",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    const { errors, isValid } = validateUpdateReleaseInput(req.body);
-    if (!isValid) return res.status(400).json(errors);
-
     Release.findById(req.params.id)
       .then(release => {
+        const { errors, isValid } = validateUpdateReleaseInput(req.body);
+        if (!isValid) return res.status(400).json(errors);
         Release.findOneAndUpdate(
           { _id: release._id },
           {
