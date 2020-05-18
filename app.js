@@ -51,4 +51,19 @@ app.use("/api/comments", comments);
 const reviews = require("./routes/api/reviews");
 app.use("/api/reviews", reviews);
 
+app.use((err, req, res, next) => {
+  if (err) {
+    if (err.error && err.error.isJoi) {
+      res.status(400).json({
+        // type: err.type,
+        message: err.error.toString(),
+      });
+    } else {
+      res.status(400).json({ message: err.message });
+    }
+  } else {
+    next(err);
+  }
+});
+
 app.listen(port, () => console.log(`Server is running on port ${port}`));
