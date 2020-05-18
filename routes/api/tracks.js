@@ -1,8 +1,126 @@
 const express = require("express");
 const router = express.Router();
+const passport = require("passport");
 
-router.get("/test", (req, res) =>
-  res.json({ msg: "This is the tracks route" })
+const joiValidator = require("express-joi-validation").createValidator({
+  passError: true,
+});
+const {
+  ValidationError,
+  RecordNotFoundError,
+} = require("../../validation/errors");
+const {
+  newTrackValidation,
+  updateTrackValidation,
+} = require("../../validation/track.joiSchema");
+
+const Track = require("../../models/Track");
+const Release = require("../../models/Release");
+
+// GET all tracks
+router.get("/", (req, res, next) => {
+  Track.find()
+    .sort({ createdAt: -1 })
+    .then(tracks => res.json(tracks))
+    .catch(err => next(new RecordNotFoundError("No tracks found")));
+});
+
+// GET a track by id
+router.get("/:id", (req, res, next) => {
+  Track.findById(req.params.id)
+    .then(track => res.json(track))
+    .catch(err => next(new RecordNotFoundError("No track found")));
+});
+
+// GET all tracks by personnel
+router.get("/personnel/:personnel_id", (req, res, next) => {
+  Track.find({
+    $or: [
+      { "personnel.personnelId": req.params.personnel_id },
+      { artists: { $elemMatch: { $eq: req.params.personnel_id } } },
+      { writers: { $elemMatch: { $eq: req.params.personnel_id } } },
+    ],
+  })
+    .then(tracks => res.json(tracks))
+    .catch(err => next(new RecordNotFoundError("No tracks found")));
+});
+
+// GET all tracks by release
+router.get("/release/:release_id", (req, res, next) => {
+  Release.findById(req.params.release_id)
+    .then(release => {
+      const trackIds = release.trackListing.map(listing => listing.trackId);
+      Track.find({ _id: { $in: trackIds } })
+        .then(tracks => res.json(tracks))
+        .catch(err => next(new RecordNotFoundError("No tracks found")));
+    })
+    .catch(err => next(new RecordNotFoundError("No release found")));
+});
+
+// POST a new track
+router.post(
+  "/",
+  passport.authenticate("jwt", { session: false }),
+  joiValidator.body(newTrackValidation),
+  (req, res, next) => {
+    const newTrack = new Track({
+      ...req.body,
+    });
+
+    newTrack
+      .save()
+      .then(track => res.json(track))
+      .catch(err => next(err));
+  }
+);
+
+// PUT replacement info for a track
+router.put(
+  "/:id",
+  // passport.authenticate("jwt", { session: false }),
+  joiValidator.body(updateTrackValidation),
+  (req, res, next) => {
+    Track.findById(req.params.id)
+      .then(track => {
+        Track.findOneAndReplace(
+          { _id: track._id },
+          Object.assign(
+            {},
+            track.toObject(),
+            { ...req.body },
+            { updatedAt: Date.now() }
+          ),
+          { new: true },
+          (err, updatedTrack) => {
+            if (err) return next(err);
+            res.json(updatedTrack);
+          }
+        );
+      })
+      .catch(err => next(new RecordNotFoundError("No track found")));
+  }
+);
+
+// DELETE a track
+router.delete(
+  "/:id",
+  passport.authenticate("jwt", { session: false }),
+  (req, res, next) => {
+    Track.findByIdAndDelete(req.params.id, (err, deletedTrack) => {
+      if (err) return next(err);
+      if (!deletedTrack) return next(new RecordNotFoundError("No track found"));
+      Release.updateMany(
+        { "trackListing.trackId": deletedTrack._id },
+        { $set: { "trackListing.$[listing].trackId": null } },
+        { arrayFilters: [{ "elem.trackId": deletedTrack._id }] },
+        (err, updateResponse) => {
+          if (err) return next(err);
+          console.log(updateResponse);
+          return res.json(deletedTrack);
+        }
+      );
+    });
+  }
 );
 
 module.exports = router;
