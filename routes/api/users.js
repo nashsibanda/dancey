@@ -5,8 +5,14 @@ const jsonwebtoken = require("jsonwebtoken");
 
 const passport = require("passport");
 const keys = require("../../config/keys");
-const validateLoginInput = require("../../validation/login");
-const validateRegisterInput = require("../../validation/register");
+const joiValidator = require("express-joi-validation").createValidator({
+  passError: true,
+});
+
+const {
+  registerValidation,
+  loginValidation,
+} = require("../../validation/user.joiSchema");
 
 const User = require("../../models/User");
 
@@ -25,17 +31,12 @@ router.get(
 );
 
 // Registration route
-router.post("/register", (req, res) => {
-  // Initial validation
-  const { errors, isValid } = validateRegisterInput(req.body);
-  if (!isValid) return res.status(400).json(errors);
-
+router.post("/register", joiValidator.body(registerValidation), (req, res) => {
   // Check for duplicate email
   User.findOne({ email: req.body.email }).then(user => {
     if (user) {
       // Add errors to validation
-      errors.email = "A user already exists with this email address";
-      return res.status(400).json(errors);
+      return next(new Error("No user exists with this email address"));
     } else {
       const newUser = new User({
         ...req.body,
@@ -73,29 +74,20 @@ router.post("/register", (req, res) => {
 });
 
 // Login route
-router.post("/login", (req, res) => {
-  // Initial validation
-  const { errors, isValid } = validateLoginInput(req.body);
-  if (!isValid) {
-    return res.status(400).json(errors);
-  }
-
+router.post("/login", joiValidator.body(loginValidation), (req, res, next) => {
   const { email, password } = req.body;
 
   User.findOne({ email }).then(user => {
     // Check if this user exists
     if (!user) {
       // Send error in validation
-      errors.email = "No user exists with that email address";
-      return res.status(404).json(errors);
+      return next(new Error("No user exists with that email address"));
     }
 
     // Compare password to saved password hash
     bcryptjs.compare(password, user.password).then(isMatch => {
       if (!isMatch) {
-        // Use validator for error
-        errors.password = "Password is incorrect";
-        return res.status(400).json(errors);
+        return next(new Error("Password is incorrect"));
       }
 
       const payload = { id: user.id, username: user.username };
