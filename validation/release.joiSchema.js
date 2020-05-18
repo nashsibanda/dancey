@@ -21,7 +21,7 @@ const releaseValidation = Joi.object({
   trackListing: Joi.array().items(
     Joi.object().keys({
       order: Joi.number().integer().min(1),
-      trackId: Joi.objectId(),
+      trackId: Joi.objectId().allow(null),
       _id: Joi.objectId(),
     })
   ),

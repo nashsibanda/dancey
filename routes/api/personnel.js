@@ -17,6 +17,7 @@ const {
 
 const Personnel = require("../../models/Personnel");
 const Release = require("../../models/Release");
+const Track = require("../../models/Track");
 
 // GET all personnel
 router.get("/", (req, res, next) => {
@@ -59,7 +60,7 @@ router.get("/release/:release_id", (req, res) => {
 // POST a new personnel record
 router.post(
   "/",
-  // passport.authenticate("jwt", { session: false }),
+  passport.authenticate("jwt", { session: false }),
   joiValidator.body(newPersonnelValidation),
   (req, res) => {
     const newPersonnel = new Personnel({
@@ -101,12 +102,13 @@ router.put(
 
 router.delete(
   "/:id",
-  // passport.authenticate("jwt", { session: false }),
+  passport.authenticate("jwt", { session: false }),
   (req, res, next) => {
     Personnel.findByIdAndDelete(req.params.id, (err, deletedPersonnel) => {
       if (err || !deletedPersonnel) {
         return next(new RecordNotFoundError("No personnel found"));
       } else {
+        // Remove all personnel references in Release documents
         Release.updateMany(
           {
             $or: [
@@ -119,12 +121,26 @@ router.delete(
               personnel: { personnelId: deletedPersonnel._id },
               mainArtists: deletedPersonnel._id,
             },
-          },
-          (err, resp) => {
-            console.log(resp);
-            return res.json(deletedPersonnel);
           }
-        );
+        ).then(() => {
+          // Remove all personnel references in Track documents
+          Track.updateMany(
+            {
+              $or: [
+                { "personnel.personnelId": deletedPersonnel._id },
+                { writers: { $elemMatch: { $eq: deletedPersonnel._id } } },
+                { artists: { $elemMatch: { $eq: deletedPersonnel._id } } },
+              ],
+            },
+            {
+              $pull: {
+                personnel: { personnelId: deletedPersonnel._id },
+                artists: deletedPersonnel._id,
+                writers: deletedPersonnel._id,
+              },
+            }
+          ).then(() => res.json(deletedPersonnel));
+        });
       }
     });
   }

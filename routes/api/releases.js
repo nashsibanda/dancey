@@ -12,32 +12,33 @@ const {
   updateReleaseValidation,
 } = require("../../validation/release.joiSchema");
 
+const {
+  ValidationError,
+  RecordNotFoundError,
+} = require("../../validation/errors");
+
 const Release = require("../../models/Release");
 
 // GET all releases
-router.get("/", (req, res) => {
+router.get("/", (req, res, next) => {
   Release.find()
     .sort({ createdAt: -1 })
     .then(releases => res.json(releases))
-    .catch(err =>
-      res.status(404).json({ noReleasesFound: "No releases found" })
-    );
+    .catch(err => next(new RecordNotFoundError("No releases found")));
 });
 
 // GET a single release
-router.get("/:id", (req, res) => {
+router.get("/:id", (req, res, next) => {
   Release.findById(req.params.id)
     .then(release => res.json(release))
-    .catch(err => res.status(404).json({ noReleaseFound: "No release found" }));
+    .catch(err => next(new RecordNotFoundError("No release found")));
 });
 
 // GET all releases by personnel
-router.get("/personnel/:personnel_id", (req, res) => {
+router.get("/personnel/:personnel_id", (req, res, next) => {
   Release.find({ "personnel.personnelId": req.params.personnel_id })
     .then(releases => res.json(releases))
-    .catch(err =>
-      res.status(404).json({ noReleasesFound: "No releases found" })
-    );
+    .catch(err => next(new RecordNotFoundError("No releases found")));
 });
 
 // POST a new release
@@ -45,19 +46,22 @@ router.post(
   "/",
   passport.authenticate("jwt", { session: false }),
   joiValidator.body(newReleaseValidation),
-  (req, res) => {
+  (req, res, next) => {
     const newRelease = new Release({
       ...req.body,
     });
 
-    newRelease.save().then(release => res.json(release));
+    newRelease
+      .save()
+      .then(release => res.json(release))
+      .catch(err => next(err));
   }
 );
 
 // PUT replacement info for a release
 router.put(
   "/:id",
-  // passport.authenticate("jwt", { session: false }),
+  passport.authenticate("jwt", { session: false }),
   joiValidator.body(updateReleaseValidation),
   (req, res, next) => {
     Release.findById(req.params.id)
@@ -79,9 +83,7 @@ router.put(
           }
         );
       })
-      .catch(err => {
-        return next(new Error("No release found"));
-      });
+      .catch(err => next(new RecordNotFoundError("No release found")));
   }
 );
 
