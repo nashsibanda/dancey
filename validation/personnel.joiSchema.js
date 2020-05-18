@@ -18,6 +18,14 @@ const personnelValidation = Joi.object({
     .valid(...Object.keys(countries))
     .label("Country of origin")
     .messages({ "any.only": "Country of origin must be a valid country" }),
+  images: Joi.array().items(
+    Joi.object().keys({
+      description: Joi.string().max(200),
+      imageUrl: Joi.string().uri({ allowRelative: true }),
+      mainImage: Joi.bool(),
+      _id: Joi.objectId(),
+    })
+  ),
 });
 
 const newPersonnelValidation = personnelValidation.tailor("new");

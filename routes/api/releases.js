@@ -57,7 +57,7 @@ router.post(
 // PUT replacement info for a release
 router.put(
   "/:id",
-  passport.authenticate("jwt", { session: false }),
+  // passport.authenticate("jwt", { session: false }),
   joiValidator.body(updateReleaseValidation),
   (req, res, next) => {
     Release.findById(req.params.id)
