@@ -54,12 +54,13 @@ app.use("/api/reviews", reviews);
 app.use((err, req, res, next) => {
   if (err) {
     if (err.error && err.error.isJoi) {
+      console.log(err.type);
       res.status(400).json({
-        // type: err.type,
-        message: err.error.toString(),
+        name: err.error.name,
+        message: err.error.message,
       });
     } else {
-      res.status(400).json({ message: err.message });
+      res.status(400).json({ name: err.name, message: err.message });
     }
   } else {
     next(err);
