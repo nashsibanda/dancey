@@ -2,34 +2,39 @@ const express = require("express");
 const router = express.Router();
 const passport = require("passport");
 
+const joiValidator = require("express-joi-validation").createValidator({
+  passError: true,
+});
+const {
+  ValidationError,
+  RecordNotFoundError,
+} = require("../../validation/errors");
+
+const {
+  newPersonnelValidation,
+  updatePersonnelValidation,
+} = require("../../validation/personnel.joiSchema");
+
 const Personnel = require("../../models/Personnel");
 const Release = require("../../models/Release");
-const {
-  validateNewPersonnelInput,
-  validateUpdatePersonnelInput,
-} = require("../../validation/personnelInputValidation");
 
 // GET all personnel
-router.get("/", (req, res) => {
+router.get("/", (req, res, next) => {
   Personnel.find()
     .sort({ createdAt: -1 })
     .then(personnelCollection => res.json(personnelCollection))
-    .catch(err =>
-      res.status(404).json({ noPersonnelCollectionFound: "No personnel found" })
-    );
+    .catch(err => next(new RecordNotFoundError("No personnel found")));
 });
 
-// GET a single release
-router.get("/:id", (req, res) => {
+// GET a single personnel record
+router.get("/:id", (req, res, next) => {
   Personnel.findById(req.params.id)
     .then(personnelRecord => res.json(personnelRecord))
-    .catch(err =>
-      res.status(404).json({ noPersonnelRecordFound: "No personnel found" })
-    );
+    .catch(err => next(new RecordNotFoundError("No personnel found")));
 });
 
 // GET all personnel by release
-router.get("/releases/:release_id", (req, res) => {
+router.get("/release/:release_id", (req, res) => {
   Release.findById(req.params.release_id)
     .then(release => {
       const personnelIds = [];
@@ -38,23 +43,17 @@ router.get("/releases/:release_id", (req, res) => {
       });
       Personnel.find({ _id: { $in: personnelIds } })
         .then(personnelCollection => res.json(personnelCollection))
-        .catch(err =>
-          res
-            .status(404)
-            .json({ noPersonnelCollectionFound: "No personnel found" })
-        );
+        .catch(err => next(new RecordNotFoundError("No personnel found")));
     })
-    .catch(err => res.status(404).json({ noReleaseFound: "No release found" }));
+    .catch(err => next(new RecordNotFoundError("No release found")));
 });
 
 // POST a new personnel record
 router.post(
   "/",
   passport.authenticate("jwt", { session: false }),
+  joiValidator.body(newPersonnelValidation),
   (req, res) => {
-    const { errors, isValid } = validateNewPersonnelInput(req.body);
-    if (!isValid) return res.status(400).json(errors);
-
     const newPersonnel = new Personnel({
       ...req.body,
     });
@@ -65,42 +64,39 @@ router.post(
   }
 );
 
-// PATCH a personnel record
-router.patch(
+// PUT replacement info for a personnel record
+router.put(
   "/:id",
   passport.authenticate("jwt", { session: false }),
-  (req, res) => {
+  joiValidator.body(updatePersonnelValidation),
+  (req, res, next) => {
     Personnel.findById(req.params.id)
       .then(personnelRecord => {
-        const { errors, isValid } = validateUpdatePersonnelInput(req.body);
-        if (!isValid) return res.status(400).json(errors);
-        Personnel.findOneAndUpdate(
+        Personnel.findOneAndReplace(
           { _id: personnelRecord._id },
-          {
-            $set: {
-              ...req.body,
-              modifiedAt: Date.now(),
-            },
-          },
+          Object.assign(
+            {},
+            personnelRecord.toObject(),
+            { ...req.body },
+            { updatedAt: Date.now() }
+          ),
           { new: true },
           (err, updatedPersonnelRecord) => {
-            if (err) return res.status(400).json(err);
+            if (err) return next(err);
             return res.json(updatedPersonnelRecord);
           }
         );
       })
-      .catch(err =>
-        res.status(404).json({ noPersonnelRecordFound: "No personnel found" })
-      );
+      .catch(err => next(new RecordNotFoundError("No personnel found")));
   }
 );
 
 router.delete(
   "/:id",
   passport.authenticate("jwt", { session: false }),
-  (req, res) => {
+  (req, res, next) => {
     Personnel.findByIdAndDelete(req.params.id, (err, deletedPersonnel) => {
-      if (err) return res.status(400).json(err);
+      if (err) return next(err);
       return res.json(deletedPersonnel);
     });
   }

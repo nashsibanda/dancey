@@ -10,6 +10,11 @@ const joiValidator = require("express-joi-validation").createValidator({
 });
 
 const {
+  RecordNotFoundError,
+  ValidationError,
+} = require("../../validation/errors");
+
+const {
   registerValidation,
   loginValidation,
 } = require("../../validation/user.joiSchema");
@@ -36,7 +41,9 @@ router.post("/register", joiValidator.body(registerValidation), (req, res) => {
   User.findOne({ email: req.body.email }).then(user => {
     if (user) {
       // Add errors to validation
-      return next(new Error("No user exists with this email address"));
+      return next(
+        new RecordNotFoundError("No user exists with this email address")
+      );
     } else {
       const newUser = new User({
         ...req.body,
@@ -66,7 +73,7 @@ router.post("/register", joiValidator.body(registerValidation), (req, res) => {
                 }
               );
             })
-            .catch(err => console.error(err));
+            .catch(err => next(err));
         });
       });
     }
@@ -81,13 +88,15 @@ router.post("/login", joiValidator.body(loginValidation), (req, res, next) => {
     // Check if this user exists
     if (!user) {
       // Send error in validation
-      return next(new Error("No user exists with that email address"));
+      return next(
+        new RecordNotFoundError("No user exists with that email address")
+      );
     }
 
     // Compare password to saved password hash
     bcryptjs.compare(password, user.password).then(isMatch => {
       if (!isMatch) {
-        return next(new Error("Password is incorrect"));
+        return next(new ValidationError("Password is incorrect"));
       }
 
       const payload = { id: user.id, username: user.username };
