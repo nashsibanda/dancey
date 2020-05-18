@@ -17,6 +17,18 @@ const PersonnelSchema = new Schema(
       type: String,
       enum: Object.keys(countries),
     },
+    images: [
+      {
+        description: String,
+        imageUrl: {
+          type: String,
+        },
+        mainImage: {
+          type: Boolean,
+          default: false,
+        },
+      },
+    ],
   },
   {
     timestamps: true,

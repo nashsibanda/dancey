@@ -29,7 +29,15 @@ router.get("/", (req, res, next) => {
 // GET a single personnel record
 router.get("/:id", (req, res, next) => {
   Personnel.findById(req.params.id)
-    .then(personnelRecord => res.json(personnelRecord))
+    .then(personnelRecord => {
+      Release.find({
+        $or: [
+          { "personnel.personnelId": personnelRecord._id },
+          { mainArtists: { $elemMatch: { $eq: personnelRecord._id } } },
+        ],
+      }).then(releases => console.log(releases));
+      res.json(personnelRecord);
+    })
     .catch(err => next(new RecordNotFoundError("No personnel found")));
 });
 
@@ -51,7 +59,7 @@ router.get("/release/:release_id", (req, res) => {
 // POST a new personnel record
 router.post(
   "/",
-  passport.authenticate("jwt", { session: false }),
+  // passport.authenticate("jwt", { session: false }),
   joiValidator.body(newPersonnelValidation),
   (req, res) => {
     const newPersonnel = new Personnel({
@@ -93,11 +101,31 @@ router.put(
 
 router.delete(
   "/:id",
-  passport.authenticate("jwt", { session: false }),
+  // passport.authenticate("jwt", { session: false }),
   (req, res, next) => {
     Personnel.findByIdAndDelete(req.params.id, (err, deletedPersonnel) => {
-      if (err) return next(err);
-      return res.json(deletedPersonnel);
+      if (err || !deletedPersonnel) {
+        return next(new RecordNotFoundError("No personnel found"));
+      } else {
+        Release.updateMany(
+          {
+            $or: [
+              { "personnel.personnelId": deletedPersonnel._id },
+              { mainArtists: { $elemMatch: { $eq: deletedPersonnel._id } } },
+            ],
+          },
+          {
+            $pull: {
+              personnel: { personnelId: deletedPersonnel._id },
+              mainArtists: deletedPersonnel._id,
+            },
+          },
+          (err, resp) => {
+            console.log(resp);
+            return res.json(deletedPersonnel);
+          }
+        );
+      }
     });
   }
 );
