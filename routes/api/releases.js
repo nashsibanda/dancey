@@ -3,12 +3,16 @@ const router = express.Router();
 const mongoose = require("mongoose");
 const passport = require("passport");
 
-const Release = require("../../models/Release");
+const joiValidator = require("express-joi-validation").createValidator({
+  passError: true,
+});
+
 const {
-  validateNewReleaseInput,
-  validateUpdateReleaseInput,
-  validateNewReleasePersonnel,
-} = require("../../validation/releaseInputValidation");
+  newReleaseValidation,
+  updateReleaseValidation,
+} = require("../../validation/release.joiSchema");
+
+const Release = require("../../models/Release");
 
 // GET all releases
 router.get("/", (req, res) => {
@@ -40,11 +44,8 @@ router.get("/personnel/:personnel_id", (req, res) => {
 router.post(
   "/",
   passport.authenticate("jwt", { session: false }),
+  joiValidator.body(newReleaseValidation),
   (req, res) => {
-    const { errors, isValid } = validateNewReleaseInput(req.body);
-
-    if (!isValid) return res.status(400).json(errors);
-
     const newRelease = new Release({
       ...req.body,
     });
@@ -53,132 +54,43 @@ router.post(
   }
 );
 
-// PATCH a release
-router.patch(
+// PUT replacement info for a release
+router.put(
   "/:id",
   passport.authenticate("jwt", { session: false }),
-  (req, res) => {
+  joiValidator.body(updateReleaseValidation),
+  (req, res, next) => {
     Release.findById(req.params.id)
       .then(release => {
-        const { errors, isValid } = validateUpdateReleaseInput(req.body);
-        if (!isValid) return res.status(400).json(errors);
-        Release.findOneAndUpdate(
+        Release.findOneAndReplace(
           { _id: release._id },
-          {
-            $set: {
-              ...req.body,
-              modifiedAt: Date.now(),
-            },
-          },
+          Object.assign(
+            {},
+            release.toObject(),
+            { ...req.body },
+            { updatedAt: Date.now() }
+          ),
           { new: true },
           (err, updatedRelease) => {
             console.log("HELLO");
-            if (err) return res.status(400).json(err);
+            if (err) return next(err);
 
             return res.json(updatedRelease);
           }
         );
       })
-      .catch(err =>
-        res.status(400).json({ noReleaseFound: "No release found" })
-      );
-  }
-);
-
-// PATCH a release with new main artists
-router.patch(
-  "/:id/add_artists",
-  passport.authenticate("jwt", { session: false }),
-  (req, res) => {
-    Release.findById(req.params.id)
-      .then(release => {
-        Release.findOneAndUpdate(
-          { _id: release._id },
-          {
-            $addToSet: {
-              mainArtists: { $each: req.body.mainArtists },
-            },
-            $set: {
-              modifiedAt: Date.now(),
-            },
-          },
-          { new: true },
-          (err, updatedRelease) => {
-            if (err) return res.status(400).json(err);
-            return res.json(updatedRelease);
-          }
-        );
-      })
-      .catch(err =>
-        res.status(400).json({ noReleaseFound: "No release found" })
-      );
-  }
-);
-
-// PATCH a release with new personnel
-router.patch(
-  "/:id/add_personnel",
-  passport.authenticate("jwt", { session: false }),
-  (req, res) => {
-    Release.findById(req.params.id)
-      .then(release => {
-        const { errors, isValid } = validateNewReleasePersonnel(req.body);
-        if (!isValid) return res.status(400).json(errors);
-        Release.findOneAndUpdate(
-          { _id: release._id },
-          {
-            $addToSet: {
-              personnel: { $each: req.body.personnel },
-            },
-            $set: {
-              modifiedAt: Date.now(),
-            },
-          },
-          { new: true },
-          (err, updatedRelease) => {
-            if (err) return res.status(400).json(err);
-            return res.json(updatedRelease);
-          }
-        );
-      })
-      .catch(err =>
-        res.status(400).json({ noReleasesFound: "No release found" })
-      );
-  }
-);
-
-router.patch(
-  "/:id/remove_personnel",
-  passport.authenticate("jwt", { session: false }),
-  (req, res) => {
-    Release.findById(req.params.id)
-      .then(release => {
-        Release.findOneAndUpdate(
-          { _id: release._id },
-          {
-            $pull: {
-              personnel: { _id: req.body.releasePersonnelId },
-            },
-          },
-          { new: true },
-          (err, updatedRelease) => {
-            if (err) return res.status(400).json(err);
-            return res.json(updatedRelease);
-          }
-        );
-      })
-      .catch(err =>
-        res.status(400).json({ noReleaseFound: "No release found" })
-      );
+      .catch(err => {
+        return next(new Error("No release found"));
+      });
   }
 );
 
 router.delete(
   "/:id",
   passport.authenticate("jwt", { session: false }),
-  (req, res) => {
+  (req, res, next) => {
     Release.findByIdAndDelete(req.params.id, (err, deletedRelease) => {
-      if (err) return res.status(400).json(err);
+      if (err) return next(err);
       return res.json(deletedRelease);
     });
   }
