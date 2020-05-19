@@ -10,32 +10,38 @@ const releaseValidation = Joi.object({
     .alter({
       new: schema => schema.required(),
     }),
-  mainArtists: Joi.array().items(Joi.objectId()),
+  mainArtists: Joi.array().items(Joi.objectId()).label("Main artists"),
   personnel: Joi.array().items(
-    Joi.object().keys({
-      personnelId: Joi.objectId(),
-      role: Joi.string().max(200),
-      _id: Joi.objectId(),
-    })
+    Joi.object()
+      .keys({
+        personnelId: Joi.objectId(),
+        role: Joi.string().max(200),
+        _id: Joi.objectId(),
+      })
+      .label("Personnel")
   ),
   trackListing: Joi.array().items(
-    Joi.object().keys({
-      order: Joi.number().integer().min(1),
-      trackId: Joi.objectId().allow(null),
-      _id: Joi.objectId(),
-    })
+    Joi.object()
+      .keys({
+        order: Joi.number().integer().min(1),
+        trackId: Joi.objectId().allow(null),
+        _id: Joi.objectId(),
+      })
+      .label("Track listing")
   ),
-  label: Joi.array().items(Joi.objectId()),
-  description: Joi.string().max(500),
+  label: Joi.array().items(Joi.objectId()).label("Label"),
+  description: Joi.string().max(500).label("Description"),
   images: Joi.array().items(
-    Joi.object().keys({
-      description: Joi.string().max(200),
-      imageUrl: Joi.string().uri({ allowRelative: true }),
-      mainImage: Joi.bool(),
-      _id: Joi.objectId(),
-    })
+    Joi.object()
+      .keys({
+        description: Joi.string().max(200),
+        imageUrl: Joi.string().uri({ allowRelative: true }),
+        mainImage: Joi.bool(),
+        _id: Joi.objectId(),
+      })
+      .label("Images")
   ),
-  releaseYear: Joi.number().min(1880).max(2030),
+  releaseYear: Joi.number().min(1880).max(2030).label("Release year"),
   format: Joi.string()
     .valid(...formats)
     .label("Format")
@@ -54,6 +60,7 @@ const releaseValidation = Joi.object({
     .messages({
       "any.only": "Original release country must be a valid country",
     }),
+  comments: Joi.array().items(Joi.objectId()).label("Comments"),
 });
 
 const newReleaseValidation = releaseValidation.tailor("new");
