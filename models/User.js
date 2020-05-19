@@ -8,6 +8,7 @@ const UserSchema = new Schema(
     username: {
       type: String,
       required: true,
+      unique: true,
     },
     firstName: {
       type: String,
@@ -20,6 +21,7 @@ const UserSchema = new Schema(
     email: {
       type: String,
       required: true,
+      unique: true,
     },
     createdAt: {
       type: Date,
@@ -38,6 +40,12 @@ const UserSchema = new Schema(
       type: Date,
       required: false,
     },
+    comments: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Comment",
+      },
+    ],
   },
   { timestamps: true }
 );

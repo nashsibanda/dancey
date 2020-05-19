@@ -10,7 +10,8 @@ const registerValidation = Joi.object({
   confPassword: Joi.string()
     .required()
     .valid(Joi.ref("password"))
-    .messages({ "any.only": "Passwords must match" }),
+    .messages({ "any.only": "Passwords must match" })
+    .label("Confirm password"),
   location: Joi.string()
     .required()
     .valid(...Object.keys(countries))
@@ -18,7 +19,8 @@ const registerValidation = Joi.object({
     .messages({
       "any.only": "Location must be a valid country",
     }),
-  birthday: Joi.date().less("now"),
+  birthday: Joi.date().less("now").label("Birthday"),
+  comments: Joi.array().items(Joi.objectId()).label("Comments"),
 });
 
 const loginValidation = Joi.object({

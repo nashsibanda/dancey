@@ -25,6 +25,12 @@ const TrackSchema = new Schema(
     },
     duration: Number,
     writers: [{ type: mongoose.Schema.Types.ObjectId, ref: "Personnel" }],
+    comments: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Comment",
+      },
+    ],
   },
   { timestamps: true }
 );

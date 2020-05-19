@@ -19,6 +19,7 @@ const trackValidation = Joi.object({
   originalVersion: Joi.objectId().label("Original version").allow(null),
   duration: Joi.number().integer().label("Duration"),
   writers: Joi.array().items(Joi.objectId()).label("Writer(s)"),
+  comments: Joi.array().items(Joi.objectId()).label("Comments"),
 });
 
 const newTrackValidation = trackValidation.tailor("new");

@@ -72,6 +72,12 @@ const ReleaseSchema = new Schema(
       type: String,
       enum: Object.keys(countries),
     },
+    comments: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Comment",
+      },
+    ],
   },
   {
     timestamps: true,
