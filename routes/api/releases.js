@@ -11,6 +11,7 @@ const {
   newReleaseValidation,
   updateReleaseValidation,
 } = require("../../validation/release.joiSchema");
+const { commentValidation } = require("../../validation/comment.joiSchema");
 
 const {
   ValidationError,
@@ -18,6 +19,7 @@ const {
 } = require("../../validation/errors");
 
 const Release = require("../../models/Release");
+const Comment = require("../../models/Comment");
 
 // GET all releases
 router.get("/", (req, res, next) => {
@@ -58,6 +60,38 @@ router.post(
   }
 );
 
+// POST a new comment
+router.post(
+  "/:id/add_comment",
+  passport.authenticate("jwt", { session: false }),
+  joiValidator.body(commentValidation),
+  (req, res, next) => {
+    const newComment = new Comment({
+      body: req.body.body,
+      parentCommentId: req.body.parentCommentId,
+      userId: req.user.id,
+      username: req.user.username,
+    });
+
+    newComment
+      .save()
+      .then(comment => {
+        Release.findByIdAndUpdate(
+          req.params.id,
+          {
+            $addToSet: { comments: comment._id },
+          },
+          { new: true },
+          (err, updatedRelease) => {
+            if (err) return next(err);
+            res.json(updatedRelease);
+          }
+        );
+      })
+      .catch(err => next(err));
+  }
+);
+
 // PUT replacement info for a release
 router.put(
   "/:id",
@@ -76,9 +110,7 @@ router.put(
           ),
           { new: true },
           (err, updatedRelease) => {
-            console.log("HELLO");
             if (err) return next(err);
-
             return res.json(updatedRelease);
           }
         );

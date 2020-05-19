@@ -15,9 +15,12 @@ const {
   updatePersonnelValidation,
 } = require("../../validation/personnel.joiSchema");
 
+const { commentValidation } = require("../../validation/comment.joiSchema");
+
 const Personnel = require("../../models/Personnel");
 const Release = require("../../models/Release");
 const Track = require("../../models/Track");
+const Comment = require("../../models/Comment");
 
 // GET all personnel
 router.get("/", (req, res, next) => {
@@ -70,6 +73,38 @@ router.post(
     newPersonnel
       .save()
       .then(newPersonnelRecord => res.json(newPersonnelRecord));
+  }
+);
+
+// POST a new comment
+router.post(
+  "/:id/add_comment",
+  passport.authenticate("jwt", { session: false }),
+  joiValidator.body(commentValidation),
+  (req, res, next) => {
+    const newComment = new Comment({
+      body: req.body.body,
+      parentCommentId: req.body.parentCommentId,
+      userId: req.user.id,
+      username: req.user.username,
+    });
+
+    newComment
+      .save()
+      .then(comment => {
+        Personnel.findByIdAndUpdate(
+          req.params.id,
+          {
+            $addToSet: { comments: comment._id },
+          },
+          { new: true },
+          (err, updatedRelease) => {
+            if (err) return next(err);
+            res.json(updatedRelease);
+          }
+        );
+      })
+      .catch(err => next(err));
   }
 );
 

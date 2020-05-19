@@ -1,8 +1,118 @@
 const express = require("express");
 const router = express.Router();
+const passport = require("passport");
 
-router.get("/test", (req, res) =>
-  res.json({ msg: "This is the comments route" })
+const joiValidator = require("express-joi-validation").createValidator({
+  passError: true,
+});
+const { commentValidation } = require("../../validation/comment.joiSchema");
+
+const Comment = require("../../models/Comment");
+const Release = require("../../models/Release");
+const Personnel = require("../../models/Personnel");
+// const Product = require("../../models/Product");
+// const Review = require("../../models/Review");
+// const Seller = require("../../models/Seller");
+const Track = require("../../models/Track");
+const User = require("../../models/User");
+const { RecordNotFoundError } = require("../../validation/errors");
+
+const commentResource = resource => {
+  switch (resource) {
+    case "release":
+      return Release;
+    case "personnel":
+      return Personnel;
+    case "product":
+      return Product;
+    case "review":
+      return Review;
+    case "seller":
+      return Seller;
+    case "track":
+      return Track;
+    case "buyer":
+      return User;
+    default:
+      break;
+  }
+};
+
+// GET all comments -
+// TODO Testing only!
+router.get("/all", (req, res, next) => {
+  Comment.find()
+    .then(comments => res.json(comments))
+    .catch(err => next(new RecordNotFoundError("No comments found")));
+});
+
+// GET all comments for a resource
+router.get("/get/:resource/:id", (req, res, next) => {
+  commentResource(req.params.resource)
+    .findById(req.params.id)
+    .then(({ comments }) => {
+      Comment.find({ _id: { $in: comments } })
+        .then(resourceComments => res.json(resourceComments))
+        .catch(err => next(new RecordNotFoundError("No comments found")));
+    })
+    .catch(err =>
+      next(new RecordNotFoundError(`No ${req.params.resource} found`))
+    );
+});
+
+// GET one comment
+router.get("/:id", (req, res, next) => {
+  Comment.findById(req.params.id)
+    .then(comment => res.json(comment))
+    .catch(err => next(new RecordNotFoundError("No comment found")));
+});
+
+// PUT replacement info for a comment
+router.put(
+  "/:id",
+  passport.authenticate("jwt", { session: false }),
+  joiValidator.body(commentValidation),
+  (req, res, next) => {
+    Comment.findById(req.params.id)
+      .then(comment => {
+        Comment.findOneAndReplace(
+          { _id: comment._id },
+          Object.assign(
+            {},
+            comment.toObject(),
+            { ...req.body },
+            { updatedAt: Date.now() }
+          ),
+          { new: true },
+          (err, updatedComment) => {
+            if (err) return next(err);
+            return res.json(updatedComment);
+          }
+        );
+      })
+      .catch(err => next(new RecordNotFoundError("No comment found")));
+  }
+);
+
+// DELETE a comment
+router.delete(
+  "/:id",
+  passport.authenticate("jwt", { session: false }),
+  (req, res, next) => {
+    Comment.findById(req.params.id)
+      .then(comment => {
+        Comment.findByIdAndUpdate(
+          comment._id,
+          { $set: { deleted: true } },
+          { new: true },
+          (err, deletedComment) => {
+            if (err) return next(err);
+            return res.json(deletedComment);
+          }
+        );
+      })
+      .catch(err => next(new RecordNotFoundError("No comment found")));
+  }
 );
 
 module.exports = router;
