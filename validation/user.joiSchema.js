@@ -1,4 +1,5 @@
 const Joi = require("@hapi/joi");
+Joi.objectId = require("joi-objectid")(Joi);
 const countries = require("./countries");
 
 const registerValidation = Joi.object({
