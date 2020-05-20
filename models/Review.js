@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const CommentSchema = new Schema(
+const ReviewSchema = new Schema(
   {
     userId: {
       type: mongoose.Schema.Types.ObjectId,
@@ -10,21 +10,23 @@ const CommentSchema = new Schema(
     },
     body: {
       type: String,
-      required: true,
     },
     username: {
       type: String,
       required: true,
     },
-    parentCommentId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Comment",
-      default: null,
+    rating: {
+      type: Number,
+      min: 1,
+      max: 5,
+      required: true,
     },
-    deleted: {
-      type: Boolean,
-      default: false,
-    },
+    comments: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Comment",
+      },
+    ],
     likes: {
       type: Map,
       of: Boolean,
@@ -35,4 +37,4 @@ const CommentSchema = new Schema(
   }
 );
 
-module.exports = Comment = mongoose.model("Comment", CommentSchema);
+module.exports = Review = mongoose.model("Review", ReviewSchema);

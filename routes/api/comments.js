@@ -11,11 +11,15 @@ const Comment = require("../../models/Comment");
 const Release = require("../../models/Release");
 const Personnel = require("../../models/Personnel");
 // const Product = require("../../models/Product");
-// const Review = require("../../models/Review");
+const Review = require("../../models/Review");
 // const Seller = require("../../models/Seller");
 const Track = require("../../models/Track");
 const User = require("../../models/User");
-const { RecordNotFoundError } = require("../../validation/errors");
+const {
+  RecordNotFoundError,
+  ResourceNotFoundError,
+  NotAuthorizedError,
+} = require("../../validation/errors");
 
 const commentResource = resource => {
   switch (resource) {
@@ -34,7 +38,7 @@ const commentResource = resource => {
     case "buyer":
       return User;
     default:
-      break;
+      return new ResourceNotFoundError(`No resource called ${resource}`);
   }
 };
 
@@ -75,14 +79,47 @@ router.put(
   (req, res, next) => {
     Comment.findById(req.params.id)
       .then(comment => {
+        if (review.userId != req.user.id) {
+          return next(
+            new NotAuthorizedError(
+              "You are not authorized to perform this edit."
+            )
+          );
+        } else {
+          Comment.findOneAndReplace(
+            { _id: comment._id },
+            Object.assign(
+              {},
+              comment.toObject(),
+              { ...req.body },
+              { updatedAt: Date.now() }
+            ),
+            { new: true },
+            (err, updatedComment) => {
+              if (err) return next(err);
+              return res.json(updatedComment);
+            }
+          );
+        }
+      })
+      .catch(err => next(new RecordNotFoundError("No comment found")));
+  }
+);
+
+// PUT a like or unlike on a comment
+router.put(
+  "/:id/like",
+  passport.authenticate("jwt", { session: false }),
+  (req, res, next) => {
+    Comment.findById(req.params.id)
+      .then(comment => {
+        const newLikes = Object.fromEntries(comment.likes || []);
+        const myId = req.user.id.toString();
+        newLikes[myId] = !newLikes[myId];
+        if (newLikes[myId] == false) delete newLikes[myId];
         Comment.findOneAndReplace(
           { _id: comment._id },
-          Object.assign(
-            {},
-            comment.toObject(),
-            { ...req.body },
-            { updatedAt: Date.now() }
-          ),
+          Object.assign({}, comment.toObject(), { likes: newLikes }),
           { new: true },
           (err, updatedComment) => {
             if (err) return next(err);

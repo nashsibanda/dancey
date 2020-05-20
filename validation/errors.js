@@ -5,10 +5,22 @@ module.exports = {
       this.name = "ValidationError";
     }
   },
-  RecordNotFoundError: class ValidationError extends Error {
+  RecordNotFoundError: class RecordNotFoundError extends Error {
     constructor(message) {
       super(message);
       this.name = "RecordNotFoundError";
+    }
+  },
+  ResourceNotFoundError: class ResourceNotFoundError extends Error {
+    constructor(message) {
+      super(message);
+      this.name = "ResourceNotFoundError";
+    }
+  },
+  NotAuthorizedError: class NotAuthorizedError extends Error {
+    constructor(message) {
+      super(message);
+      this.name = "NotAuthorizedError";
     }
   },
 };
