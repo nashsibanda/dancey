@@ -69,6 +69,37 @@ router.get("/:id", (req, res, next) => {
     .catch(err => next(new RecordNotFoundError("No review found")));
 });
 
+// POST a review
+router.post(
+  "/",
+  passport.authenticate("jwt", { session: false }),
+  joiValidator.body(reviewValidation),
+  (req, res, next) => {
+    const newReview = new Review({
+      userId: req.user.id,
+      username: req.user.username,
+      body: req.body.body,
+      rating: req.body.rating,
+      resourceId: req.body.resourceId,
+      resourceType: req.body.resourceType,
+    });
+
+    newReview.save().then(review => {
+      reviewResource(req.body.resourceType).findByIdAndUpdate(
+        req.body.resourceId,
+        {
+          $addToSet: { reviews: review._id },
+        },
+        { new: true },
+        (err, updatedResource) => {
+          if (err) return next(err);
+          res.json(updatedResource);
+        }
+      );
+    });
+  }
+);
+
 // PUT replacement info for a review
 router.put(
   "/:id",
@@ -134,19 +165,20 @@ router.delete(
   "/:id",
   passport.authenticate("jwt", { session: false }),
   (req, res, next) => {
-    Review.findById(req.params.id)
-      .then(review => {
-        Review.findByIdAndUpdate(
-          review._id,
-          { $set: { deleted: true } },
-          { new: true },
-          (err, deletedReview) => {
-            if (err) return next(err);
-            return res.json(deletedReview);
-          }
-        );
-      })
-      .catch(err => next(new RecordNotFoundError("No review found")));
+    Review.findByIdAndDelete(req.params.id, (err, deletedReview) => {
+      reviewResource(deletedReview.resourceType).findByIdAndUpdate(
+        deletedReview.resourceId,
+        {
+          $pull: { reviews: deletedReview._id },
+        },
+        { new: true },
+        (err, updatedResource) => {
+          if (err) return next(err);
+          res.json(deletedReview);
+        }
+      );
+    })
+    .catch(err => next(new RecordNotFoundError("No review found")));
   }
 );
 

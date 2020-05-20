@@ -1,6 +1,15 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
+const reviewTypes = [
+  "release",
+  "personnel",
+  "product",
+  "seller",
+  "track",
+  "buyer",
+];
+
 const ReviewSchema = new Schema(
   {
     userId: {
@@ -30,6 +39,16 @@ const ReviewSchema = new Schema(
     likes: {
       type: Map,
       of: Boolean,
+    },
+    resourceType: {
+      type: String,
+      enum: reviewTypes,
+      required: true,
+    },
+    resourceId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Resource",
+      required: true,
     },
   },
   {
