@@ -31,7 +31,7 @@ const TrackSchema = new Schema(
         ref: "Comment",
       },
     ],
-    review: [
+    reviews: [
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Review",
