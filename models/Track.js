@@ -31,6 +31,12 @@ const TrackSchema = new Schema(
         ref: "Comment",
       },
     ],
+    review: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Review",
+      },
+    ],
   },
   { timestamps: true }
 );

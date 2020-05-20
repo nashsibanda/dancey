@@ -23,7 +23,7 @@ const { commentValidation } = require("../../validation/comment.joiSchema");
 const User = require("../../models/User");
 const Comment = require("../../models/Comment");
 
-// Current user route
+// GET current user
 router.get(
   "/current",
   passport.authenticate("jwt", { session: false }),
@@ -37,7 +37,14 @@ router.get(
   }
 );
 
-// Registration route
+// GET all users
+router.get("/", (req, res) => {
+  User.find()
+    .then(users => res.json(users))
+    .catch(err => next(err));
+});
+
+// POST new user
 router.post("/register", joiValidator.body(registerValidation), (req, res) => {
   // Check for duplicate email
   User.findOne({ email: req.body.email }).then(user => {
@@ -82,14 +89,13 @@ router.post("/register", joiValidator.body(registerValidation), (req, res) => {
   });
 });
 
-// Login route
+// POST new login session
 router.post("/login", joiValidator.body(loginValidation), (req, res, next) => {
   const { email, password } = req.body;
 
   User.findOne({ email }).then(user => {
     // Check if this user exists
     if (!user) {
-      // Send error in validation
       return next(
         new RecordNotFoundError("No user exists with that email address")
       );
