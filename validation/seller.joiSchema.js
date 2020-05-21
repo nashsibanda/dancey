@@ -7,15 +7,18 @@ const sellerValidation = Joi.object({
     .max(200)
     .label("Seller name")
     .alter({ new: schema => schema.required() }),
-  userId: Joi.objectId()
-    .label("User ID")
+  adminUserIds: Joi.array()
+    .min(1)
+    .label("Admin User IDs")
+    .items(Joi.objectId())
     .alter({ new: schema => schema.required() }),
   location: Joi.string()
     .label("Location")
     .valid(...Object.keys(countries))
     .messages({
       "any.only": "Location must be a valid country",
-    }),
+    })
+    .alter({ new: schema => schema.required() }),
 });
 
 const newSellerValidation = sellerValidation.tailor("new");
