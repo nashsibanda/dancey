@@ -14,7 +14,7 @@ const SellerSchema = new Schema(
       ref: "User",
     },
     location: {
-      type: string,
+      type: String,
       enum: Object.keys(countries),
     },
     reviews: [
