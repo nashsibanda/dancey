@@ -22,6 +22,7 @@ const registerValidation = Joi.object({
     }),
   birthday: Joi.date().less("now").label("Birthday"),
   comments: Joi.array().items(Joi.objectId()).label("Comments"),
+  isAdmin: Joi.bool().forbidden(),
 });
 
 const loginValidation = Joi.object({

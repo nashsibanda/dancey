@@ -52,6 +52,7 @@ const UserSchema = new Schema(
         ref: "Review",
       },
     ],
+    isAdmin: { type: Boolean, default: false },
   },
   { timestamps: true }
 );

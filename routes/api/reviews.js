@@ -106,7 +106,7 @@ router.put(
   (req, res, next) => {
     Review.findById(req.params.id)
       .then(review => {
-        if (review.userId != req.user.id) {
+        if (review.userId != req.user.id || !req.user.isAdmin) {
           return next(
             new NotAuthorizedError(
               "You are not authorized to perform this edit."

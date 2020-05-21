@@ -68,7 +68,11 @@ router.post("/register", joiValidator.body(registerValidation), (req, res) => {
             .save()
             .then(user => {
               // Sign in user after registration
-              const payload = { id: user.id, username: user.username };
+              const payload = {
+                id: user.id,
+                username: user.username,
+                isAdmin: user.isAdmin,
+              };
 
               jsonwebtoken.sign(
                 payload,
@@ -107,7 +111,11 @@ router.post("/login", joiValidator.body(loginValidation), (req, res, next) => {
         return next(new ValidationError("Password is incorrect"));
       }
 
-      const payload = { id: user.id, username: user.username };
+      const payload = {
+        id: user.id,
+        username: user.username,
+        isAdmin: user.isAdmin,
+      };
 
       // Sign in user with jsonwebtoken
       jsonwebtoken.sign(
