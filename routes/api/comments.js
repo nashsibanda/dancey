@@ -12,7 +12,7 @@ const Release = require("../../models/Release");
 const Personnel = require("../../models/Personnel");
 // const Product = require("../../models/Product");
 const Review = require("../../models/Review");
-// const Seller = require("../../models/Seller");
+const Seller = require("../../models/Seller");
 const Track = require("../../models/Track");
 const User = require("../../models/User");
 const {
@@ -70,6 +70,36 @@ router.get("/:id", (req, res, next) => {
     .then(comment => res.json(comment))
     .catch(err => next(new RecordNotFoundError("No comment found")));
 });
+
+// POST a comment
+router.post(
+  "/",
+  passport.authenticate("jwt", { session: false }),
+  joiValidator.body(commentValidation),
+  (req, res, next) => {
+    const newComment = new Comment({
+      userId: req.user.id,
+      username: req.user.username,
+      body: req.body.body,
+      rating: req.body.rating,
+      resourceId: req.body.resourceId,
+      resourceType: req.body.resourceType,
+    });
+    newComment.save().then(comment => {
+      commentResource(req.body.resourceType).findByIdAndUpdate(
+        req.body.resourceId,
+        {
+          $addToSet: { comments: comment._id },
+        },
+        { new: true },
+        (err, updatedResource) => {
+          if (err) return next(err);
+          res.json(comment);
+        }
+      );
+    });
+  }
+);
 
 // PUT replacement info for a comment
 router.put(
@@ -140,7 +170,7 @@ router.delete(
       .then(comment => {
         Comment.findByIdAndUpdate(
           comment._id,
-          { $set: { deleted: true } },
+          { $set: { deleted: true, body: "" } },
           { new: true },
           (err, deletedComment) => {
             if (err) return next(err);

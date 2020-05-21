@@ -60,38 +60,6 @@ router.post(
   }
 );
 
-// POST a new comment
-router.post(
-  "/:id/add_comment",
-  passport.authenticate("jwt", { session: false }),
-  joiValidator.body(commentValidation),
-  (req, res, next) => {
-    const newComment = new Comment({
-      body: req.body.body,
-      parentCommentId: req.body.parentCommentId,
-      userId: req.user.id,
-      username: req.user.username,
-    });
-
-    newComment
-      .save()
-      .then(comment => {
-        Release.findByIdAndUpdate(
-          req.params.id,
-          {
-            $addToSet: { comments: comment._id },
-          },
-          { new: true },
-          (err, updatedRelease) => {
-            if (err) return next(err);
-            res.json(updatedRelease);
-          }
-        );
-      })
-      .catch(err => next(err));
-  }
-);
-
 // PUT replacement info for a release
 router.put(
   "/:id",
