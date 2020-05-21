@@ -5,7 +5,10 @@ const passport = require("passport");
 const joiValidator = require("express-joi-validation").createValidator({
   passError: true,
 });
-const { sellerValidation } = require("../../validation/seller.joiSchema");
+const {
+  sellerValidation,
+  newSellerValidation,
+} = require("../../validation/seller.joiSchema");
 const {
   RecordNotFoundError,
   NotAuthorizedError,
@@ -31,11 +34,11 @@ router.get("/:id", (req, res, next) => {
 router.post(
   "/",
   passport.authenticate("jwt", { session: false }),
-  joiValidator.body(sellerValidation),
+  joiValidator.body(newSellerValidation),
   (req, res, next) => {
     const newSeller = new Seller({
       sellerName: req.body.sellerName,
-      userId: req.user.id,
+      adminUserIds: [req.user.id],
       location: req.body.location,
     });
 

@@ -8,11 +8,13 @@ const SellerSchema = new Schema(
       type: String,
       required: true,
     },
-    userId: {
-      type: mongoose.Schema.Types.ObjectId,
-      required: true,
-      ref: "User",
-    },
+    adminUserIds: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        ref: "User",
+      },
+    ],
     location: {
       type: String,
       enum: Object.keys(countries),
