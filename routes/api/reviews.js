@@ -7,12 +7,11 @@ const joiValidator = require("express-joi-validation").createValidator({
 });
 const { reviewValidation } = require("../../validation/review.joiSchema");
 
-const Comment = require("../../models/Comment");
 const Release = require("../../models/Release");
 const Personnel = require("../../models/Personnel");
 // const Product = require("../../models/Product");
 const Review = require("../../models/Review");
-// const Seller = require("../../models/Seller");
+const Seller = require("../../models/Seller");
 const Track = require("../../models/Track");
 const User = require("../../models/User");
 const {
@@ -83,7 +82,6 @@ router.post(
       resourceId: req.body.resourceId,
       resourceType: req.body.resourceType,
     });
-
     newReview.save().then(review => {
       reviewResource(req.body.resourceType).findByIdAndUpdate(
         req.body.resourceId,
@@ -93,7 +91,7 @@ router.post(
         { new: true },
         (err, updatedResource) => {
           if (err) return next(err);
-          res.json(updatedResource);
+          res.json(review);
         }
       );
     });
@@ -177,8 +175,7 @@ router.delete(
           res.json(deletedReview);
         }
       );
-    })
-    .catch(err => next(new RecordNotFoundError("No review found")));
+    }).catch(err => next(new RecordNotFoundError("No review found")));
   }
 );
 
