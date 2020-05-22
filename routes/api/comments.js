@@ -15,6 +15,7 @@ const Review = require("../../models/Review");
 const Seller = require("../../models/Seller");
 const Track = require("../../models/Track");
 const User = require("../../models/User");
+
 const {
   RecordNotFoundError,
   ResourceNotFoundError,
@@ -44,11 +45,19 @@ const commentResource = resource => {
 
 // GET all comments -
 // TODO Testing only!
-router.get("/all", (req, res, next) => {
-  Comment.find()
-    .then(comments => res.json(comments))
-    .catch(err => next(new RecordNotFoundError("No comments found")));
-});
+router.get(
+  "/all",
+  passport.authenticate("jwt", { session: false }),
+  (req, res, next) => {
+    if (!req.user.isAdmin)
+      return next(
+        new NotAuthorizedError("You are not authorized to perform this action")
+      );
+    Comment.find()
+      .then(comments => res.json(comments))
+      .catch(err => next(new RecordNotFoundError("No comments found")));
+  }
+);
 
 // GET all comments for a resource
 router.get("/get/:resource/:id", (req, res, next) => {
@@ -109,7 +118,9 @@ router.put(
   (req, res, next) => {
     Comment.findById(req.params.id)
       .then(comment => {
-        if (review.userId != req.user.id || !req.user.isAdmin) {
+        if (comment.deleted)
+          return next(new RecordNotFoundError("Comment is deleted"));
+        if (comment.userId != req.user.id || !req.user.isAdmin) {
           return next(
             new NotAuthorizedError(
               "You are not authorized to perform this edit."
@@ -143,6 +154,8 @@ router.put(
   (req, res, next) => {
     Comment.findById(req.params.id)
       .then(comment => {
+        if (comment.deleted)
+          return next(new RecordNotFoundError("Comment is deleted"));
         const newLikes = Object.fromEntries(comment.likes || []);
         const myId = req.user.id.toString();
         newLikes[myId] = !newLikes[myId];
@@ -168,6 +181,8 @@ router.delete(
   (req, res, next) => {
     Comment.findById(req.params.id)
       .then(comment => {
+        if (comment.deleted)
+          return next(new RecordNotFoundError("Comment is already deleted"));
         if (!req.user.isAdmin || comment.userId != req.user.id) {
           return next(
             new NotAuthorizedError(

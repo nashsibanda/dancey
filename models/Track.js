@@ -37,6 +37,7 @@ const TrackSchema = new Schema(
         ref: "Review",
       },
     ],
+    deleted: { type: Boolean, default: false },
   },
   { timestamps: true }
 );

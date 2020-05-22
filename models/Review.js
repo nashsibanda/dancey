@@ -50,6 +50,7 @@ const ReviewSchema = new Schema(
       ref: "Resource",
       required: true,
     },
+    deleted: { type: Boolean, default: false },
   },
   {
     timestamps: true,

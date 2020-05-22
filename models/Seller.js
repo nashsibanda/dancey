@@ -19,12 +19,19 @@ const SellerSchema = new Schema(
       type: String,
       enum: Object.keys(countries),
     },
+    comments: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Comment",
+      },
+    ],
     reviews: [
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Review",
       },
     ],
+    deleted: { type: Boolean, default: false },
   },
   { timestamps: true }
 );

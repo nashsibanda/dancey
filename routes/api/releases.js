@@ -11,15 +11,10 @@ const {
   newReleaseValidation,
   updateReleaseValidation,
 } = require("../../validation/release.joiSchema");
-const { commentValidation } = require("../../validation/comment.joiSchema");
 
-const {
-  ValidationError,
-  RecordNotFoundError,
-} = require("../../validation/errors");
+const { RecordNotFoundError } = require("../../validation/errors");
 
 const Release = require("../../models/Release");
-const Comment = require("../../models/Comment");
 
 // GET all releases
 router.get("/", (req, res, next) => {
@@ -68,6 +63,8 @@ router.put(
   (req, res, next) => {
     Release.findById(req.params.id)
       .then(release => {
+        if (release.deleted)
+          return next(new RecordNotFoundError("Release is deleted"));
         Release.findOneAndReplace(
           { _id: release._id },
           Object.assign(
@@ -91,10 +88,23 @@ router.delete(
   "/:id",
   passport.authenticate("jwt", { session: false }),
   (req, res, next) => {
-    Release.findByIdAndDelete(req.params.id, (err, deletedRelease) => {
-      if (err) return next(err);
-      return res.json(deletedRelease);
-    });
+    Release.findById(req.params.id)
+      .then(release => {
+        if (release.deleted) {
+          return next(new RecordNotFoundError("Release is already deleted"));
+        } else {
+          Release.findByIdAndUpdate(
+            req.params.id,
+            { $set: { deleted: true } },
+            { new: true },
+            (err, deletedRelease) => {
+              if (err) return next(err);
+              return res.json(deletedRelease);
+            }
+          );
+        }
+      })
+      .catch(err => next(new RecordNotFoundError("Release not found")));
   }
 );
 

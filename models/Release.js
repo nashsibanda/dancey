@@ -84,6 +84,7 @@ const ReleaseSchema = new Schema(
         ref: "Review",
       },
     ],
+    deleted: { type: Boolean, default: false },
   },
   {
     timestamps: true,

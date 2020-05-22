@@ -5,22 +5,16 @@ const passport = require("passport");
 const joiValidator = require("express-joi-validation").createValidator({
   passError: true,
 });
-const {
-  ValidationError,
-  RecordNotFoundError,
-} = require("../../validation/errors");
+const { RecordNotFoundError } = require("../../validation/errors");
 
 const {
   newPersonnelValidation,
   updatePersonnelValidation,
 } = require("../../validation/personnel.joiSchema");
 
-const { commentValidation } = require("../../validation/comment.joiSchema");
-
 const Personnel = require("../../models/Personnel");
 const Release = require("../../models/Release");
 const Track = require("../../models/Track");
-const Comment = require("../../models/Comment");
 
 // GET all personnel
 router.get("/", (req, res, next) => {
@@ -84,6 +78,8 @@ router.put(
   (req, res, next) => {
     Personnel.findById(req.params.id)
       .then(personnelRecord => {
+        if (personnel.deleted)
+          return next(new RecordNotFoundError("Personnel is deleted"));
         Personnel.findOneAndReplace(
           { _id: personnelRecord._id },
           Object.assign(
@@ -103,49 +99,75 @@ router.put(
   }
 );
 
+// DELETE a personnel record
 router.delete(
   "/:id",
   passport.authenticate("jwt", { session: false }),
   (req, res, next) => {
-    Personnel.findByIdAndDelete(req.params.id, (err, deletedPersonnel) => {
-      if (err || !deletedPersonnel) {
-        return next(new RecordNotFoundError("No personnel found"));
-      } else {
-        // Remove all personnel references in Release documents
-        Release.updateMany(
-          {
-            $or: [
-              { "personnel.personnelId": deletedPersonnel._id },
-              { mainArtists: { $elemMatch: { $eq: deletedPersonnel._id } } },
-            ],
-          },
-          {
-            $pull: {
-              personnel: { personnelId: deletedPersonnel._id },
-              mainArtists: deletedPersonnel._id,
-            },
-          }
-        ).then(() => {
-          // Remove all personnel references in Track documents
-          Track.updateMany(
-            {
-              $or: [
-                { "personnel.personnelId": deletedPersonnel._id },
-                { writers: { $elemMatch: { $eq: deletedPersonnel._id } } },
-                { artists: { $elemMatch: { $eq: deletedPersonnel._id } } },
-              ],
-            },
-            {
-              $pull: {
-                personnel: { personnelId: deletedPersonnel._id },
-                artists: deletedPersonnel._id,
-                writers: deletedPersonnel._id,
-              },
+    Personnel.findById(req.params.id)
+      .then(personnelRecord => {
+        if (personnelRecord.deleted) {
+          return next(new RecordNotFoundError("Personnel is already deleted"));
+        } else {
+          Personnel.findByIdAndUpdate(
+            req.params.id,
+            { $set: { deleted: true } },
+            { new: true },
+            (err, deletedPersonnel) => {
+              if (err || !deletedPersonnel) {
+                return next(new RecordNotFoundError("No personnel found"));
+              } else {
+                // Remove all personnel references in Release documents
+                Release.updateMany(
+                  {
+                    $or: [
+                      {
+                        mainArtists: {
+                          $elemMatch: { $eq: deletedPersonnel._id },
+                        },
+                      },
+                      { "personnel.personnelId": deletedPersonnel._id },
+                    ],
+                  },
+                  {
+                    $pull: {
+                      personnel: { personnelId: deletedPersonnel._id },
+                      mainArtists: deletedPersonnel._id,
+                    },
+                  }
+                ).then(() => {
+                  // Remove all personnel references in Track documents
+                  Track.updateMany(
+                    {
+                      $or: [
+                        { "personnel.personnelId": deletedPersonnel._id },
+                        {
+                          writers: {
+                            $elemMatch: { $eq: deletedPersonnel._id },
+                          },
+                        },
+                        {
+                          artists: {
+                            $elemMatch: { $eq: deletedPersonnel._id },
+                          },
+                        },
+                      ],
+                    },
+                    {
+                      $pull: {
+                        personnel: { personnelId: deletedPersonnel._id },
+                        artists: deletedPersonnel._id,
+                        writers: deletedPersonnel._id,
+                      },
+                    }
+                  ).then(() => res.json(deletedPersonnel));
+                });
+              }
             }
-          ).then(() => res.json(deletedPersonnel));
-        });
-      }
-    });
+          );
+        }
+      })
+      .catch(err => next(new RecordNotFoundError("No personnel found")));
   }
 );
 
