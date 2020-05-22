@@ -30,6 +30,10 @@ const ProductSchema = new Schema(
       required: true,
     },
     description: String,
+    sold: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true }
 );

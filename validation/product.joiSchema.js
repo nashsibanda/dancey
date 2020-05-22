@@ -31,6 +31,7 @@ const productValidation = Joi.object({
     .label("Seller ID")
     .alter({ new: schema => schema.required() }),
   description: Joi.string().label("Description").max(500),
+  sold: Joi.bool().label("Sold"),
 });
 
 const newProductValidation = productValidation.tailor("new");
