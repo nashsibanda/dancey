@@ -223,6 +223,7 @@ router.delete(
                         ),
                         { new: true },
                         (err, deletedSeller) => {
+                          if (err) return next(err);
                           Product.find({
                             sellerId: deletedSeller._id,
                           }).then(products => {
