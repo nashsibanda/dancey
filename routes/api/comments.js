@@ -43,8 +43,7 @@ const commentResource = resource => {
   }
 };
 
-// GET all comments -
-// TODO Testing only!
+// GET all comments - admin only
 router.get(
   "/all",
   passport.authenticate("jwt", { session: false }),
@@ -60,9 +59,9 @@ router.get(
 );
 
 // GET all comments for a resource
-router.get("/get/:resource/:id", (req, res, next) => {
+router.get("/get/:resource/:resource_id", (req, res, next) => {
   commentResource(req.params.resource)
-    .findById(req.params.id)
+    .findById(req.params.resource_id)
     .then(({ comments }) => {
       Comment.find({ _id: { $in: comments } })
         .then(resourceComments => res.json(resourceComments))

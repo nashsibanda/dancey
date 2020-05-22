@@ -42,16 +42,24 @@ const reviewResource = resource => {
 
 // GET all reviews -
 // TODO Testing only!
-router.get("/all", (req, res, next) => {
-  Review.find()
-    .then(reviews => res.json(reviews))
-    .catch(err => next(new RecordNotFoundError("No reviews found")));
-});
+router.get(
+  "/all",
+  passport.authenticate("jwt", { session: false }),
+  (req, res, next) => {
+    if (!req.user.isAdmin)
+      return next(
+        new NotAuthorizedError("You are not authorized to perform this action")
+      );
+    Review.find()
+      .then(reviews => res.json(reviews))
+      .catch(err => next(new RecordNotFoundError("No reviews found")));
+  }
+);
 
 // GET all reviews for a resource
-router.get("/get/:resource/:id", (req, res, next) => {
+router.get("/get/:resource/:resource_id", (req, res, next) => {
   reviewResource(req.params.resource)
-    .findById(req.params.id)
+    .findById(req.params.resource_id)
     .then(({ reviews }) => {
       Review.find({ _id: { $in: reviews } })
         .then(resourceReviews => res.json(resourceReviews))
