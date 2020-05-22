@@ -10,7 +10,7 @@ const { commentValidation } = require("../../validation/comment.joiSchema");
 const Comment = require("../../models/Comment");
 const Release = require("../../models/Release");
 const Personnel = require("../../models/Personnel");
-// const Product = require("../../models/Product");
+const Product = require("../../models/Product");
 const Review = require("../../models/Review");
 const Seller = require("../../models/Seller");
 const Track = require("../../models/Track");
@@ -168,15 +168,23 @@ router.delete(
   (req, res, next) => {
     Comment.findById(req.params.id)
       .then(comment => {
-        Comment.findByIdAndUpdate(
-          comment._id,
-          { $set: { deleted: true, body: "" } },
-          { new: true },
-          (err, deletedComment) => {
-            if (err) return next(err);
-            return res.json(deletedComment);
-          }
-        );
+        if (!req.user.isAdmin || comment.userId != req.user.id) {
+          return next(
+            new NotAuthorizedError(
+              "You are not authorized to perform this action"
+            )
+          );
+        } else {
+          Comment.findByIdAndUpdate(
+            comment._id,
+            { $set: { deleted: true, body: "" } },
+            { new: true },
+            (err, deletedComment) => {
+              if (err) return next(err);
+              return res.json(deletedComment);
+            }
+          );
+        }
       })
       .catch(err => next(new RecordNotFoundError("No comment found")));
   }
