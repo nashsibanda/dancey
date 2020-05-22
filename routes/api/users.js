@@ -22,6 +22,8 @@ const {
 } = require("../../validation/user.joiSchema");
 
 const User = require("../../models/User");
+const Seller = require("../../models/Seller");
+const Product = require("../../models/Product");
 
 // GET current user
 router.get(
@@ -201,8 +203,48 @@ router.delete(
             { $set: { deleted: true, email: null } },
             { new: true },
             (err, deletedUser) => {
-              if (err) return next(err);
-              return res.json(deletedUser);
+              if (err || !deletedUser) {
+                return next(err);
+              } else if (deletedUser.sellerId) {
+                // Remove all assignments as seller admin
+                Seller.findByIdAndUpdate(
+                  deletedUser.sellerId,
+                  { $pull: { adminUserIds: deletedUser._id } },
+                  { new: true },
+                  (err, updatedSeller) => {
+                    if (updatedSeller.adminUserIds.length == 0) {
+                      Seller.findOneAndReplace(
+                        updatedSeller._id,
+                        Object.assign(
+                          {},
+                          updatedSeller.toObject(),
+                          { deleted: true },
+                          { updatedAt: Date.now() }
+                        ),
+                        { new: true },
+                        (err, deletedSeller) => {
+                          Product.find({
+                            sellerId: deletedSeller._id,
+                          }).then(products => {
+                            if (products) {
+                              Product.updateMany(
+                                { sellerId: deletedSeller._id },
+                                { $set: { deleted: true } }
+                              ).then(() => res.json(deletedUser));
+                            } else {
+                              return res.json(deletedUser);
+                            }
+                          });
+                        }
+                      );
+                    } else {
+                      return res.json(deletedUser);
+                    }
+                  }
+                );
+              } else {
+                return res.json(deletedUser);
+              }
             }
           );
         }

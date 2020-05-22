@@ -59,6 +59,7 @@ const UserSchema = new Schema(
     ],
     isAdmin: { type: Boolean, default: false },
     deleted: { type: Boolean, default: false },
+    sellerId: { type: Schema.Types.ObjectId, default: null },
   },
   { timestamps: true }
 );

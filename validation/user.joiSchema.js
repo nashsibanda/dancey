@@ -39,6 +39,7 @@ const userValidation = Joi.object({
   birthday: Joi.date().less("now").label("Birthday"),
   comments: Joi.array().items(Joi.objectId()).label("Comments"),
   isAdmin: Joi.bool().forbidden(),
+  sellerId: Joi.objectId().forbidden(),
 });
 
 const loginValidation = Joi.object({
