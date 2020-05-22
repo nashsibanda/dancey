@@ -5,19 +5,15 @@ const passport = require("passport");
 const joiValidator = require("express-joi-validation").createValidator({
   passError: true,
 });
-const {
-  ValidationError,
-  RecordNotFoundError,
-} = require("../../validation/errors");
+const { RecordNotFoundError } = require("../../validation/errors");
+
 const {
   newTrackValidation,
   updateTrackValidation,
 } = require("../../validation/track.joiSchema");
-const { commentValidation } = require("../../validation/comment.joiSchema");
 
 const Track = require("../../models/Track");
 const Release = require("../../models/Release");
-const Comment = require("../../models/Comment");
 
 // GET all tracks
 router.get("/", (req, res, next) => {
@@ -84,6 +80,9 @@ router.put(
   (req, res, next) => {
     Track.findById(req.params.id)
       .then(track => {
+        if (track.deleted) {
+          return next(new RecordNotFoundError("Track is deleted"));
+        }
         Track.findOneAndReplace(
           { _id: track._id },
           Object.assign(
@@ -108,20 +107,34 @@ router.delete(
   "/:id",
   passport.authenticate("jwt", { session: false }),
   (req, res, next) => {
-    Track.findByIdAndDelete(req.params.id, (err, deletedTrack) => {
-      if (err) return next(err);
-      if (!deletedTrack) return next(new RecordNotFoundError("No track found"));
-      Release.updateMany(
-        { "trackListing.trackId": deletedTrack._id },
-        { $set: { "trackListing.$[listing].trackId": null } },
-        { arrayFilters: [{ "elem.trackId": deletedTrack._id }] },
-        (err, updateResponse) => {
-          if (err) return next(err);
-          console.log(updateResponse);
-          return res.json(deletedTrack);
+    Track.findById(req.params.id)
+      .then(track => {
+        if (track.deleted) {
+          return next(new RecordNotFoundError("Track is already deleted"));
+        } else {
+          Track.findByIdAndUpdate(
+            req.params.id,
+            { $set: { deleted: true } },
+            { new: true },
+            (err, deletedTrack) => {
+              if (err) return next(err);
+              if (!deletedTrack)
+                return next(new RecordNotFoundError("No track found"));
+              Release.updateMany(
+                { "trackListing.trackId": deletedTrack._id },
+                { $set: { "trackListing.$[listing].trackId": null } },
+                { arrayFilters: [{ "elem.trackId": deletedTrack._id }] },
+                (err, updateResponse) => {
+                  if (err) return next(err);
+                  console.log(updateResponse);
+                  return res.json(deletedTrack);
+                }
+              );
+            }
+          );
         }
-      );
-    });
+      })
+      .catch(err => next(new RecordNotFoundError("No track found")));
   }
 );
 

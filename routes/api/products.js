@@ -5,10 +5,12 @@ const passport = require("passport");
 const joiValidator = require("express-joi-validation").createValidator({
   passError: true,
 });
+
 const {
   newProductValidation,
   productValidation,
 } = require("../../validation/product.joiSchema");
+
 const {
   RecordNotFoundError,
   NotAuthorizedError,
@@ -77,6 +79,8 @@ router.put(
   (req, res, next) => {
     Product.findById(req.params.id)
       .then(product => {
+        if (product.deleted)
+          return next(new RecordNotFoundError("Product is deleted"));
         Seller.findById(product.sellerId).then(seller => {
           if (!req.user.isAdmin || !seller.adminUserIds.includes(req.user.id)) {
             return next(
@@ -113,6 +117,8 @@ router.delete(
   (req, res, next) => {
     Product.findById(req.params.id)
       .then(product => {
+        if (product.deleted)
+          return next(new RecordNotFoundError("Product is already deleted"));
         Seller.findById(product.sellerId).then(seller => {
           if (!req.user.isAdmin || !seller.adminUserIds.includes(req.user.id)) {
             return next(
@@ -121,8 +127,10 @@ router.delete(
               )
             );
           } else {
-            Product.findOneAndDelete(
+            Product.findOneAndUpdate(
               { _id: product._id },
+              { $set: { deleted: true } },
+              { new: true },
               (err, deletedProduct) => {
                 if (err) return next(err);
                 return res.json(deletedProduct);

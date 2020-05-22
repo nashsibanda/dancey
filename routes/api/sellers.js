@@ -9,6 +9,7 @@ const {
   sellerValidation,
   newSellerValidation,
 } = require("../../validation/seller.joiSchema");
+
 const {
   RecordNotFoundError,
   NotAuthorizedError,
@@ -57,7 +58,12 @@ router.put(
   (req, res, next) => {
     Seller.findById(req.params.id)
       .then(seller => {
-        if (!req.user.isAdmin || !seller.adminUserIds.includes(req.user.id)) {
+        if (seller.deleted) {
+          return next(new RecordNotFoundError("Seller is deleted"));
+        } else if (
+          !req.user.isAdmin ||
+          !seller.adminUserIds.includes(req.user.id)
+        ) {
           return next(
             new NotAuthorizedError(
               "You are not authorized to person this edit."
@@ -91,17 +97,27 @@ router.delete(
   (req, res, next) => {
     Seller.findById(req.params.id)
       .then(seller => {
-        if (!req.user.isAdmin || !seller.adminUserIds.includes(req.user.id)) {
+        if (seller.deleted) {
+          return next(new RecordNotFoundError("Seller is already deleted"));
+        } else if (
+          !req.user.isAdmin ||
+          !seller.adminUserIds.includes(req.user.id)
+        ) {
           return next(
             new NotAuthorizedError(
-              "You are not authorized to person this edit."
+              "You are not authorized to perform this action."
             )
           );
         } else {
-          Seller.findOneAndDelete({ _id: seller._id }, (err, deletedSeller) => {
-            if (err) return next(err);
-            return res.json(deletedSeller);
-          });
+          Seller.findOneAndUpdate(
+            { _id: seller._id },
+            { $set: { deleted: true } },
+            { new: true },
+            (err, deletedSeller) => {
+              if (err) return next(err);
+              return res.json(deletedSeller);
+            }
+          );
         }
       })
       .catch(err => next(new RecordNotFoundError("No seller found")));

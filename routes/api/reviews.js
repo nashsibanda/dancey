@@ -14,6 +14,7 @@ const Review = require("../../models/Review");
 const Seller = require("../../models/Seller");
 const Track = require("../../models/Track");
 const User = require("../../models/User");
+
 const {
   RecordNotFoundError,
   NotAuthorizedError,
@@ -106,7 +107,9 @@ router.put(
   (req, res, next) => {
     Review.findById(req.params.id)
       .then(review => {
-        if (review.userId != req.user.id || !req.user.isAdmin) {
+        if (review.deleted) {
+          return next(new RecordNotFoundError("Review is deleted"));
+        } else if (review.userId != req.user.id || !req.user.isAdmin) {
           return next(
             new NotAuthorizedError(
               "You are not authorized to perform this edit."
@@ -140,6 +143,8 @@ router.put(
   (req, res, next) => {
     Review.findById(req.params.id)
       .then(review => {
+        if (review.deleted)
+          return next(new RecordNotFoundError("Review is deleted"));
         const newLikes = Object.fromEntries(review.likes || []);
         const myId = req.user.id.toString();
         newLikes[myId] = !newLikes[myId];
@@ -163,28 +168,38 @@ router.delete(
   "/:id",
   passport.authenticate("jwt", { session: false }),
   (req, res, next) => {
-    Review.findById(req.params.id).then(review => {
-      if (!req.user.isAdmin || review.userId != req.user.id) {
-        return next(
-          new NotAuthorizedError(
-            "You are not authorized to perform this action"
-          )
-        );
-      }
-    });
-    Review.findByIdAndDelete(req.params.id, (err, deletedReview) => {
-      reviewResource(deletedReview.resourceType).findByIdAndUpdate(
-        deletedReview.resourceId,
-        {
-          $pull: { reviews: deletedReview._id },
-        },
-        { new: true },
-        (err, updatedResource) => {
-          if (err) return next(err);
-          res.json(deletedReview);
+    Review.findById(req.params.id)
+      .then(review => {
+        if (review.deleted) {
+          return next(new RecordNotFoundError("Review is already deleted"));
+        } else if (!req.user.isAdmin || review.userId != req.user.id) {
+          return next(
+            new NotAuthorizedError(
+              "You are not authorized to perform this action"
+            )
+          );
+        } else {
+          Review.findByIdAndUpdate(
+            req.params.id,
+            { $set: { deleted: true } },
+            { new: true },
+            (err, deletedReview) => {
+              reviewResource(deletedReview.resourceType).findByIdAndUpdate(
+                deletedReview.resourceId,
+                {
+                  $pull: { reviews: deletedReview._id },
+                },
+                { new: true },
+                (err, updatedResource) => {
+                  if (err) return next(err);
+                  res.json(deletedReview);
+                }
+              );
+            }
+          );
         }
-      );
-    }).catch(err => next(new RecordNotFoundError("No review found")));
+      })
+      .catch(err => next(new RecordNotFoundError("No review found")));
   }
 );
 
