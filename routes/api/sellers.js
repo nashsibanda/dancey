@@ -180,13 +180,25 @@ router.delete(
             )
           );
         } else {
-          Seller.findOneAndUpdate(
-            { _id: seller._id },
+          Seller.findByIdAndUpdate(
+            seller._id,
             { $set: { deleted: true } },
             { new: true },
             (err, deletedSeller) => {
               if (err) return next(err);
-              return res.json(deletedSeller);
+              // Delete any products held by this seller
+              Product.find({
+                sellerId: deletedSeller._id,
+              }).then(products => {
+                if (products) {
+                  Product.updateMany(
+                    { sellerId: deletedSeller._id },
+                    { $set: { deleted: true } }
+                  ).then(() => res.json(deletedSeller));
+                } else {
+                  return res.json(deletedSeller);
+                }
+              });
             }
           );
         }
