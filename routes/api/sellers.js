@@ -57,7 +57,7 @@ router.put(
   (req, res, next) => {
     Seller.findById(req.params.id)
       .then(seller => {
-        if (seller.userId != req.user.id || !req.user.isAdmin) {
+        if (!req.user.isAdmin || !seller.adminUserIds.includes(req.user.id)) {
           return next(
             new NotAuthorizedError(
               "You are not authorized to person this edit."
@@ -91,7 +91,7 @@ router.delete(
   (req, res, next) => {
     Seller.findById(req.params.id)
       .then(seller => {
-        if (seller.userId != req.user.id || !req.user.isAdmin) {
+        if (!req.user.isAdmin || !seller.adminUserIds.includes(req.user.id)) {
           return next(
             new NotAuthorizedError(
               "You are not authorized to person this edit."

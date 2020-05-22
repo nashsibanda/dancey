@@ -9,7 +9,7 @@ const { reviewValidation } = require("../../validation/review.joiSchema");
 
 const Release = require("../../models/Release");
 const Personnel = require("../../models/Personnel");
-// const Product = require("../../models/Product");
+const Product = require("../../models/Product");
 const Review = require("../../models/Review");
 const Seller = require("../../models/Seller");
 const Track = require("../../models/Track");
@@ -163,6 +163,15 @@ router.delete(
   "/:id",
   passport.authenticate("jwt", { session: false }),
   (req, res, next) => {
+    Review.findById(req.params.id).then(review => {
+      if (!req.user.isAdmin || review.userId != req.user.id) {
+        return next(
+          new NotAuthorizedError(
+            "You are not authorized to perform this action"
+          )
+        );
+      }
+    });
     Review.findByIdAndDelete(req.params.id, (err, deletedReview) => {
       reviewResource(deletedReview.resourceType).findByIdAndUpdate(
         deletedReview.resourceId,
