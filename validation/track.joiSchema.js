@@ -6,7 +6,7 @@ const trackValidation = Joi.object({
     .max(200)
     .label("Title")
     .alter({ new: schema => schema.required() }),
-  artists: Joi.array().items(Joi.objectId()).label("Artist(s)"),
+  mainArtists: Joi.array().items(Joi.objectId()).label("Main Artist(s)"),
   personnel: Joi.array()
     .items(
       Joi.object().keys({

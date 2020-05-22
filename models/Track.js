@@ -7,7 +7,7 @@ const TrackSchema = new Schema(
       type: String,
       required: true,
     },
-    artists: [
+    mainArtists: [
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Personnel",

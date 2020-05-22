@@ -30,6 +30,16 @@ const productValidation = Joi.object({
   sellerId: Joi.objectId()
     .label("Seller ID")
     .alter({ new: schema => schema.required() }),
+  images: Joi.array().items(
+    Joi.object()
+      .keys({
+        description: Joi.string().max(200),
+        imageUrl: Joi.string().uri({ allowRelative: true }),
+        mainImage: Joi.bool(),
+        _id: Joi.objectId(),
+      })
+      .label("Images")
+  ),
   description: Joi.string().label("Description").max(500),
   sold: Joi.bool().label("Sold"),
 });
