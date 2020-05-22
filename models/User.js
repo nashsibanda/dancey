@@ -21,7 +21,12 @@ const UserSchema = new Schema(
     email: {
       type: String,
       required: true,
-      unique: true,
+      index: {
+        unique: true,
+        partialFilterExpression: {
+          email: { $type: "string" },
+        },
+      },
     },
     createdAt: {
       type: Date,
@@ -53,6 +58,7 @@ const UserSchema = new Schema(
       },
     ],
     isAdmin: { type: Boolean, default: false },
+    deleted: { type: Boolean, default: false },
   },
   { timestamps: true }
 );
