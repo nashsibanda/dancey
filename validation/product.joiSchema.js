@@ -19,15 +19,17 @@ const productValidation = Joi.object({
     .messages({
       "any.only": "Currency must be a valid currency",
     })
-    .alter({ new: schema.required() }),
+    .alter({ new: schema => schema.required() }),
   condition: Joi.string()
     .label("Condition")
-    .valid(...mediaCondition)
+    .valid(...Object.keys(mediaCondition))
     .messages({
       "any.only": "Condition must be a valid media condition",
     })
-    .alter({ new: schema.required() }),
-  sellerId: Joi.objectId().label("Seller ID").alter({ new: schema.required() }),
+    .alter({ new: schema => schema.required() }),
+  sellerId: Joi.objectId()
+    .label("Seller ID")
+    .alter({ new: schema => schema.required() }),
   description: Joi.string().label("Description").max(500),
 });
 
