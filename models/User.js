@@ -28,10 +28,6 @@ const UserSchema = new Schema(
         },
       },
     },
-    createdAt: {
-      type: Date,
-      default: Date.now,
-    },
     password: {
       type: String,
       required: true,

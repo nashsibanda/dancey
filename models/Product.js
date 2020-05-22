@@ -34,6 +34,24 @@ const ProductSchema = new Schema(
       type: Boolean,
       default: false,
     },
+    comments: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Comment",
+      },
+    ],
+    images: [
+      {
+        description: String,
+        imageUrl: {
+          type: String,
+        },
+        mainImage: {
+          type: Boolean,
+          default: false,
+        },
+      },
+    ],
     deleted: { type: Boolean, default: false },
   },
   { timestamps: true }
