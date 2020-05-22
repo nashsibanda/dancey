@@ -12,16 +12,16 @@ const joiValidator = require("express-joi-validation").createValidator({
 const {
   RecordNotFoundError,
   ValidationError,
+  NotAuthorizedError,
 } = require("../../validation/errors");
 
 const {
   registerValidation,
   loginValidation,
+  userValidation,
 } = require("../../validation/user.joiSchema");
-const { commentValidation } = require("../../validation/comment.joiSchema");
 
 const User = require("../../models/User");
-const Comment = require("../../models/Comment");
 
 // GET current user
 router.get(
@@ -49,45 +49,52 @@ router.post("/register", joiValidator.body(registerValidation), (req, res) => {
   // Check for duplicate email
   User.findOne({ email: req.body.email }).then(user => {
     if (user) {
-      // Add errors to validation
       return next(
-        new RecordNotFoundError("No user exists with this email address")
+        new RecordNotFoundError("A user already exists with this email address")
       );
     } else {
-      const newUser = new User({
-        ...req.body,
-      });
+      User.findOne({ username: req.body.username }).then(user => {
+        if (user) {
+          return next(
+            new RecordNotFoundError("A user already exists with this username")
+          );
+        } else {
+          const newUser = new User({
+            ...req.body,
+          });
 
-      // Generate a hashed password and save user
-      bcryptjs.genSalt(10, (err, salt) => {
-        bcryptjs.hash(newUser.password, salt, (err, hash) => {
-          // if (err) throw err;
-          if (err) throw err;
-          newUser.password = hash;
-          newUser
-            .save()
-            .then(user => {
-              // Sign in user after registration
-              const payload = {
-                id: user.id,
-                username: user.username,
-                isAdmin: user.isAdmin,
-              };
+          // Generate a hashed password and save user
+          bcryptjs.genSalt(10, (err, salt) => {
+            bcryptjs.hash(newUser.password, salt, (err, hash) => {
+              // if (err) throw err;
+              if (err) throw err;
+              newUser.password = hash;
+              newUser
+                .save()
+                .then(user => {
+                  // Sign in user after registration
+                  const payload = {
+                    id: user.id,
+                    username: user.username,
+                    isAdmin: user.isAdmin,
+                  };
 
-              jsonwebtoken.sign(
-                payload,
-                keys.secretOrKey,
-                { expiresIn: 3600 },
-                (err, token) => {
-                  res.json({
-                    success: true,
-                    token: "Bearer " + token,
-                  });
-                }
-              );
-            })
-            .catch(err => next(err));
-        });
+                  jsonwebtoken.sign(
+                    payload,
+                    keys.secretOrKey,
+                    { expiresIn: 3600 },
+                    (err, token) => {
+                      res.json({
+                        success: true,
+                        token: "Bearer " + token,
+                      });
+                    }
+                  );
+                })
+                .catch(err => next(err));
+            });
+          });
+        }
       });
     }
   });
@@ -132,5 +139,76 @@ router.post("/login", joiValidator.body(loginValidation), (req, res, next) => {
     });
   });
 });
+
+// PUT replacement info for a user
+router.put(
+  "/:id",
+  passport.authenticate(
+    "jwt",
+    { session: false },
+    joiValidator.body(userValidation),
+    (req, res, next) => {
+      User.findById(req.params.id)
+        .then(user => {
+          if (user.deleted) {
+            return next(new RecordNotFoundError("User is deleted"));
+          } else if (!req.user.isAdmin || user._id != req.user.id) {
+            return next(
+              new NotAuthorizedError(
+                "You are not authorized to perform this action"
+              )
+            );
+          } else {
+            User.findOneAndReplace(
+              { _id: user._id },
+              Object.assign(
+                {},
+                user.toObject(),
+                { ...req.body },
+                { updatedAt: Date.now() }
+              ),
+              { new: true },
+              (err, updatedUser) => {
+                if (err) return next(err);
+                return res.json(updatedUser);
+              }
+            );
+          }
+        })
+        .catch(err => next(new RecordNotFoundError("No user found")));
+    }
+  )
+);
+
+// DELETE a user
+router.delete(
+  "/:id",
+  passport.authenticate("jwt", { session: false }),
+  (req, res, next) => {
+    User.findById(req.params.id)
+      .then(user => {
+        if (user.deleted) {
+          return next(new RecordNotFoundError("User is already deleted"));
+        } else if (!req.user.isAdmin || user._id != req.user.id) {
+          return next(
+            new NotAuthorizedError(
+              "You are not authorized to perform this action"
+            )
+          );
+        } else {
+          User.findByIdAndUpdate(
+            user._id,
+            { $set: { deleted: true, email: null } },
+            { new: true },
+            (err, deletedUser) => {
+              if (err) return next(err);
+              return res.json(deletedUser);
+            }
+          );
+        }
+      })
+      .catch(err => next(new RecordNotFoundError("No user found")));
+  }
+);
 
 module.exports = router;

@@ -2,24 +2,40 @@ const Joi = require("@hapi/joi");
 Joi.objectId = require("joi-objectid")(Joi);
 const countries = require("./countries");
 
-const registerValidation = Joi.object({
-  username: Joi.string().alphanum().min(3).max(30).required().label("Username"),
-  email: Joi.string().email().required().label("Email"),
-  firstName: Joi.string().alphanum().required().label("First name"),
-  lastName: Joi.string().alphanum().required().label("Last name"),
-  password: Joi.string().label("Password").required(),
+const userValidation = Joi.object({
+  username: Joi.string()
+    .alphanum()
+    .min(3)
+    .max(30)
+    .label("Username")
+    .alter({ new: schema => schema.required() }),
+  email: Joi.string()
+    .email()
+    .label("Email")
+    .alter({ new: schema => schema.required() }),
+  firstName: Joi.string()
+    .alphanum()
+    .label("First name")
+    .alter({ new: schema => schema.required() }),
+  lastName: Joi.string()
+    .alphanum()
+    .label("Last name")
+    .alter({ new: schema => schema.required() }),
+  password: Joi.string()
+    .label("Password")
+    .alter({ new: schema => schema.required() }),
   confPassword: Joi.string()
-    .required()
     .valid(Joi.ref("password"))
     .messages({ "any.only": "Passwords must match" })
-    .label("Confirm password"),
+    .label("Confirm password")
+    .alter({ new: schema => schema.required() }),
   location: Joi.string()
-    .required()
     .valid(...Object.keys(countries))
     .label("Location")
     .messages({
       "any.only": "Location must be a valid country",
-    }),
+    })
+    .alter({ new: schema => schema.required() }),
   birthday: Joi.date().less("now").label("Birthday"),
   comments: Joi.array().items(Joi.objectId()).label("Comments"),
   isAdmin: Joi.bool().forbidden(),
@@ -30,4 +46,6 @@ const loginValidation = Joi.object({
   password: Joi.string().required().label("Password"),
 });
 
-module.exports = { registerValidation, loginValidation };
+const registerValidation = userValidation.tailor("new");
+
+module.exports = { registerValidation, loginValidation, userValidation };
