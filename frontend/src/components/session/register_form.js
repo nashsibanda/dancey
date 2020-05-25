@@ -14,7 +14,6 @@ class RegisterForm extends React.Component {
       firstName: "",
       lastName: "",
       location: "",
-      errors: [],
     };
 
     this.update = this.update.bind(this);
@@ -25,10 +24,6 @@ class RegisterForm extends React.Component {
   componentDidUpdate(prevProps, prevState) {
     if (this.props.loggedIn === true) {
       this.props.history.push("/releases");
-    }
-
-    if (prevState.errors !== this.props.errors) {
-      this.setState({ errors: this.props.errors });
     }
   }
 
@@ -81,7 +76,6 @@ class RegisterForm extends React.Component {
       location,
       password,
       confPassword,
-      errors,
     } = this.state;
     return (
       <div>

@@ -8,7 +8,6 @@ class LoginForm extends React.Component {
     this.state = {
       email: "",
       password: "",
-      errors: [],
     };
 
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -19,10 +18,6 @@ class LoginForm extends React.Component {
   componentDidUpdate(prevProps, prevState) {
     if (this.props.currentUser === true) {
       this.props.history.push("/releases");
-    }
-
-    if (prevState.errors !== this.props.errors) {
-      this.setState({ errors: this.props.errors });
     }
   }
 
@@ -44,7 +39,7 @@ class LoginForm extends React.Component {
   renderErrors() {
     return (
       <ul>
-        {this.state.errors.map((error, i) => (
+        {this.props.errors.map((error, i) => (
           <li key={`error-${i}`} className={error.name}>
             {error.message}
           </li>
@@ -54,7 +49,7 @@ class LoginForm extends React.Component {
   }
 
   render() {
-    const { email, password, errors } = this.state;
+    const { email, password } = this.state;
     return (
       <div className="login-form-container">
         <form onSubmit={this.handleSubmit}>
