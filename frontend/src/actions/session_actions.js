@@ -27,7 +27,7 @@ export const logoutUser = () => ({
 export const logout = () => dispatch => {
   localStorage.removeItem("jwtToken");
   SessionAPIUtil.setAuthToken(false);
-  dispatch(logoutUser);
+  dispatch(logoutUser());
 };
 
 export const register = user => dispatch =>
