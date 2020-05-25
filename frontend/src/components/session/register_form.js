@@ -1,6 +1,6 @@
 import React from "react";
 import { withRouter } from "react-router-dom";
-import countries from "../../util/countries";
+import countries from "../../util/validation/countries";
 
 class RegisterForm extends React.Component {
   constructor(props) {
