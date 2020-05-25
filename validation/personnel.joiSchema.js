@@ -17,7 +17,7 @@ const personnelValidation = Joi.object({
   countryOfOrigin: Joi.string()
     .valid(...Object.keys(countries))
     .label("Country of origin")
-    .messages({ "any.only": "Country of origin must be a valid country" }),
+    .messages({ "any.only": '"Country of origin" must be a valid country' }),
   images: Joi.array().items(
     Joi.object()
       .keys({

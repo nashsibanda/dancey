@@ -17,14 +17,14 @@ const productValidation = Joi.object({
     .label("Currency")
     .valid(...Object.keys(currencies))
     .messages({
-      "any.only": "Currency must be a valid currency",
+      "any.only": '"Currency" must be a valid currency',
     })
     .alter({ new: schema => schema.required() }),
   condition: Joi.string()
     .label("Condition")
     .valid(...Object.keys(mediaCondition))
     .messages({
-      "any.only": "Condition must be a valid media condition",
+      "any.only": '"Condition" must be a valid media condition',
     })
     .alter({ new: schema => schema.required() }),
   sellerId: Joi.objectId()

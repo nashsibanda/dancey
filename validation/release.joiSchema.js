@@ -46,19 +46,19 @@ const releaseValidation = Joi.object({
     .valid(...formats)
     .label("Format")
     .messages({
-      "any.only": "Format must be a valid format",
+      "any.only": '"Format" must be a valid format',
     }),
   releaseCountry: Joi.string()
     .valid(...Object.keys(countries))
     .label("Release country")
     .messages({
-      "any.only": "Release country must be a valid country",
+      "any.only": '"Release country" must be a valid country',
     }),
   originalReleaseCountry: Joi.string()
     .valid(...Object.keys(countries))
     .label("Original release country")
     .messages({
-      "any.only": "Original release country must be a valid country",
+      "any.only": '"Original release country" must be a valid country',
     }),
   comments: Joi.array().items(Joi.objectId()).label("Comments"),
 });
