@@ -16,7 +16,7 @@ const sellerValidation = Joi.object({
     .label("Location")
     .valid(...Object.keys(countries))
     .messages({
-      "any.only": "Location must be a valid country",
+      "any.only": '"Location" must be a valid country',
     })
     .alter({ new: schema => schema.required() }),
 });

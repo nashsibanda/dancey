@@ -33,7 +33,7 @@ const userValidation = Joi.object({
     .valid(...Object.keys(countries))
     .label("Location")
     .messages({
-      "any.only": "Location must be a valid country",
+      "any.only": '"Location" must be a valid country',
     })
     .alter({ new: schema => schema.required() }),
   birthday: Joi.date().less("now").label("Birthday"),
