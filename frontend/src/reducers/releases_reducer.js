@@ -6,12 +6,12 @@ const ReleasesReducer = (state = {}, action) => {
     case RECEIVE_RELEASES:
       const releasesOutput = {};
       action.releases.forEach(release => {
-        releasesOutput[release.id] = release;
+        releasesOutput[release._id] = release;
       });
       return releasesOutput;
     case RECEIVE_RELEASE:
       const { release } = action;
-      return Object.assign({}, state, { [release.id]: release });
+      return Object.assign({}, state, { [release._id]: release });
     default:
       return state;
   }

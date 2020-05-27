@@ -5,6 +5,7 @@ import MainPage from "./main/main_page";
 import LoginFormContainer from "./session/login_form_container";
 import RegisterFormContainer from "./session/register_form_container";
 import NavBarContainer from "./nav/navbar_container";
+import ReleasesIndexContainer from "./releases/releases_index_container";
 
 const App = () => (
   <div>
@@ -12,6 +13,7 @@ const App = () => (
     <Switch>
       <AuthRoute exact path="/login" component={LoginFormContainer} />
       <AuthRoute exact path="/register" component={RegisterFormContainer} />
+      <Route path="/releases" component={ReleasesIndexContainer} />
       <Route exact path="/" component={MainPage} />
     </Switch>
   </div>
