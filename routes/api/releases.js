@@ -19,6 +19,7 @@ const Release = require("../../models/Release");
 // GET all releases
 router.get("/", (req, res, next) => {
   Release.find()
+    .populate("mainArtists")
     .sort({ createdAt: -1 })
     .then(releases => res.json(releases))
     .catch(err => next(new RecordNotFoundError("No releases found")));
@@ -27,6 +28,12 @@ router.get("/", (req, res, next) => {
 // GET a single release
 router.get("/:id", (req, res, next) => {
   Release.findById(req.params.id)
+    .populate("mainArtists")
+    .populate("personnel.personnelId")
+    .populate("trackListing.trackId")
+    .populate("label")
+    .populate("comments")
+    .populate("reviews")
     .then(release => res.json(release))
     .catch(err => next(new RecordNotFoundError("No release found")));
 });
@@ -34,6 +41,7 @@ router.get("/:id", (req, res, next) => {
 // GET all releases by personnel
 router.get("/personnel/:personnel_id", (req, res, next) => {
   Release.find({ "personnel.personnelId": req.params.personnel_id })
+    .populate("mainArtists")
     .then(releases => res.json(releases))
     .catch(err => next(new RecordNotFoundError("No releases found")));
 });
