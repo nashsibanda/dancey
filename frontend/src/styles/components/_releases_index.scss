@@ -1,0 +1,13 @@
+.releases-index {
+  display: flex;
+  flex-wrap: wrap;
+
+  .release-tile {
+    width: 8rem;
+    padding-right: 1rem;
+
+    img {
+      width: 100%;
+    }
+  }
+}
