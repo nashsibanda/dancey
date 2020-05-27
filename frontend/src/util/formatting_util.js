@@ -16,11 +16,11 @@ export const joinMainArtistLinks = mainArtists => {
       <>
         {mainArtists.slice(0, -1).map(({ _id, name }) => (
           <>
-            <Link to={`/api/releases/${_id}`}>{name}</Link>
+            <Link to={`/api/personnel/${_id}`}>{name}</Link>
             {", "}
           </>
         ))}
-        <Link to={`/api/releases/${mainArtists[mainArtists.length - 1]._id}`}>
+        <Link to={`/api/personnel/${mainArtists[mainArtists.length - 1]._id}`}>
           {mainArtists[mainArtists.length - 1].name}
         </Link>
       </>
