@@ -21,7 +21,7 @@ export const receiveReleaseErrors = errors => ({
 
 export const fetchAllReleases = () => dispatch =>
   ReleaseAPIUtil.getAllReleases()
-    .then(releases => dispatch(receiveReleases(releases)))
+    .then(releases => dispatch(receiveReleases(releases.data)))
     .catch(err => dispatch(receiveReleaseErrors(err.response.data)));
 
 export const fetchOneReleases = () => dispatch =>
