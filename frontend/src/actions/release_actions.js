@@ -24,12 +24,12 @@ export const fetchAllReleases = () => dispatch =>
     .then(releases => dispatch(receiveReleases(releases.data)))
     .catch(err => dispatch(receiveReleaseErrors(err.response.data)));
 
-export const fetchOneReleases = () => dispatch =>
-  ReleaseAPIUtil.getOneRelease()
-    .then(release => dispatch(receiveRelease(release)))
+export const fetchOneRelease = id => dispatch =>
+  ReleaseAPIUtil.getOneRelease(id)
+    .then(release => dispatch(receiveRelease(release.data)))
     .catch(err => dispatch(receiveReleaseErrors(err.response.data)));
 
 export const fetchPersonnelReleases = personnelId => dispatch =>
   ReleaseAPIUtil.getPersonnelReleases(personnelId)
-    .then(releases => dispatch(receiveReleases(releases)))
+    .then(releases => dispatch(receiveReleases(releases.data)))
     .catch(err => dispatch(receiveReleaseErrors(err.response.data)));
