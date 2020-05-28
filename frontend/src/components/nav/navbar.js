@@ -15,7 +15,7 @@ class NavBar extends React.Component {
 
   getLinks() {
     return (
-      <div>
+      <div className="nav-menu">
         <Link to={`/releases`}>Releases</Link>
         <Link to={`/personnel`}>Personnel</Link>
         {this.props.loggedIn ? (
@@ -35,12 +35,12 @@ class NavBar extends React.Component {
 
   render() {
     return (
-      <div>
-        <h1>
+      <header className="site-header">
+        <h1 className="site-header-title">
           <Link to={"/"}>dancey</Link>
         </h1>
         {this.getLinks()}
-      </div>
+      </header>
     );
   }
 }
