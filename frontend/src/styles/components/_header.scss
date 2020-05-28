@@ -1,0 +1,27 @@
+.site-header {
+  border-bottom: 1px solid darkgray;
+  background-color: #333;
+  color: #fff;
+
+  a {
+    color: white;
+  }
+
+  .site-header-title {
+    font-family: $display;
+    font-size: 3rem;
+    padding-left: 1rem;
+  }
+
+  .nav-menu {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    padding: 1rem 0;
+    background-color: #2a2a2a;
+
+    a {
+      margin-right: 2rem;
+    }
+  }
+}
