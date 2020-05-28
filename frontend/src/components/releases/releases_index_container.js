@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import ReleasesIndex from "./releases_index";
 
 const mapStateToProps = state => ({
-  releases: state.releases,
+  releases: state.entities.releases,
 });
 
 const mapDispatchToProps = dispatch => ({

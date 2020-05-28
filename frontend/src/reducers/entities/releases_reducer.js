@@ -1,4 +1,7 @@
-import { RECEIVE_RELEASE, RECEIVE_RELEASES } from "../actions/release_actions";
+import {
+  RECEIVE_RELEASE,
+  RECEIVE_RELEASES,
+} from "../../actions/release_actions";
 
 const ReleasesReducer = (state = {}, action) => {
   Object.freeze(state);
