@@ -1,0 +1,22 @@
+body {
+  font-family: $sans-serif;
+}
+
+h1,
+h2 {
+  font-family: $serif;
+}
+
+main {
+  padding: 1.5rem;
+}
+
+a {
+  color: #0351a5;
+
+  @media (hover: hover) {
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
