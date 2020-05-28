@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { joinMainArtistLinks } from "../../util/formatting_util";
+import { joinObjectLinks } from "../../util/formatting_util";
 
 const ReleaseTile = props => {
   const {
@@ -16,9 +16,9 @@ const ReleaseTile = props => {
       <img src="/assets/plain_record.png" />
       <div className="release-tile-info">
         <div>
-          <Link to={`/api/releases/${_id}`}>{title}</Link>
+          <Link to={`/releases/${_id}`}>{title}</Link>
         </div>
-        <div>{mainArtists[0] && joinMainArtistLinks(mainArtists)}</div>
+        <div>{mainArtists[0] && joinObjectLinks(mainArtists)}</div>
         <div>
           <span>{releaseYear}</span>
           <span>{format}</span>
