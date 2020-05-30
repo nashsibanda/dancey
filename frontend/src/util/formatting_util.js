@@ -27,4 +27,5 @@ export const joinObjectLinks = (
   }
 };
 
-// export default formattingUtil;
+export const makeFriendlyTime = duration =>
+  `${parseInt(duration / 60)}:${duration % 60}`;
