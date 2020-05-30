@@ -189,7 +189,15 @@ router.delete(
         } else {
           Review.findByIdAndUpdate(
             req.params.id,
-            { $set: { deleted: true } },
+            {
+              $set: {
+                deleted: true,
+                body: "",
+                userId: null,
+                rating: null,
+                username: null,
+              },
+            },
             { new: true },
             (err, deletedReview) => {
               reviewResource(deletedReview.resourceType).findByIdAndUpdate(

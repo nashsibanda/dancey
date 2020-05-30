@@ -191,7 +191,7 @@ router.delete(
         } else {
           Comment.findByIdAndUpdate(
             comment._id,
-            { $set: { deleted: true, body: "" } },
+            { $set: { deleted: true, body: "", userId: null, username: null } },
             { new: true },
             (err, deletedComment) => {
               if (err) return next(err);
