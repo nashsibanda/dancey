@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { joinObjectLinks } from "../../util/formatting_util";
+import TracksIndexContainer from "../tracks/tracks_index_container";
 
 export default class ReleaseShow extends Component {
   constructor(props) {
@@ -19,8 +20,8 @@ export default class ReleaseShow extends Component {
   }
 
   render() {
-    if (this.props.release) {
-      const { release } = this.props;
+    const { release, loading } = this.props;
+    if (release && !loading) {
       const {
         images,
         label,
@@ -32,6 +33,7 @@ export default class ReleaseShow extends Component {
         title,
         trackListing,
         format,
+        _id,
       } = release;
 
       const mainImage = images.find(({ mainImage }) => mainImage === true);
@@ -68,7 +70,13 @@ export default class ReleaseShow extends Component {
               </div>
             </div>
           </div>
-          <div className="release-tracklist"></div>
+          <div className="release-tracklist">
+            <h2>Track List</h2>
+            <TracksIndexContainer
+              releaseTracks={trackListing}
+              releaseId={_id}
+            />
+          </div>
           <div className="release-personnel"></div>
         </div>
       );

@@ -1,4 +1,5 @@
 import * as ReleaseAPIUtil from "../util/release_api_util";
+import { loadingOn, loadingOff } from "./loading_actions";
 
 export const RECEIVE_RELEASE = "RECEIVE_RELEASE";
 export const RECEIVE_RELEASES = "RECEIVE_RELEASES";
@@ -19,17 +20,32 @@ export const receiveReleaseErrors = errors => ({
   errors,
 });
 
-export const fetchAllReleases = () => dispatch =>
+export const fetchAllReleases = () => dispatch => {
+  dispatch(loadingOn());
   ReleaseAPIUtil.getAllReleases()
-    .then(releases => dispatch(receiveReleases(releases.data)))
+    .then(releases => {
+      dispatch(receiveReleases(releases.data));
+      dispatch(loadingOff());
+    })
     .catch(err => dispatch(receiveReleaseErrors(err.response.data)));
+};
 
-export const fetchOneRelease = id => dispatch =>
+export const fetchOneRelease = id => dispatch => {
+  dispatch(loadingOn());
   ReleaseAPIUtil.getOneRelease(id)
-    .then(release => dispatch(receiveRelease(release.data)))
+    .then(release => {
+      dispatch(receiveRelease(release.data));
+      dispatch(loadingOff());
+    })
     .catch(err => dispatch(receiveReleaseErrors(err.response.data)));
+};
 
-export const fetchPersonnelReleases = personnelId => dispatch =>
+export const fetchPersonnelReleases = personnelId => dispatch => {
+  dispatch(loadingOn());
   ReleaseAPIUtil.getPersonnelReleases(personnelId)
-    .then(releases => dispatch(receiveReleases(releases.data)))
+    .then(releases => {
+      dispatch(receiveReleases(releases.data));
+      dispatch(loadingOff());
+    })
     .catch(err => dispatch(receiveReleaseErrors(err.response.data)));
+};
