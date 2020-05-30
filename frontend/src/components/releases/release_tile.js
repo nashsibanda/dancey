@@ -10,10 +10,20 @@ const ReleaseTile = props => {
     releaseYear,
     mainArtists,
     releaseCountry,
+    images,
   } = props.release;
+  const mainImage = images.find(({ mainImage }) => mainImage === true);
+
   return (
     <li className="release-tile">
-      <img src="/assets/plain_record.png" />
+      <img
+        src={mainImage ? mainImage.imageUrl : "/assets/plain_record.png"}
+        alt={
+          mainImage
+            ? mainImage.description
+            : "Default album placeholder image - upload a new one!"
+        }
+      />
       <div className="release-tile-info">
         <div>
           <Link to={`/releases/${_id}`}>{title}</Link>

@@ -1,4 +1,5 @@
 import { RECEIVE_RELEASE } from "../../actions/release_actions";
+import { RECEIVE_ONE_REVIEW } from "../../actions/review_actions";
 
 const ReviewsReducer = (state = {}, action) => {
   Object.freeze(state);
@@ -9,6 +10,9 @@ const ReviewsReducer = (state = {}, action) => {
         releaseReviewsOutput[review._id] = review;
       });
       return releaseReviewsOutput;
+    case RECEIVE_ONE_REVIEW:
+      const { review } = action;
+      return Object.assign({}, state, { [review._id]: review });
     default:
       return state;
   }

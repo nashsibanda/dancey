@@ -73,6 +73,7 @@ router.get("/get/:resource/:resource_id", (req, res, next) => {
 // GET one review
 router.get("/:id", (req, res, next) => {
   Review.findById(req.params.id)
+    .populate("comments")
     .then(review => res.json(review))
     .catch(err => next(new RecordNotFoundError("No review found")));
 });
