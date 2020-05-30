@@ -89,9 +89,9 @@ router.post(
       userId: req.user.id,
       username: req.user.username,
       body: req.body.body,
-      rating: req.body.rating,
       resourceId: req.body.resourceId,
       resourceType: req.body.resourceType,
+      parentCommentId: req.body.parentCommentId,
     });
     newComment.save().then(comment => {
       commentResource(req.body.resourceType).findByIdAndUpdate(
