@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { joinObjectLinks } from "../../util/formatting_util";
 import TracksIndexContainer from "../tracks/tracks_index_container";
+import PersonnelIndexContainer from "../personnel/personnel_index_container";
 
 export default class ReleaseShow extends Component {
   constructor(props) {
@@ -45,6 +46,11 @@ export default class ReleaseShow extends Component {
                 src={
                   mainImage ? mainImage.imageUrl : "/assets/plain_record.png"
                 }
+                alt={
+                  mainImage
+                    ? mainImage.description
+                    : "Default album placeholder image - upload a new one!"
+                }
               />
               <button>More Images</button>
             </div>
@@ -76,8 +82,15 @@ export default class ReleaseShow extends Component {
               releaseTracks={trackListing}
               releaseId={_id}
             />
+            <button>Add a track...</button>
           </div>
-          <div className="release-personnel"></div>
+          <div className="release-personnel">
+            <h2>Personnel</h2>
+            <PersonnelIndexContainer
+              releasePersonnel={personnel}
+              releaseId={_id}
+            />
+          </div>
         </div>
       );
     } else {
