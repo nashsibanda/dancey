@@ -5,7 +5,7 @@ export default class TracksIndex extends Component {
   render() {
     const { stateTracks, releaseTracks } = this.props;
     return (
-      <ul>
+      <ul className="tracks-index">
         {releaseTracks.length > 0 &&
           releaseTracks
             .sort((a, b) => a.order - b.order)
@@ -21,11 +21,6 @@ export default class TracksIndex extends Component {
                 )
               );
             })}
-        <li className="tracks-index-item">
-          <div className="main-track-details">
-            <a href="#">Add A Track</a>
-          </div>
-        </li>
       </ul>
     );
   }
