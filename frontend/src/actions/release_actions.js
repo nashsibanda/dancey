@@ -27,7 +27,10 @@ export const fetchAllReleases = () => dispatch => {
       dispatch(receiveReleases(releases.data));
       dispatch(loadingOff());
     })
-    .catch(err => dispatch(receiveReleaseErrors(err.response.data)));
+    .catch(err => {
+      dispatch(receiveReleaseErrors(err.response.data));
+      dispatch(loadingOff());
+    });
 };
 
 export const fetchOneRelease = id => dispatch => {
@@ -37,7 +40,10 @@ export const fetchOneRelease = id => dispatch => {
       dispatch(receiveRelease(release.data));
       dispatch(loadingOff());
     })
-    .catch(err => dispatch(receiveReleaseErrors(err.response.data)));
+    .catch(err => {
+      dispatch(receiveReleaseErrors(err.response.data));
+      dispatch(loadingOff());
+    });
 };
 
 export const fetchPersonnelReleases = personnelId => dispatch => {
@@ -47,5 +53,8 @@ export const fetchPersonnelReleases = personnelId => dispatch => {
       dispatch(receiveReleases(releases.data));
       dispatch(loadingOff());
     })
-    .catch(err => dispatch(receiveReleaseErrors(err.response.data)));
+    .catch(err => {
+      dispatch(receiveReleaseErrors(err.response.data));
+      dispatch(loadingOff());
+    });
 };
