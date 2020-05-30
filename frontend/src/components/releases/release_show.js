@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { joinObjectLinks } from "../../util/formatting_util";
 import TracksIndexContainer from "../tracks/tracks_index_container";
 import PersonnelIndexContainer from "../personnel/personnel_index_container";
+import CommentsIndexContainer from "../comments/comments_index_container";
 
 export default class ReleaseShow extends Component {
   constructor(props) {
@@ -34,6 +35,7 @@ export default class ReleaseShow extends Component {
         title,
         trackListing,
         format,
+        comments,
         _id,
       } = release;
 
@@ -89,6 +91,15 @@ export default class ReleaseShow extends Component {
             <PersonnelIndexContainer
               releasePersonnel={personnel}
               releaseId={_id}
+            />
+          </div>
+          <div className="comments-container">
+            <h2>Comments</h2>
+            <CommentsIndexContainer
+              entityComments={comments}
+              indentLevel={0}
+              resourceId={_id}
+              resourceType={"release"}
             />
           </div>
         </div>
