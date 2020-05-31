@@ -1,0 +1,45 @@
+.tracks-index {
+  display: flex;
+  flex-direction: column;
+
+  .tracks-index-item {
+    background-color: $graylightest;
+    border-bottom: 1px solid $graylight;
+    padding: 0.7rem;
+
+    &:last-of-type {
+      border-bottom: none;
+    }
+
+    &:nth-of-type(2n) {
+      background-color: $graylighter;
+    }
+
+    &:last-of-type {
+      background-color: $gray;
+      color: white;
+      font-weight: 700;
+    }
+
+    .main-track-details {
+      display: flex;
+
+      .track-order {
+        flex-basis: 5%;
+      }
+
+      .track-title {
+        flex-basis: 85%;
+      }
+
+      .track-duration {
+        flex-basis: 10%;
+      }
+
+      .tracks-total-duration {
+        text-align: right;
+        flex-basis: 95%;
+      }
+    }
+  }
+}
