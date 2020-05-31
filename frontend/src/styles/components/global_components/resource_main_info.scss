@@ -1,0 +1,43 @@
+.resource-main-info {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid lightgray;
+
+  $image-size: 12rem;
+
+  .resource-image {
+    margin-right: 4rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    img {
+      width: $image-size;
+    }
+
+    button {
+      margin-top: 0.4rem;
+    }
+  }
+
+  .resource-details {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    height: $image-size;
+
+    h2 {
+      font-size: 2rem;
+    }
+
+    div {
+      display: flex;
+      flex-direction: row;
+    }
+    .details-label {
+      width: 10rem;
+    }
+  }
+}

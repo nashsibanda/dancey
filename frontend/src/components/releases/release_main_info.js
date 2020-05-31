@@ -13,8 +13,8 @@ export default function ReleaseMainInfo(props) {
   } = props.release;
   const mainImage = images.find(({ mainImage }) => mainImage === true);
   return (
-    <div className="release-main-info">
-      <div className="release-image">
+    <div className="resource-main-info">
+      <div className="resource-image">
         <img
           src={mainImage ? mainImage.imageUrl : "/assets/plain_record.png"}
           alt={
@@ -25,7 +25,7 @@ export default function ReleaseMainInfo(props) {
         />
         <button>More Images</button>
       </div>
-      <div className="release-details">
+      <div className="resource-details">
         <h2>
           {joinObjectLinks(mainArtists)} — {title}
         </h2>
