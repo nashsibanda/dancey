@@ -37,7 +37,7 @@ export default class ReviewsIndexItem extends Component {
         </div>
         {comments.length > 0 && (
           <div>
-            <button onClick={this.toggleComments}>
+            <button className="big-button" onClick={this.toggleComments}>
               Show {comments.length} Comment{comments.length === 1 ? "" : "s"}
             </button>
           </div>

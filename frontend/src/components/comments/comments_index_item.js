@@ -30,8 +30,12 @@ export default function CommentsIndexItem(props) {
         >
           Posted on {createdAt.toDateString()}
         </span>
-        <span className="comment-reply">Reply</span>
-        <span className="comment-like">Like</span>
+        <span className="comment-reply">
+          <button className="link-button">Reply</button>
+        </span>
+        <span className="comment-like">
+          <button className="link-button">Like</button>
+        </span>
       </div>
 
       <CommentsIndexContainer
