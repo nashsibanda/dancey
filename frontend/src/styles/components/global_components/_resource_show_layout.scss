@@ -1,0 +1,23 @@
+.resource-show-container {
+  .resource-show-body {
+    display: flex;
+    margin-top: 1rem;
+
+    h2 {
+      font-size: 1.3rem;
+      margin-bottom: 0.2rem;
+    }
+
+    div > div {
+      margin-bottom: 1rem;
+    }
+
+    .resource-show-main {
+      flex-basis: 70%;
+    }
+
+    .resource-show-aside {
+      flex-basis: 30%;
+    }
+  }
+}
