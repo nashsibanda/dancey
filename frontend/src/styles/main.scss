@@ -2,10 +2,11 @@
 @import "./base/reset";
 
 // CSS Base
-@import "./base/globals";
+@import "./base/colors_and_fonts";
 @import "./base/mixins";
 @import "./base/layout";
 
 // Components
 @import "./components/global_components";
 @import "./components/releases";
+@import "./components/tracks";
