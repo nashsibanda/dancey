@@ -8,15 +8,28 @@ h2 {
 }
 
 main {
-  padding: 1.5rem;
+  padding: 2rem;
 }
 
 a {
-  color: #0351a5;
+  color: $blue;
 
   @media (hover: hover) {
     &:hover {
       text-decoration: underline;
+    }
+  }
+}
+
+button {
+  margin-top: 0.4rem;
+  padding: 0.4rem 0.7rem;
+  border: 1px solid $gray;
+  border-radius: 3px;
+
+  @media (hover: hover) {
+    &:hover {
+      background-color: $graylighter;
     }
   }
 }

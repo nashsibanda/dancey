@@ -1,6 +1,7 @@
 .resource-show-container {
   .resource-show-body {
     display: flex;
+    justify-content: space-between;
     margin-top: 1rem;
 
     h2 {
@@ -13,7 +14,7 @@
     }
 
     .resource-show-main {
-      flex-basis: 70%;
+      flex-basis: 65%;
     }
 
     .resource-show-aside {
