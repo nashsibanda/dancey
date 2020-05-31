@@ -10,11 +10,28 @@ export default function CommentsIndexItem(props) {
     resourceType,
     resourceId,
   } = props;
+  const { body, username, userId } = comment;
+  const createdAt = new Date(comment.createdAt);
+  const updatedAt = new Date(comment.updatedAt);
   return (
     <li className="comment">
-      <div>{comment.body}</div>
-      <div>
-        Posted by <Link to={`/user/${comment.userId}`}>{comment.username}</Link>
+      <div className="comment-body">{body}</div>
+      <div className="comment-details">
+        <span className="comment-attribution">
+          Posted by <Link to={`/user/${userId}`}>{username}</Link>
+        </span>
+        <span
+          className="comment-created-on"
+          title={
+            comment.createdAt === comment.updatedAt
+              ? `posted at ${createdAt.toString()}`
+              : `edited at ${updatedAt.toString()}`
+          }
+        >
+          Posted on {createdAt.toDateString()}
+        </span>
+        <span className="comment-reply">Reply</span>
+        <span className="comment-like">Like</span>
       </div>
 
       <CommentsIndexContainer
