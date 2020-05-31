@@ -130,7 +130,9 @@ class RegisterForm extends React.Component {
               </option>
             ))}
           </select>
-          <button type="submit">Submit</button>
+          <button className="big-button" type="submit">
+            Submit
+          </button>
           {this.renderErrors()}
         </form>
       </div>

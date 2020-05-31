@@ -23,7 +23,7 @@ export default function ReleaseMainInfo(props) {
               : "Default album placeholder image - upload a new one!"
           }
         />
-        <button>More Images</button>
+        <button className="big-button">More Images</button>
       </div>
       <div className="resource-details">
         <h2>

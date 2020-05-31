@@ -38,7 +38,7 @@ export default class ReleaseShow extends Component {
                   releaseTracks={trackListing}
                   releaseId={_id}
                 />
-                <button>Add a track...</button>
+                <button className="big-button">Add a track...</button>
               </div>
               <div className="release-personnel">
                 <h2>Personnel</h2>
