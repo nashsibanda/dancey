@@ -3,22 +3,19 @@
   flex-direction: row;
   align-items: center;
   padding-bottom: 1rem;
-  border-bottom: 1px solid lightgray;
+  border-bottom: 1px solid $graylighter;
 
   $image-size: 12rem;
 
   .resource-image {
     margin-right: 4rem;
+    margin-left: 1rem;
     display: flex;
     flex-direction: column;
     align-items: center;
 
     img {
       width: $image-size;
-    }
-
-    button {
-      margin-top: 0.4rem;
     }
   }
 
