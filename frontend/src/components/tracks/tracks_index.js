@@ -3,38 +3,69 @@ import TracksIndexItem from "./tracks_index_item";
 import { makeFriendlyTime } from "../../util/formatting_util";
 
 export default class TracksIndex extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      initialLoad: false,
+    };
+  }
+
+  componentDidMount() {
+    const { fetchResourceTracks, resourceType, resourceId } = this.props;
+    fetchResourceTracks(resourceType, resourceId);
+    this.setState({ initialLoad: true });
+  }
+
   render() {
-    const { stateTracks, releaseTracks } = this.props;
-    const totalDuration = releaseTracks.reduce(
-      (acc, track) => acc + track.trackId.duration,
-      0
-    );
-    return (
-      <ul className="tracks-index">
-        {releaseTracks.length > 0 &&
-          releaseTracks
-            .sort((a, b) => a.order - b.order)
-            .map(rTrack => {
-              const itemTrack = stateTracks[rTrack.trackId._id];
+    const { stateTracks, loading } = this.props;
+
+    if (this.state.initialLoad && !loading) {
+      const trackListing = this.props.trackListing
+        ? this.props.trackListing
+        : null;
+      let indexTracks, totalDuration;
+
+      if (!!trackListing) {
+        indexTracks = trackListing
+          .sort((a, b) => a.order - b.order)
+          .map(listingItem => stateTracks[listingItem.trackId]);
+        totalDuration = indexTracks.reduce(
+          (acc, track) => acc + track.duration,
+          0
+        );
+      } else {
+        indexTracks = Object.values(stateTracks).sort(
+          (a, b) => a.title - b.title
+        );
+      }
+      return (
+        <ul className="tracks-index">
+          {indexTracks.length > 0 &&
+            indexTracks.map((track, index) => {
               return (
-                itemTrack && (
-                  <TracksIndexItem
-                    key={itemTrack._id}
-                    track={itemTrack}
-                    order={rTrack.order}
-                  />
-                )
+                <TracksIndexItem
+                  key={track._id}
+                  track={track}
+                  ordered={!!trackListing}
+                  order={index + 1}
+                />
               );
             })}
-        <li className="tracks-index-item">
-          <div className="main-track-details">
-            <span className="tracks-total-duration">
-              {releaseTracks.length} tracks — Total Duration:{" "}
-              {makeFriendlyTime(totalDuration)}
-            </span>
-          </div>
-        </li>
-      </ul>
-    );
+          {!!trackListing && (
+            <li className="tracks-index-item">
+              <div className="main-track-details">
+                <span className="tracks-total-duration">
+                  {trackListing.length} track
+                  {trackListing.length === 1 ? "" : "s"} — Total Duration:{" "}
+                  {makeFriendlyTime(totalDuration)}
+                </span>
+              </div>
+            </li>
+          )}
+        </ul>
+      );
+    } else {
+      return <p>LOADING</p>;
+    }
   }
 }

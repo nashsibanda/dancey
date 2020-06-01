@@ -39,8 +39,9 @@ export default class ReleaseShow extends Component {
               <div className="release-tracklist">
                 <h2>Track List</h2>
                 <TracksIndexContainer
-                  releaseTracks={trackListing}
-                  releaseId={_id}
+                  trackListing={trackListing}
+                  resourceId={_id}
+                  resourceType={"release"}
                 />
                 <button className="big-button">Add a track...</button>
               </div>
@@ -66,7 +67,6 @@ export default class ReleaseShow extends Component {
               <div className="reviews-container">
                 <h2>Reviews</h2>
                 <ReviewsIndexContainer
-                  entityReviews={reviews}
                   resourceType={"release"}
                   resourceId={_id}
                 />
