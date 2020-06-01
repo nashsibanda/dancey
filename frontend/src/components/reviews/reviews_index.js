@@ -1,51 +1,61 @@
+import React, { Component } from "react";
 import ReactStars from "react-rating-stars-component";
-import React from "react";
 import ReviewsIndexItem from "./reviews_index_item";
 
-export default function ReviewsIndex(props) {
-  const {
-    resourceId,
-    resourceType,
-    entityReviews,
-    stateReviews,
-    fetchOneReview,
-  } = props;
+export default class ReviewsIndex extends Component {
+  componentDidMount() {
+    const { fetchResourceReviews, resourceId, resourceType } = this.props;
+    fetchResourceReviews(resourceType, resourceId);
+  }
 
-  const avgRating =
-    (entityReviews.reduce(
-      (acc, currentReview) => acc + currentReview.rating,
-      0
-    ) *
-      1.0) /
-    entityReviews.length;
+  render() {
+    const {
+      resourceId,
+      resourceType,
+      stateReviews,
+      fetchOneReview,
+    } = this.props;
 
-  return (
-    <div className="reviews-index-container">
-      <div className="reviews-average-rating">
-        <ReactStars
-          value={Math.round(avgRating * 10) / 10}
-          size={18}
-          half={true}
-          edit={false}
-          className={"rating-stars"}
-        />
-        <div>Average Rating: {Math.round(avgRating * 10) / 10}</div>
+    const indexReviews = Object.values(stateReviews).filter(
+      review =>
+        review.resourceType === resourceType && review.resourceId === resourceId
+    );
+
+    const avgRating =
+      (indexReviews.reduce(
+        (acc, currentReview) => acc + currentReview.rating,
+        0
+      ) *
+        1.0) /
+      indexReviews.length;
+
+    return (
+      <div className="reviews-index-container">
+        <div className="reviews-average-rating">
+          <ReactStars
+            value={Math.round(avgRating * 10) / 10}
+            size={18}
+            half={true}
+            edit={false}
+            className={"rating-stars"}
+          />
+          <div>Average Rating: {Math.round(avgRating * 10) / 10}</div>
+        </div>
+        <ul className="reviews-index">
+          {indexReviews.length > 0 &&
+            indexReviews.map(review => {
+              return (
+                review && (
+                  <ReviewsIndexItem
+                    review={review}
+                    key={review._id}
+                    fetchOneReview={fetchOneReview}
+                  />
+                )
+              );
+            })}
+        </ul>
       </div>
-      <ul className="reviews-index">
-        {entityReviews.length > 0 &&
-          entityReviews.map(eReview => {
-            const itemReview = stateReviews[eReview._id];
-            return (
-              itemReview && (
-                <ReviewsIndexItem
-                  review={itemReview}
-                  key={itemReview._id}
-                  fetchOneReview={fetchOneReview}
-                />
-              )
-            );
-          })}
-      </ul>
-    </div>
-  );
+    );
+  }
 }
