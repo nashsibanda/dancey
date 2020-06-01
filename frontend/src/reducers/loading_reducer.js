@@ -1,15 +1,16 @@
-import { LOADING_ON, LOADING_OFF } from "../actions/loading_actions";
+import { combineReducers } from "redux";
+import ReleasesLoadingReducer from "./loading/releases_loading_reducer";
+import ReviewsLoadingReducer from "./loading/reviews_loading_reducer";
+import CommentsLoadingReducer from "./loading/comments_loading_reducer";
+import TracksLoadingReducer from "./loading/tracks_loading_reducer";
+import PersonnelLoadingReducer from "./loading/personnel_loading_reducer";
 
-const LoadingReducer = (state = false, action) => {
-  Object.freeze(state);
-  switch (action.type) {
-    case LOADING_ON:
-      return true;
-    case LOADING_OFF:
-      return false;
-    default:
-      return state;
-  }
-};
+const LoadingReducer = combineReducers({
+  releases: ReleasesLoadingReducer,
+  reviews: ReviewsLoadingReducer,
+  comments: CommentsLoadingReducer,
+  tracks: TracksLoadingReducer,
+  personnel: PersonnelLoadingReducer,
+});
 
 export default LoadingReducer;
