@@ -84,7 +84,15 @@ router.put(
           { new: true },
           (err, updatedRelease) => {
             if (err) return next(err);
-            return res.json(updatedRelease);
+            updatedRelease
+              .populate("mainArtists")
+              .populate("personnel.personnelId")
+              .populate("trackListing.trackId")
+              .populate("label")
+              .populate("comments")
+              .populate("reviews")
+              .execPopulate()
+              .then(updatedRelease => res.json(updatedRelease));
           }
         );
       })
