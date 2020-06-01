@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import TracksIndexContainer from "../tracks/tracks_index_container";
 import PersonnelIndexContainer from "../personnel/personnel_index_container";
-import CommentsIndexContainer from "../comments/comments_index_container";
+import CommentsSectionContainer from "../comments/comments_section_container";
 import ReleaseMainInfo from "./release_main_info";
 import ReviewsIndexContainer from "../reviews/reviews_index_container";
 
@@ -9,8 +9,9 @@ export default class ReleaseShow extends Component {
   constructor(props) {
     super(props);
 
-    // this.state = {};
+    this.state = { showEditButtons: false };
     this.loadReleaseData = this.loadReleaseData.bind(this);
+    this.toggleEditButtons = this.toggleEditButtons.bind(this);
   }
 
   loadReleaseData() {
@@ -22,8 +23,13 @@ export default class ReleaseShow extends Component {
     this.loadReleaseData();
   }
 
+  toggleEditButtons() {
+    this.setState({ showEditButtons: !this.state.showEditButtons });
+  }
+
   render() {
     const { release, loading, loggedIn, updateRelease } = this.props;
+    const { showEditButtons } = this.state;
     if (release && !loading) {
       const { personnel, trackListing, comments, _id } = release;
 
@@ -33,43 +39,41 @@ export default class ReleaseShow extends Component {
             release={release}
             loggedIn={loggedIn}
             updateRelease={updateRelease}
+            toggleEditButtons={this.toggleEditButtons}
+            showEditButtons={showEditButtons}
           />
           <div className="resource-show-body">
             <div className="resource-show-main">
               <div className="release-tracklist">
-                <h2>Track List</h2>
                 <TracksIndexContainer
                   trackListing={trackListing}
                   resourceId={_id}
                   resourceType={"release"}
+                  showEditButtons={showEditButtons}
                 />
-                <button className="big-button">Add a track...</button>
               </div>
               <div className="release-personnel">
-                <h2>Personnel</h2>
                 <PersonnelIndexContainer
                   resourcePersonnel={personnel}
                   resourceId={_id}
                   resourceType={"release"}
+                  showEditButtons={showEditButtons}
                 />
               </div>
               <div className="comments-container">
-                <h2>Comments</h2>
-                <CommentsIndexContainer
+                <CommentsSectionContainer
                   entityComments={comments}
-                  indentLevel={0}
                   resourceId={_id}
                   resourceType={"release"}
-                  parentCommentId={null}
                 />
               </div>
             </div>
             <div className="resource-show-aside">
               <div className="reviews-container">
-                <h2>Reviews</h2>
                 <ReviewsIndexContainer
                   resourceType={"release"}
                   resourceId={_id}
+                  showEditButtons={showEditButtons}
                 />
               </div>
             </div>
