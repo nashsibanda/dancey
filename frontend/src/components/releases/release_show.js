@@ -23,13 +23,17 @@ export default class ReleaseShow extends Component {
   }
 
   render() {
-    const { release, loading } = this.props;
+    const { release, loading, loggedIn, updateRelease } = this.props;
     if (release && !loading) {
       const { personnel, reviews, trackListing, comments, _id } = release;
 
       return (
         <div className="resource-show-container">
-          <ReleaseMainInfo release={release} />
+          <ReleaseMainInfo
+            release={release}
+            loggedIn={loggedIn}
+            updateRelease={updateRelease}
+          />
           <div className="resource-show-body">
             <div className="resource-show-main">
               <div className="release-tracklist">

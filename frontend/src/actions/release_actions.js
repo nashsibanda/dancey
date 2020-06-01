@@ -58,3 +58,16 @@ export const fetchPersonnelReleases = personnelId => dispatch => {
       dispatch(loadingOff());
     });
 };
+
+export const updateRelease = (id, updateData) => dispatch => {
+  dispatch(loadingOn());
+  ReleaseAPIUtil.putRelease(id, updateData)
+    .then(release => {
+      dispatch(receiveRelease(release.data));
+      dispatch(loadingOff());
+    })
+    .catch(err => {
+      dispatch(receiveReleaseErrors(err.response.data));
+      dispatch(loadingOff());
+    });
+};

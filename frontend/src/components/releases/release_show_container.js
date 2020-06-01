@@ -1,4 +1,4 @@
-import { fetchOneRelease } from "../../actions/release_actions";
+import { fetchOneRelease, updateRelease } from "../../actions/release_actions";
 import { connect } from "react-redux";
 import ReleaseShow from "./release_show";
 
@@ -14,11 +14,13 @@ const mapStateToProps = (state, { match }) => {
     releases,
     reviews,
     loading: state.loading,
+    loggedIn: state.session.isAuthenticated,
   };
 };
 
 const mapDispatchToProps = dispatch => ({
   fetchRelease: id => dispatch(fetchOneRelease(id)),
+  updateRelease: (id, updateData) => dispatch(updateRelease(id, updateData)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ReleaseShow);
