@@ -17,6 +17,12 @@
     img {
       width: $image-size;
       margin-bottom: 0.5rem;
+      border: 3px dashed transparent;
+      box-sizing: border-box;
+
+      &.default-image {
+        border-color: $graylight;
+      }
     }
   }
 

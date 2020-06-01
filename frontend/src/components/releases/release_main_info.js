@@ -61,6 +61,7 @@ export default class ReleaseMainInfo extends React.Component {
         <div className="resource-image">
           <img
             src={mainImage ? mainImage.imageUrl : plainRecordImage}
+            className={mainImage ? "" : "default-image"}
             alt={
               mainImage
                 ? mainImage.description
