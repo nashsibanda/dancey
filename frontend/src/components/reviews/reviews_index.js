@@ -1,3 +1,4 @@
+import ReactStars from "react-rating-stars-component";
 import React from "react";
 import ReviewsIndexItem from "./reviews_index_item";
 
@@ -20,7 +21,16 @@ export default function ReviewsIndex(props) {
 
   return (
     <div className="reviews-index-container">
-      <div>Average Rating: {Math.round(avgRating * 10) / 10}</div>
+      <div className="reviews-average-rating">
+        <ReactStars
+          value={Math.round(avgRating * 10) / 10}
+          size={18}
+          half={true}
+          edit={false}
+          className={"rating-stars"}
+        />
+        <div>Average Rating: {Math.round(avgRating * 10) / 10}</div>
+      </div>
       <ul className="reviews-index">
         {entityReviews.length > 0 &&
           entityReviews.map(eReview => {
