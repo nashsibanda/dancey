@@ -43,9 +43,14 @@ export default class TracksIndexItem extends Component {
       ? this.props.showPersonnel
       : null;
     return (
-      <li className="tracks-index-item" onClick={this.toggleTrackPersonnel}>
+      <li className="tracks-index-item">
         <div className="main-track-details">
-          {ordered && <span className="track-order">{order}</span>}
+          <span className="track-expand-info">
+            <button className="link-button" onClick={this.toggleTrackPersonnel}>
+              {showTrackPersonnel ? "-" : "+"}
+            </button>
+          </span>
+          <span className="track-order">{ordered ? order : "*"}</span>
           <span className="track-title">{title}</span>
           <span className="track-duration">{makeFriendlyTime(duration)}</span>
         </div>
