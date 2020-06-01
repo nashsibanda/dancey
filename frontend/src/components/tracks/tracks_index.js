@@ -29,7 +29,8 @@ export default class TracksIndex extends Component {
         <li className="tracks-index-item">
           <div className="main-track-details">
             <span className="tracks-total-duration">
-              Total Duration: {makeFriendlyTime(totalDuration)}
+              {releaseTracks.length} tracks — Total Duration:{" "}
+              {makeFriendlyTime(totalDuration)}
             </span>
           </div>
         </li>
