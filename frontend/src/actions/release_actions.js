@@ -1,5 +1,5 @@
 import * as ReleaseAPIUtil from "../util/release_api_util";
-import { loadingOn, loadingOff } from "./loading_actions";
+import { releasesLoadingOn, releasesLoadingOff } from "./loading_actions";
 
 export const RECEIVE_RELEASE = "RECEIVE_RELEASE";
 export const RECEIVE_RELEASES = "RECEIVE_RELEASES";
@@ -21,53 +21,53 @@ export const receiveReleaseErrors = errors => ({
 });
 
 export const fetchAllReleases = () => dispatch => {
-  dispatch(loadingOn());
+  dispatch(releasesLoadingOn());
   ReleaseAPIUtil.getAllReleases()
     .then(releases => {
       dispatch(receiveReleases(releases.data));
-      dispatch(loadingOff());
+      dispatch(releasesLoadingOff());
     })
     .catch(err => {
       dispatch(receiveReleaseErrors(err.response.data));
-      dispatch(loadingOff());
+      dispatch(releasesLoadingOff());
     });
 };
 
 export const fetchOneRelease = id => dispatch => {
-  dispatch(loadingOn());
+  dispatch(releasesLoadingOn());
   ReleaseAPIUtil.getOneRelease(id)
     .then(release => {
       dispatch(receiveRelease(release.data));
-      dispatch(loadingOff());
+      dispatch(releasesLoadingOff());
     })
     .catch(err => {
       dispatch(receiveReleaseErrors(err.response.data));
-      dispatch(loadingOff());
+      dispatch(releasesLoadingOff());
     });
 };
 
 export const fetchPersonnelReleases = personnelId => dispatch => {
-  dispatch(loadingOn());
+  dispatch(releasesLoadingOn());
   ReleaseAPIUtil.getPersonnelReleases(personnelId)
     .then(releases => {
       dispatch(receiveReleases(releases.data));
-      dispatch(loadingOff());
+      dispatch(releasesLoadingOff());
     })
     .catch(err => {
       dispatch(receiveReleaseErrors(err.response.data));
-      dispatch(loadingOff());
+      dispatch(releasesLoadingOff());
     });
 };
 
 export const updateRelease = (id, updateData) => dispatch => {
-  dispatch(loadingOn());
+  dispatch(releasesLoadingOn());
   ReleaseAPIUtil.putRelease(id, updateData)
     .then(release => {
       dispatch(receiveRelease(release.data));
-      dispatch(loadingOff());
+      dispatch(releasesLoadingOff());
     })
     .catch(err => {
       dispatch(receiveReleaseErrors(err.response.data));
-      dispatch(loadingOff());
+      dispatch(releasesLoadingOff());
     });
 };
