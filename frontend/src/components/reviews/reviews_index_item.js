@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import CommentsIndexContainer from "../comments/comments_index_container";
+import ReactStars from "react-rating-stars-component";
 
 export default class ReviewsIndexItem extends Component {
   constructor(props) {
@@ -28,20 +29,47 @@ export default class ReviewsIndexItem extends Component {
   render() {
     const { review } = this.props;
     const { rating, body, username, userId, comments, _id } = review;
+    const createdAt = new Date(review.createdAt);
+    const updatedAt = new Date(review.updatedAt);
     return (
       <li className="reviews-index-item">
-        <div>{body}</div>
-        <div>Rating: {rating}</div>
-        <div>
-          Reviewed by <Link to={`/users/${userId}`}>{username}</Link>
+        <div className="review-details">
+          <span className="review-attribution">
+            Reviewed by <Link to={`/users/${userId}`}>{username}</Link>
+          </span>
+          <span
+            className="review-created-on"
+            title={
+              review.createdAt === review.updatedAt
+                ? `posted at ${createdAt.toString()}`
+                : `edited at ${updatedAt.toString()}`
+            }
+          >
+            on {createdAt.toDateString()}
+          </span>
+          <div className="review-interactions">
+            <span className="review-add-comment">
+              <button className="link-button">Add Comment</button>
+            </span>
+            <span className="review-like">
+              <button className="link-button">Like</button>
+            </span>
+          </div>
         </div>
-        {comments.length > 0 && (
-          <div>
-            <button className="big-button" onClick={this.toggleComments}>
+        <div>{body}</div>
+        <div>
+          <span>Rating:</span>
+          <ReactStars value={rating} size={18} edit={false} />
+        </div>
+        <div>
+          {comments.length > 0 ? (
+            <button className="link-button" onClick={this.toggleComments}>
               Show {comments.length} Comment{comments.length === 1 ? "" : "s"}
             </button>
-          </div>
-        )}
+          ) : (
+            <button className="link-button">Add Comment</button>
+          )}
+        </div>
         <div>
           {this.state.showComments && (
             <CommentsIndexContainer

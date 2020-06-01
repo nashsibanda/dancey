@@ -1,0 +1,30 @@
+.reviews-index-container {
+  .reviews-average-rating {
+    margin-bottom: 1rem;
+  }
+
+  .reviews-index {
+    .reviews-index-item {
+      margin-bottom: 1rem;
+
+      .review-details {
+        color: $gray;
+        font-size: 0.8rem;
+        font-weight: 700;
+        margin-bottom: 0.4rem;
+
+        .review-attribution {
+          margin-right: 0.2rem;
+        }
+
+        .review-interactions {
+          span {
+            &:first-of-type {
+              margin-right: 1rem;
+            }
+          }
+        }
+      }
+    }
+  }
+}
