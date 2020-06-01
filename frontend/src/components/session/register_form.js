@@ -1,6 +1,7 @@
 import React from "react";
 import { withRouter } from "react-router-dom";
 import countries from "../../util/validation/countries";
+import { Helmet } from "react-helmet";
 
 class RegisterForm extends React.Component {
   constructor(props) {
@@ -79,6 +80,9 @@ class RegisterForm extends React.Component {
     } = this.state;
     return (
       <div>
+        <Helmet>
+          <title>Register — dancey</title>
+        </Helmet>
         <form onSubmit={this.handleSubmit}>
           <input
             type="email"

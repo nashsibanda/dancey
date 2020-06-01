@@ -1,5 +1,6 @@
 import React from "react";
 import { withRouter } from "react-router-dom";
+import { Helmet } from "react-helmet";
 
 class LoginForm extends React.Component {
   constructor(props) {
@@ -52,6 +53,9 @@ class LoginForm extends React.Component {
     const { email, password } = this.state;
     return (
       <div className="login-form-container">
+        <Helmet>
+          <title>Log In — dancey</title>
+        </Helmet>
         <form onSubmit={this.handleSubmit}>
           <div>
             <input
