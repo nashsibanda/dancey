@@ -2,6 +2,11 @@
   display: flex;
   flex-direction: column;
 
+  .tracks-index-prefs {
+    display: flex;
+    justify-content: flex-end;
+  }
+
   .tracks-index-item {
     background-color: $graylightest;
     border-bottom: 1px solid $graylight;
@@ -23,22 +28,50 @@
 
     .main-track-details {
       display: flex;
+      justify-content: flex-start;
 
       .track-order {
-        flex-basis: 5%;
+        margin-right: 2rem;
       }
 
       .track-title {
-        flex-basis: 85%;
+        flex-grow: 1;
       }
 
       .track-duration {
-        flex-basis: 10%;
+        margin-right: 1rem;
       }
 
       .tracks-total-duration {
+        flex-grow: 1;
         text-align: right;
-        flex-basis: 96.6%;
+        margin-right: 1rem;
+      }
+    }
+
+    .track-personnel-details {
+      font-size: 0.8rem;
+
+      .track-personnel-label {
+        font-weight: 700;
+        color: $graydark;
+        margin-right: 0.3rem;
+      }
+
+      .track-personnel-main {
+        margin-bottom: 0.2rem;
+        & > span {
+          margin-right: 1rem;
+        }
+      }
+
+      .track-personnel-credits {
+        display: flex;
+        flex-wrap: wrap;
+
+        .track-personnel-credit {
+          margin-right: 1rem;
+        }
       }
     }
   }
