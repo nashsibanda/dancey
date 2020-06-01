@@ -17,21 +17,23 @@ export default class CommentsIndex extends Component {
     return (
       <ul className={"comments-index indent-" + indentLevel}>
         {indexComments.length > 0 &&
-          indexComments.map(eComment => {
-            const itemComment = stateComments[eComment._id];
-            return (
-              itemComment && (
-                <CommentsIndexItem
-                  key={itemComment._id}
-                  comment={itemComment}
-                  entityComments={entityComments}
-                  indentLevel={indentLevel + 1}
-                  resourceId={resourceId}
-                  resourceType={resourceType}
-                />
-              )
-            );
-          })}
+          indexComments
+            .sort((a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt))
+            .map(eComment => {
+              const itemComment = stateComments[eComment._id];
+              return (
+                itemComment && (
+                  <CommentsIndexItem
+                    key={itemComment._id}
+                    comment={itemComment}
+                    entityComments={entityComments}
+                    indentLevel={indentLevel + 1}
+                    resourceId={resourceId}
+                    resourceType={resourceType}
+                  />
+                )
+              );
+            })}
       </ul>
     );
   }
