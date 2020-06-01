@@ -1,0 +1,16 @@
+footer {
+  border-top: 2px solid $graylighter;
+  padding: 1rem;
+  background-color: $graydarker;
+
+  .footer-menu {
+    display: flex;
+    justify-content: space-around;
+
+    a {
+      color: $graylightest;
+      font-size: 0.8rem;
+      font-weight: 700;
+    }
+  }
+}
