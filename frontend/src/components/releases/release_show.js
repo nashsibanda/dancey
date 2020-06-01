@@ -4,6 +4,7 @@ import PersonnelIndexContainer from "../personnel/personnel_index_container";
 import CommentsSectionContainer from "../comments/comments_section_container";
 import ReleaseMainInfo from "./release_main_info";
 import ReviewsIndexContainer from "../reviews/reviews_index_container";
+import { Helmet } from "react-helmet";
 
 export default class ReleaseShow extends Component {
   constructor(props) {
@@ -35,6 +36,9 @@ export default class ReleaseShow extends Component {
 
       return (
         <div className="resource-show-container">
+          <Helmet>
+            <title>{release.title} — dancey</title>
+          </Helmet>
           <ReleaseMainInfo
             release={release}
             loggedIn={loggedIn}
