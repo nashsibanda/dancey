@@ -7,9 +7,10 @@ export const getOneReview = id => axios.get(`api/reviews/${id}`);
 export const getResourceReviews = (resourceType, resourceId) =>
   axios.get(`api/reviews/get/${resourceType}/${resourceId}`);
 
-export const postReview = postData => axios.post("/api/reviews", postData);
+export const postReview = reviewPostData =>
+  axios.post("/api/reviews", reviewPostData);
 
-export const updateReview = (id, updateData) =>
-  axios.post(`/api/reviews/${id}`, updateData);
+export const updateReview = (id, reviewUpdateData) =>
+  axios.post(`/api/reviews/${id}`, reviewUpdateData);
 
 export const deleteReview = id => axios.delete(`api/reviews/${id}`);
