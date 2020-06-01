@@ -35,7 +35,7 @@ router.get("/get/personnel/:personnel_id", (req, res, next) => {
   Track.find({
     $or: [
       { "personnel.personnelId": req.params.personnel_id },
-      { artists: { $elemMatch: { $eq: req.params.personnel_id } } },
+      { mainArtists: { $elemMatch: { $eq: req.params.personnel_id } } },
       { writers: { $elemMatch: { $eq: req.params.personnel_id } } },
     ],
   })
@@ -75,7 +75,7 @@ router.post(
 // PUT replacement info for a track
 router.put(
   "/:id",
-  // passport.authenticate("jwt", { session: false }),
+  passport.authenticate("jwt", { session: false }),
   joiValidator.body(updateTrackValidation),
   (req, res, next) => {
     Track.findById(req.params.id)
