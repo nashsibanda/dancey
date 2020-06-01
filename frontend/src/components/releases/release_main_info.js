@@ -1,5 +1,6 @@
 import React from "react";
 import { joinObjectLinks } from "../../util/formatting_util";
+import plainRecordImage from "../../assets/plain_record.png";
 
 export default class ReleaseMainInfo extends React.Component {
   constructor(props) {
@@ -7,7 +8,7 @@ export default class ReleaseMainInfo extends React.Component {
 
     this.state = {
       releaseYear: this.props.release.releaseYear,
-      editYear: true,
+      editYear: false,
     };
 
     this.toggleForm = this.toggleForm.bind(this);
@@ -55,7 +56,7 @@ export default class ReleaseMainInfo extends React.Component {
       <div className="resource-main-info">
         <div className="resource-image">
           <img
-            src={mainImage ? mainImage.imageUrl : "/assets/plain_record.png"}
+            src={mainImage ? mainImage.imageUrl : plainRecordImage}
             alt={
               mainImage
                 ? mainImage.description
