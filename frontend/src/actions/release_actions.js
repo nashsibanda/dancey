@@ -59,9 +59,9 @@ export const fetchPersonnelReleases = personnelId => dispatch => {
     });
 };
 
-export const updateRelease = (id, updateData) => dispatch => {
+export const updateRelease = (id, releaseUpdateData) => dispatch => {
   dispatch(releasesLoadingOn());
-  ReleaseAPIUtil.putRelease(id, updateData)
+  ReleaseAPIUtil.putRelease(id, releaseUpdateData)
     .then(release => {
       dispatch(receiveRelease(release.data));
       dispatch(releasesLoadingOff());

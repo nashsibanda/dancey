@@ -25,7 +25,7 @@ export const fetchResourceReviews = (resourceType, resourceId) => dispatch => {
   ReviewAPIUtil.getResourceReviews(resourceType, resourceId)
     .then(reviews => {
       dispatch(receiveReviews(reviews.data));
-      dispatch(reviewsLoadingOff);
+      dispatch(reviewsLoadingOff());
     })
     .catch(err => {
       dispatch(receiveReviewErrors(err.response.data));
