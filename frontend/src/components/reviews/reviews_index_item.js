@@ -28,6 +28,7 @@ export default class ReviewsIndexItem extends Component {
 
   render() {
     const { review } = this.props;
+    const { showComments } = this.state;
     const { rating, body, username, userId, comments, _id } = review;
     const createdAt = new Date(review.createdAt);
     const updatedAt = new Date(review.updatedAt);
@@ -63,15 +64,21 @@ export default class ReviewsIndexItem extends Component {
         </div>
         <div>
           {comments.length > 0 ? (
-            <button className="link-button" onClick={this.toggleComments}>
-              Show {comments.length} Comment{comments.length === 1 ? "" : "s"}
-            </button>
+            showComments ? (
+              <button className="link-button" onClick={this.toggleComments}>
+                Hide Comment{comments.length === 1 ? "" : "s"}
+              </button>
+            ) : (
+              <button className="link-button" onClick={this.toggleComments}>
+                Show {comments.length} Comment{comments.length === 1 ? "" : "s"}
+              </button>
+            )
           ) : (
             <button className="link-button">Add Comment</button>
           )}
         </div>
         <div>
-          {this.state.showComments && (
+          {showComments && (
             <CommentsIndexContainer
               entityComments={comments}
               indentLevel={0}
