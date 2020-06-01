@@ -38,14 +38,18 @@ export default class ReleaseMainInfo extends React.Component {
   }
 
   render() {
-    const { loggedIn, release } = this.props;
+    const {
+      loggedIn,
+      release,
+      toggleEditButtons,
+      showEditButtons,
+    } = this.props;
     const {
       images,
       mainArtists,
       label,
       format,
       releaseCountry,
-      // releaseYear,
       title,
     } = release;
     const { editYear, releaseYear } = this.state;
@@ -66,6 +70,14 @@ export default class ReleaseMainInfo extends React.Component {
           <button className="big-button">More Images</button>
         </div>
         <div className="resource-details">
+          {loggedIn && (
+            <button
+              className="big-button toggle-edit-button"
+              onClick={toggleEditButtons}
+            >
+              {showEditButtons ? "Finish Editing" : "Edit this Release"}
+            </button>
+          )}
           <h2>
             {joinObjectLinks(mainArtists)} — {title}
           </h2>

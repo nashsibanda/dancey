@@ -48,7 +48,12 @@ export default class TracksIndex extends Component {
   }
 
   render() {
-    const { stateTracks, tracksLoading } = this.props;
+    const {
+      stateTracks,
+      tracksLoading,
+      hideHeader,
+      showEditButtons,
+    } = this.props;
     const {
       initialLoad,
       showTrackPersonnel,
@@ -75,37 +80,52 @@ export default class TracksIndex extends Component {
         );
       }
       return (
-        <ul className="tracks-index">
-          <li className="tracks-index-prefs">
-            <button className="link-button" onClick={this.toggleTrackPersonnel}>
-              {showTrackPersonnel ? "Hide Track Credits" : "Show Track Credits"}
-            </button>
-          </li>
-          {indexTracks.length > 0 &&
-            indexTracks.map((track, index) => {
-              return (
-                <TracksIndexItemContainer
-                  key={track._id}
-                  track={track}
-                  ordered={!!trackListing}
-                  order={index + 1}
-                  showPersonnel={showTrackPersonnel}
-                  loadedTrackPersonnel={loadedTrackPersonnel}
-                />
-              );
-            })}
-          {!!trackListing && (
-            <li className="tracks-index-item">
-              <div className="main-track-details">
-                <span className="tracks-total-duration">
-                  {trackListing.length} track
-                  {trackListing.length === 1 ? "" : "s"} — Total Duration:{" "}
-                  {makeFriendlyTime(totalDuration)}
-                </span>
-              </div>
-            </li>
+        <div className="tracks-index-container">
+          {!hideHeader && (
+            <div className="resource-show-section-header">
+              <h2>Track List</h2>
+              {showEditButtons && (
+                <button className="big-button">Edit Tracks</button>
+              )}
+            </div>
           )}
-        </ul>
+          <ul className="tracks-index">
+            <li className="tracks-index-prefs">
+              <button
+                className="link-button"
+                onClick={this.toggleTrackPersonnel}
+              >
+                {showTrackPersonnel
+                  ? "Hide Track Credits"
+                  : "Show Track Credits"}
+              </button>
+            </li>
+            {indexTracks.length > 0 &&
+              indexTracks.map((track, index) => {
+                return (
+                  <TracksIndexItemContainer
+                    key={track._id}
+                    track={track}
+                    ordered={!!trackListing}
+                    order={index + 1}
+                    showPersonnel={showTrackPersonnel}
+                    loadedTrackPersonnel={loadedTrackPersonnel}
+                  />
+                );
+              })}
+            {!!trackListing && (
+              <li className="tracks-index-item">
+                <div className="main-track-details">
+                  <span className="tracks-total-duration">
+                    {trackListing.length} track
+                    {trackListing.length === 1 ? "" : "s"} — Total Duration:{" "}
+                    {makeFriendlyTime(totalDuration)}
+                  </span>
+                </div>
+              </li>
+            )}
+          </ul>
+        </div>
       );
     } else {
       return <p>LOADING</p>;

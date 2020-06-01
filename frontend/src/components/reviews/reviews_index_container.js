@@ -8,6 +8,7 @@ import {
 const mapStateToProps = state => ({
   stateReviews: state.entities.reviews,
   loading: state.loading.reviews,
+  loggedIn: state.session.isAuthenticated,
 });
 
 const mapDispatchToProps = dispatch => ({

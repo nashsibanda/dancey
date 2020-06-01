@@ -8,23 +8,38 @@ export default class PersonnelIndex extends Component {
   }
 
   render() {
-    const { resourcePersonnel, statePersonnel } = this.props;
+    const {
+      resourcePersonnel,
+      statePersonnel,
+      showEditButtons,
+      hideHeader,
+    } = this.props;
     return (
-      <ul className="personnel-index">
-        {resourcePersonnel.length > 0 &&
-          resourcePersonnel.map(rPersonnel => {
-            const itemPersonnel = statePersonnel[rPersonnel.personnelId];
-            return (
-              itemPersonnel && (
-                <PersonnelIndexItem
-                  personnel={itemPersonnel}
-                  role={rPersonnel.role}
-                  key={rPersonnel._id}
-                />
-              )
-            );
-          })}
-      </ul>
+      <div className="personnel-index-container">
+        {!hideHeader && (
+          <div className="resource-show-section-header">
+            <h2>Personnel</h2>
+            {showEditButtons && (
+              <button className="big-button">Edit Personnel</button>
+            )}
+          </div>
+        )}
+        <ul className="personnel-index">
+          {resourcePersonnel.length > 0 &&
+            resourcePersonnel.map((rPersonnel, index) => {
+              const itemPersonnel = statePersonnel[rPersonnel.personnelId];
+              return (
+                itemPersonnel && (
+                  <PersonnelIndexItem
+                    personnel={itemPersonnel}
+                    role={rPersonnel.role}
+                    key={`${rPersonnel._id}-personnelIndex-${index}`}
+                  />
+                )
+              );
+            })}
+        </ul>
+      </div>
     );
   }
 }
