@@ -22,7 +22,7 @@ a {
 }
 
 .big-button {
-  margin-top: 0.4rem;
+  margin-top: 0.5rem;
   padding: 0.4rem 0.7rem;
   border: 1px solid $gray;
   border-radius: 3px;
@@ -36,4 +36,12 @@ a {
 
 .link-button {
   color: $blue;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"] {
+  border: 1px solid $graylighter;
+  padding: 0.5rem;
 }

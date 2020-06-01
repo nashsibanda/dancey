@@ -9,8 +9,12 @@
       margin-bottom: 0.2rem;
     }
 
-    div > div {
-      margin-bottom: 1rem;
+    & > div > div {
+      margin-bottom: 2rem;
+
+      &.rating-stars {
+        margin-bottom: 0;
+      }
     }
 
     .resource-show-main {
