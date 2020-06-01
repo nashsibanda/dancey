@@ -3,11 +3,32 @@
   flex-wrap: wrap;
 
   .release-tile {
-    width: 8rem;
-    padding-right: 1rem;
+    width: 11rem;
+    padding: 1rem;
 
     img {
       width: 100%;
+    }
+
+    .release-tile-info {
+      margin-top: 0.7rem;
+
+      .release-tile-title {
+        font-weight: 700;
+        font-size: 1.1rem;
+        font-family: $serif;
+      }
+
+      .release-tile-details {
+        font-size: 0.8rem;
+        font-weight: 700;
+        color: $graydark;
+
+        div {
+          display: flex;
+          justify-content: space-between;
+        }
+      }
     }
   }
 }
