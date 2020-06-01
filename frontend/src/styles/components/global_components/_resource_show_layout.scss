@@ -2,11 +2,18 @@
   .resource-show-body {
     display: flex;
     justify-content: space-between;
-    margin-top: 1rem;
+    padding: 0 $main-margins;
 
-    h2 {
-      font-size: 1.3rem;
-      margin-bottom: 0.2rem;
+    .resource-show-section-header {
+      margin-bottom: 0.4rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      h2 {
+        font-size: 1.3rem;
+        display: inline-block;
+      }
     }
 
     & > div > div {
@@ -18,11 +25,19 @@
     }
 
     .resource-show-main {
-      flex-basis: 65%;
+      min-height: 63vh;
+      width: 68%;
+      padding-top: 1rem;
+      padding-right: 2%;
+      border-right: 1px solid $graylighter;
+      box-sizing: border-box;
     }
 
     .resource-show-aside {
-      flex-basis: 30%;
+      width: 32%;
+      padding-top: 1rem;
+      padding-left: 2%;
+      box-sizing: border-box;
     }
   }
 }

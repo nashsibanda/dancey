@@ -1,14 +1,18 @@
 body {
   font-family: $sans-serif;
+  font-weight: 300;
 }
 
 h1,
 h2 {
   font-family: $serif;
+  font-weight: 400;
 }
 
+$main-margins: 2rem;
+
 main {
-  padding: 2rem;
+  min-height: 86vh;
 }
 
 a {

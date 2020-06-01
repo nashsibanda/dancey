@@ -2,7 +2,7 @@
   display: flex;
   flex-direction: row;
   align-items: center;
-  padding-bottom: 1rem;
+  padding: 2rem $main-margins;
   border-bottom: 1px solid $graylighter;
 
   $image-size: 12rem;
@@ -22,9 +22,17 @@
 
   .resource-details {
     display: flex;
+    flex-grow: 1;
     flex-direction: column;
     justify-content: space-around;
     height: $image-size;
+    position: relative;
+
+    .toggle-edit-button {
+      position: absolute;
+      top: 0rem;
+      right: 0rem;
+    }
 
     h2 {
       font-size: 2rem;
