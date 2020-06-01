@@ -30,10 +30,8 @@ router.get("/:id", (req, res, next) => {
   Release.findById(req.params.id)
     .populate("mainArtists")
     .populate("personnel.personnelId")
-    .populate("trackListing.trackId")
     .populate("label")
     .populate("comments")
-    .populate("reviews")
     .then(release => res.json(release))
     .catch(err => next(new RecordNotFoundError("No release found")));
 });
@@ -87,10 +85,8 @@ router.put(
             updatedRelease
               .populate("mainArtists")
               .populate("personnel.personnelId")
-              .populate("trackListing.trackId")
               .populate("label")
               .populate("comments")
-              .populate("reviews")
               .execPopulate()
               .then(updatedRelease => res.json(updatedRelease));
           }

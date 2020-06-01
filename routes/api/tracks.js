@@ -31,7 +31,7 @@ router.get("/:id", (req, res, next) => {
 });
 
 // GET all tracks by personnel
-router.get("/personnel/:personnel_id", (req, res, next) => {
+router.get("/get/personnel/:personnel_id", (req, res, next) => {
   Track.find({
     $or: [
       { "personnel.personnelId": req.params.personnel_id },
@@ -44,7 +44,7 @@ router.get("/personnel/:personnel_id", (req, res, next) => {
 });
 
 // GET all tracks by release
-router.get("/release/:release_id", (req, res, next) => {
+router.get("/get/release/:release_id", (req, res, next) => {
   Release.findById(req.params.release_id)
     .then(release => {
       const trackIds = release.trackListing.map(listing => listing.trackId);
