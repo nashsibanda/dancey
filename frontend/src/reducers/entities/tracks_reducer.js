@@ -1,4 +1,3 @@
-import { RECEIVE_RELEASE } from "../../actions/release_actions";
 import { RECEIVE_TRACKS } from "../../actions/track_actions";
 
 const TracksReducer = (state = {}, action) => {
