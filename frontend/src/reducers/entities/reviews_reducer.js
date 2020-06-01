@@ -1,4 +1,3 @@
-import { RECEIVE_RELEASE } from "../../actions/release_actions";
 import {
   RECEIVE_ONE_REVIEW,
   RECEIVE_REVIEWS,
