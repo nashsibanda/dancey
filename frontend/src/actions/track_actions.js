@@ -2,7 +2,7 @@ import * as TrackAPIUtil from "../util/track_api_util";
 import { tracksLoadingOn, tracksLoadingOff } from "./loading_actions";
 
 export const RECEIVE_TRACKS = "RECEIVE_TRACKS";
-export const RECEIVE_ONE_TRACK = "RECEIVE_ONE_TRACK";
+export const RECEIVE_TRACK = "RECEIVE_ONE_TRACK";
 export const RECEIVE_TRACK_ERRORS = "RECEIVE_TRACK_ERRORS";
 
 const receiveTracks = tracks => ({
@@ -10,8 +10,8 @@ const receiveTracks = tracks => ({
   tracks,
 });
 
-const receiveOneTrack = track => ({
-  type: RECEIVE_ONE_TRACK,
+const receiveTrack = track => ({
+  type: RECEIVE_TRACK,
   track,
 });
 
@@ -33,11 +33,11 @@ export const fetchResourceTracks = (resourceType, resourceId) => dispatch => {
     });
 };
 
-export const fetchOneTrack = id => dispatch => {
+export const fetchTrack = id => dispatch => {
   dispatch(tracksLoadingOn());
-  TrackAPIUtil.getOneTrack(id)
+  TrackAPIUtil.getTrack(id)
     .then(track => {
-      dispatch(receiveOneTrack(track.data));
+      dispatch(receiveTrack(track.data));
       dispatch(tracksLoadingOff());
     })
     .catch(err => {
