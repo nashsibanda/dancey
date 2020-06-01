@@ -4,6 +4,7 @@ import ReviewsLoadingReducer from "./loading/reviews_loading_reducer";
 import CommentsLoadingReducer from "./loading/comments_loading_reducer";
 import TracksLoadingReducer from "./loading/tracks_loading_reducer";
 import PersonnelLoadingReducer from "./loading/personnel_loading_reducer";
+import TrackPersonnelLoadingReducer from "./loading/track_personnel_loading_reducer";
 
 const LoadingReducer = combineReducers({
   releases: ReleasesLoadingReducer,
@@ -11,6 +12,7 @@ const LoadingReducer = combineReducers({
   comments: CommentsLoadingReducer,
   tracks: TracksLoadingReducer,
   personnel: PersonnelLoadingReducer,
+  trackPersonnel: TrackPersonnelLoadingReducer,
 });
 
 export default LoadingReducer;

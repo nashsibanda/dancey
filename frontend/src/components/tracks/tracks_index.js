@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import TracksIndexItem from "./tracks_index_item";
+import TracksIndexItemContainer from "./tracks_index_item_container";
 import { makeFriendlyTime } from "../../util/formatting_util";
 
 export default class TracksIndex extends Component {
@@ -7,19 +7,55 @@ export default class TracksIndex extends Component {
     super(props);
     this.state = {
       initialLoad: false,
+      showTrackPersonnel: false,
+      loadedTrackPersonnel: false,
     };
+    this.toggleTrackPersonnel = this.toggleTrackPersonnel.bind(this);
   }
 
   componentDidMount() {
-    const { fetchResourceTracks, resourceType, resourceId } = this.props;
+    const {
+      fetchResourceTracks,
+      fetchResourceTracksPersonnel,
+      resourceType,
+      resourceId,
+    } = this.props;
     fetchResourceTracks(resourceType, resourceId);
-    this.setState({ initialLoad: true });
+    if (this.state.showTrackPersonnel && !this.state.loadedTrackPersonnel) {
+      fetchResourceTracksPersonnel(resourceType, resourceId);
+      this.setState({ initialLoad: true, loadedTrackPersonnel: true });
+    } else {
+      this.setState({ initialLoad: true });
+    }
+  }
+
+  toggleTrackPersonnel() {
+    const { loadedTrackPersonnel, showTrackPersonnel } = this.state;
+    const {
+      fetchResourceTracksPersonnel,
+      resourceType,
+      resourceId,
+    } = this.props;
+    if (!loadedTrackPersonnel) {
+      fetchResourceTracksPersonnel(resourceType, resourceId);
+      this.setState({
+        showTrackPersonnel: !showTrackPersonnel,
+        loadedTrackPersonnel: true,
+      });
+    } else {
+      this.setState({ showTrackPersonnel: !showTrackPersonnel });
+    }
   }
 
   render() {
-    const { stateTracks, loading } = this.props;
+    const { stateTracks, tracksLoading } = this.props;
+    const {
+      initialLoad,
+      showTrackPersonnel,
+      loadedTrackPersonnel,
+    } = this.state;
 
-    if (this.state.initialLoad && !loading) {
+    if (initialLoad && !tracksLoading) {
       const trackListing = this.props.trackListing
         ? this.props.trackListing
         : null;
@@ -40,14 +76,21 @@ export default class TracksIndex extends Component {
       }
       return (
         <ul className="tracks-index">
+          <li className="tracks-index-prefs">
+            <button className="link-button" onClick={this.toggleTrackPersonnel}>
+              {showTrackPersonnel ? "Hide Track Credits" : "Show Track Credits"}
+            </button>
+          </li>
           {indexTracks.length > 0 &&
             indexTracks.map((track, index) => {
               return (
-                <TracksIndexItem
+                <TracksIndexItemContainer
                   key={track._id}
                   track={track}
                   ordered={!!trackListing}
                   order={index + 1}
+                  showPersonnel={showTrackPersonnel}
+                  loadedTrackPersonnel={loadedTrackPersonnel}
                 />
               );
             })}

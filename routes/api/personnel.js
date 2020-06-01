@@ -40,13 +40,60 @@ router.get("/:id", (req, res, next) => {
 });
 
 // GET all personnel by release
-router.get("/release/:release_id", (req, res) => {
+router.get("/get/release/:release_id", (req, res) => {
   Release.findById(req.params.release_id)
     .then(release => {
       const personnelIds = [];
       release.personnel.forEach(personnel => {
         personnelIds.push(personnel.personnelId);
       });
+      Personnel.find({ _id: { $in: personnelIds } })
+        .then(personnelCollection => res.json(personnelCollection))
+        .catch(err => next(new RecordNotFoundError("No personnel found")));
+    })
+    .catch(err => next(new RecordNotFoundError("No release found")));
+});
+
+// GET all personnel from a release's tracks
+router.get("/get/release/:release_id/tracks", (req, res) => {
+  Release.findById(req.params.release_id)
+    .populate("trackListing.trackId")
+    .then(release => {
+      const personnelIdSet = new Set();
+      release.trackListing.forEach(({ trackId }) => {
+        trackId.personnel.forEach(personnel => {
+          personnelIdSet.add(personnel.personnelId);
+        });
+        trackId.mainArtists.forEach(mainArtist => {
+          personnelIdSet.add(mainArtist);
+        });
+        trackId.writers.forEach(writer => {
+          personnelIdSet.add(writer);
+        });
+      });
+      const personnelIds = Array.from(personnelIdSet);
+      Personnel.find({ _id: { $in: personnelIds } })
+        .then(personnelCollection => res.json(personnelCollection))
+        .catch(err => next(new RecordNotFoundError("No personnel found")));
+    })
+    .catch(err => next(new RecordNotFoundError("No release found")));
+});
+
+// GET all personnel by track
+router.get("/get/track/:track_id", (req, res) => {
+  Track.findById(req.params.track_id)
+    .then(track => {
+      const personnelIdSet = new Set();
+      track.personnel.forEach(personnel => {
+        personnelIdSet.add(personnel.personnelId);
+      });
+      track.mainArtists.forEach(mainArtist => {
+        personnelIdSet.add(mainArtist);
+      });
+      track.writers.forEach(writer => {
+        personnelIdSet.add(writer);
+      });
+      const personnelIds = Array.from(personnelIdSet);
       Personnel.find({ _id: { $in: personnelIds } })
         .then(personnelCollection => res.json(personnelCollection))
         .catch(err => next(new RecordNotFoundError("No personnel found")));
