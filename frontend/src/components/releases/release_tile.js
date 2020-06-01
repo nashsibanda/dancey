@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { joinObjectLinks } from "../../util/formatting_util";
+import plainRecordImage from "../../assets/plain_record.png";
 
 const ReleaseTile = props => {
   const {
@@ -17,7 +18,7 @@ const ReleaseTile = props => {
   return (
     <li className="release-tile">
       <img
-        src={mainImage ? mainImage.imageUrl : "/assets/plain_record.png"}
+        src={mainImage ? mainImage.imageUrl : plainRecordImage}
         alt={
           mainImage
             ? mainImage.description
