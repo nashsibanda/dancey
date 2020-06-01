@@ -8,6 +8,8 @@ export const TRACKS_LOADING_ON = "TRACKS_LOADING_ON";
 export const TRACKS_LOADING_OFF = "TRACKS_LOADING_OFF";
 export const PERSONNEL_LOADING_ON = "PERSONNEL_LOADING_ON";
 export const PERSONNEL_LOADING_OFF = "PERSONNEL_LOADING_OFF";
+export const TRACK_PERSONNEL_LOADING_ON = "TRACK_PERSONNEL_LOADING_ON";
+export const TRACK_PERSONNEL_LOADING_OFF = "TRACK_PERSONNEL_LOADING_OFF";
 
 export const releasesLoadingOn = () => ({
   type: RELEASES_LOADING_ON,
@@ -47,4 +49,12 @@ export const personnelLoadingOn = () => ({
 
 export const personnelLoadingOff = () => ({
   type: PERSONNEL_LOADING_OFF,
+});
+
+export const trackPersonnelLoadingOn = () => ({
+  type: TRACK_PERSONNEL_LOADING_ON,
+});
+
+export const trackPersonnelLoadingOff = () => ({
+  type: TRACK_PERSONNEL_LOADING_OFF,
 });
