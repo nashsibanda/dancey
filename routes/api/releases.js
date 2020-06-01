@@ -29,7 +29,6 @@ router.get("/", (req, res, next) => {
 router.get("/:id", (req, res, next) => {
   Release.findById(req.params.id)
     .populate("mainArtists")
-    .populate("personnel.personnelId")
     .populate("label")
     .populate("comments")
     .then(release => res.json(release))
@@ -84,7 +83,6 @@ router.put(
             if (err) return next(err);
             updatedRelease
               .populate("mainArtists")
-              .populate("personnel.personnelId")
               .populate("label")
               .populate("comments")
               .execPopulate()
