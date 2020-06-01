@@ -7,6 +7,7 @@ import RegisterFormContainer from "./session/register_form_container";
 import NavBarContainer from "./nav/navbar_container";
 import ReleasesIndexContainer from "./releases/releases_index_container";
 import ReleaseShowContainer from "./releases/release_show_container";
+import Footer from "./footer/footer";
 
 const App = () => (
   <div>
@@ -24,6 +25,7 @@ const App = () => (
         <Route exact path="/" component={MainPage} />
       </Switch>
     </main>
+    <Footer />
   </div>
 );
 
