@@ -13,7 +13,7 @@ const mapStateToProps = (state, { match }) => {
     comments,
     releases,
     reviews,
-    loading: state.loading,
+    loading: state.loading.releases,
     loggedIn: state.session.isAuthenticated,
   };
 };
