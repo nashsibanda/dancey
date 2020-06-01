@@ -25,7 +25,7 @@ export default class ReleaseShow extends Component {
   render() {
     const { release, loading, loggedIn, updateRelease } = this.props;
     if (release && !loading) {
-      const { personnel, reviews, trackListing, comments, _id } = release;
+      const { personnel, trackListing, comments, _id } = release;
 
       return (
         <div className="resource-show-container">
@@ -48,8 +48,9 @@ export default class ReleaseShow extends Component {
               <div className="release-personnel">
                 <h2>Personnel</h2>
                 <PersonnelIndexContainer
-                  releasePersonnel={personnel}
-                  releaseId={_id}
+                  resourcePersonnel={personnel}
+                  resourceId={_id}
+                  resourceType={"release"}
                 />
               </div>
               <div className="comments-container">
