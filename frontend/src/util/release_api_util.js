@@ -9,7 +9,7 @@ export const getPersonnelReleases = personnelId =>
 
 export const postRelease = postData => axios.post("/api/releases", postData);
 
-export const updateRelease = (id, updateData) =>
-  axios.post(`/api/releases/${id}`, updateData);
+export const putRelease = (id, updateData) =>
+  axios.put(`/api/releases/${id}`, updateData);
 
 export const deleteRelease = id => axios.delete(`api/releases/${id}`);
