@@ -16,6 +16,12 @@ export default class TracksIndexItem extends Component {
     this.toggleTrackPersonnel = this.toggleTrackPersonnel.bind(this);
   }
 
+  componentDidUpdate(prevProps) {
+    if (prevProps.showPersonnel !== this.props.showPersonnel) {
+      this.setState({ showTrackPersonnel: this.props.showPersonnel });
+    }
+  }
+
   toggleTrackPersonnel() {
     const { track, fetchResourcePersonnel, loadedTrackPersonnel } = this.props;
     const { showTrackPersonnel, trackPersonnelLoaded } = this.state;
@@ -60,7 +66,7 @@ export default class TracksIndexItem extends Component {
           <span className="track-title">{title}</span>
           <span className="track-duration">{makeFriendlyTime(duration)}</span>
         </div>
-        {(showPersonnel || showTrackPersonnel) && !trackPersonnelLoading && (
+        {showTrackPersonnel && !trackPersonnelLoading && (
           <div className="track-personnel-details">
             <div className="track-personnel-main">
               <span>

@@ -94,15 +94,22 @@ export default class TracksIndex extends Component {
             </div>
           )}
           <ul className="tracks-index">
-            <li className="tracks-index-prefs">
-              <button
-                className="link-button"
-                onClick={this.toggleTrackPersonnel}
-              >
-                {showTrackPersonnel
-                  ? "Hide Track Credits"
-                  : "Show Track Credits"}
-              </button>
+            <li className="tracks-index-item">
+              <div className="main-track-details tracks-index-column-titles">
+                <span className="track-expand-info">
+                  <button
+                    className="icosn-button"
+                    onClick={this.toggleTrackPersonnel}
+                  >
+                    <FontAwesomeIcon
+                      icon={showTrackPersonnel ? "minus-square" : "plus-square"}
+                    />
+                  </button>
+                </span>
+                <span className="track-order">#</span>
+                <span className="track-title">Title</span>
+                <span className="track-duration">Duration</span>
+              </div>
             </li>
             {indexTracks.length > 0 &&
               indexTracks.map((track, index) => {
