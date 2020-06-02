@@ -1,80 +1,81 @@
-.tracks-index {
-  display: flex;
-  flex-direction: column;
-
-  .tracks-index-prefs {
+.tracks-index-container {
+  .tracks-index {
     display: flex;
-    justify-content: flex-end;
-  }
+    flex-direction: column;
+    border: 1px solid $graylighter;
 
-  .tracks-index-item {
-    background-color: $graylightest;
-    border-bottom: 1px solid $graylight;
-    padding: 0.7rem;
-
-    &:last-of-type {
-      border-bottom: none;
-    }
-
-    &:nth-of-type(2n) {
+    .tracks-index-item {
       background-color: $graylighter;
-    }
+      border-bottom: 1px solid $graylight;
+      padding: 0.7rem;
 
-    &:last-of-type {
-      background-color: $gray;
-      color: white;
-      font-weight: 700;
-    }
-
-    .main-track-details {
-      display: flex;
-      justify-content: flex-start;
-
-      .track-expand-info {
-        margin-right: 1rem;
+      &:nth-of-type(2n) {
+        background-color: $graylightest;
       }
 
-      .track-order {
-        margin-right: 2rem;
-      }
-
-      .track-title {
-        flex-grow: 1;
-      }
-
-      .track-duration {
-        margin-right: 1rem;
-      }
-
-      .tracks-total-duration {
-        flex-grow: 1;
-        text-align: right;
-        margin-right: 1rem;
-      }
-    }
-
-    .track-personnel-details {
-      font-size: 0.8rem;
-
-      .track-personnel-label {
+      &:first-of-type {
+        background-color: $graydark;
+        color: white;
         font-weight: 700;
-        color: $graydark;
-        margin-right: 0.3rem;
       }
 
-      .track-personnel-main {
-        margin-bottom: 0.2rem;
-        & > span {
+      &:last-of-type {
+        border-bottom: none;
+        background-color: $graydark;
+        color: white;
+        font-weight: 700;
+      }
+
+      .main-track-details {
+        display: flex;
+        justify-content: flex-start;
+
+        .track-expand-info {
+          margin-right: 1rem;
+        }
+
+        .track-order {
+          margin-right: 2rem;
+        }
+
+        .track-title {
+          flex-grow: 1;
+        }
+
+        .track-duration {
+          margin-right: 1rem;
+        }
+
+        .tracks-total-duration {
+          flex-grow: 1;
+          text-align: right;
           margin-right: 1rem;
         }
       }
 
-      .track-personnel-credits {
-        display: flex;
-        flex-wrap: wrap;
+      .track-personnel-details {
+        font-size: 0.8rem;
 
-        .track-personnel-credit {
-          margin-right: 1rem;
+        .track-personnel-label {
+          font-weight: 700;
+          color: $graydark;
+          margin-right: 0.3rem;
+        }
+
+        .track-personnel-main {
+          margin-bottom: 0.2rem;
+          & > span {
+            margin-right: 1rem;
+          }
+        }
+
+        .track-personnel-credits {
+          display: flex;
+          flex-wrap: wrap;
+
+          .track-personnel-credit {
+            margin-right: 1rem;
+          }
         }
       }
     }
