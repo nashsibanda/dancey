@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 class NavBar extends React.Component {
   constructor(props) {
@@ -16,19 +17,35 @@ class NavBar extends React.Component {
   getLinks() {
     return (
       <div className="nav-menu">
-        <Link to={`/releases`}>Releases</Link>
-        <Link to={`/personnel`}>Personnel</Link>
-        {this.props.loggedIn ? (
-          <>
-            <Link to={`/profile`}>Profile</Link>
-            <button onClick={this.logoutUser}>Log Out</button>
-          </>
-        ) : (
-          <>
-            <Link to={`/register`}>Register</Link>
-            <Link to={`/login`}>Log In</Link>
-          </>
-        )}
+        <span className="nav-resources-menu">
+          <Link to={`/releases`}>Releases</Link>
+          <Link to={`/personnel`}>Personnel</Link>
+        </span>
+        <span className="nav-session-menu">
+          {this.props.loggedIn ? (
+            <>
+              <Link className="nav-button" to={`/profile`}>
+                <FontAwesomeIcon icon="user" />
+                <span>Profile</span>
+              </Link>
+              <button className="nav-button" onClick={this.logoutUser}>
+                <FontAwesomeIcon icon="sign-out-alt" />
+                <span>Log Out</span>
+              </button>
+            </>
+          ) : (
+            <>
+              <Link className="nav-button" to={`/register`}>
+                <FontAwesomeIcon icon="user-plus" />
+                <span>Register</span>
+              </Link>
+              <Link className="nav-button" to={`/login`}>
+                <FontAwesomeIcon icon="sign-in-alt" />
+                <span>Log In</span>
+              </Link>
+            </>
+          )}
+        </span>
       </div>
     );
   }

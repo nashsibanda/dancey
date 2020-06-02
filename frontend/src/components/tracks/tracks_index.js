@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import TracksIndexItemContainer from "./tracks_index_item_container";
 import { makeFriendlyTime } from "../../util/formatting_util";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export default class TracksIndex extends Component {
   constructor(props) {
@@ -85,7 +86,10 @@ export default class TracksIndex extends Component {
             <div className="resource-show-section-header">
               <h2>Track List</h2>
               {showEditButtons && (
-                <button className="big-button">Edit Tracks</button>
+                <button className="big-button">
+                  <FontAwesomeIcon icon="edit" />
+                  <span>Edit Tracks</span>
+                </button>
               )}
             </div>
           )}

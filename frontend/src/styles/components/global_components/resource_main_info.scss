@@ -34,10 +34,21 @@
     height: $image-size;
     position: relative;
 
+    .icon-button {
+      margin-left: 0.6rem;
+      color: $gray;
+    }
+
     .toggle-edit-button {
       position: absolute;
       bottom: 0rem;
       right: 0rem;
+      background-color: $graydarker;
+      color: $graylighter;
+
+      svg {
+        color: $graylighter;
+      }
     }
 
     h2 {

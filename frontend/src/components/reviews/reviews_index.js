@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import ReactStars from "react-rating-stars-component";
 import ReviewsIndexItem from "./reviews_index_item";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export default class ReviewsIndex extends Component {
   componentDidMount() {
@@ -34,7 +35,12 @@ export default class ReviewsIndex extends Component {
       <div className="reviews-index-container">
         <div className="resource-show-section-header">
           <h2>Reviews</h2>
-          {loggedIn && <button className="big-button">Add a Review</button>}
+          {loggedIn && (
+            <button className="big-button">
+              <FontAwesomeIcon icon="pen-fancy" />
+              <span>Add a Review</span>
+            </button>
+          )}
         </div>
         <div className="reviews-average-rating">
           <ReactStars

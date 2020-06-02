@@ -5,10 +5,10 @@
     padding: 0 $main-margins;
 
     .resource-show-section-header {
-      margin-bottom: 0.4rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      min-height: 3rem;
 
       h2 {
         font-size: 1.3rem;

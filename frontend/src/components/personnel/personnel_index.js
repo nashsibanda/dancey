@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import PersonnelIndexItem from "./personnel_index_item";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export default class PersonnelIndex extends Component {
   componentDidMount() {
@@ -20,7 +21,10 @@ export default class PersonnelIndex extends Component {
           <div className="resource-show-section-header">
             <h2>Personnel</h2>
             {showEditButtons && (
-              <button className="big-button">Edit Personnel</button>
+              <button className="big-button">
+                <FontAwesomeIcon icon="edit" />
+                <span>Edit Personnel</span>
+              </button>
             )}
           </div>
         )}

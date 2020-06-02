@@ -1,6 +1,7 @@
 import React from "react";
 import { joinObjectLinks } from "../../util/formatting_util";
 import plainRecordImage from "../../assets/plain_record.png";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export default class ReleaseMainInfo extends React.Component {
   constructor(props) {
@@ -68,7 +69,10 @@ export default class ReleaseMainInfo extends React.Component {
                 : "Default album placeholder image - upload a new one!"
             }
           />
-          <button className="big-button">More Images</button>
+          <button className="big-button">
+            <FontAwesomeIcon icon={showEditButtons ? "edit" : "images"} />
+            <span>{showEditButtons ? "Edit Images" : "More Images"}</span>
+          </button>
         </div>
         <div className="resource-details">
           {loggedIn && (
@@ -76,7 +80,10 @@ export default class ReleaseMainInfo extends React.Component {
               className="big-button toggle-edit-button"
               onClick={toggleEditButtons}
             >
-              {showEditButtons ? "Finish Editing" : "Edit this Release"}
+              <FontAwesomeIcon
+                icon={showEditButtons ? "toggle-on" : "toggle-off"}
+              />
+              <span>{showEditButtons ? "Finish Editing" : "Edit Release"}</span>
             </button>
           )}
           <h2>
@@ -105,17 +112,27 @@ export default class ReleaseMainInfo extends React.Component {
                   value={releaseYear}
                   onChange={this.updateField("releaseYear")}
                 ></input>
-                <button type="submit">Submit</button>
-                <button type="button" onClick={this.toggleForm("editYear")}>
-                  Cancel
+                <button className="icon-button" type="submit">
+                  <FontAwesomeIcon icon="save" />
+                </button>
+                <button
+                  className="icon-button"
+                  type="button"
+                  onClick={this.toggleForm("editYear")}
+                >
+                  <FontAwesomeIcon icon="undo-alt" />
                 </button>
               </form>
             ) : (
               <span className="details-value">
                 {releaseYear}
-                {loggedIn && (
-                  <button type="button" onClick={this.toggleForm("editYear")}>
-                    Edit
+                {showEditButtons && (
+                  <button
+                    className="icon-button"
+                    type="button"
+                    onClick={this.toggleForm("editYear")}
+                  >
+                    <FontAwesomeIcon icon="edit" />
                   </button>
                 )}
               </span>
