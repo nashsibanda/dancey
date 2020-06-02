@@ -71,3 +71,16 @@ select {
   font-size: 1rem;
   max-width: 15rem;
 }
+
+.loading-spinner {
+  display: flex;
+  justify-content: center;
+  height: 100%;
+  font-size: 2rem;
+  padding: 0.2rem 0;
+  color: $graydark;
+
+  &.extra-vertical-padding {
+    padding: 0.5rem 0;
+  }
+}
