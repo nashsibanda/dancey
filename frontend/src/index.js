@@ -6,6 +6,7 @@ import configureStore from "./store/store";
 import Root from "./components/root";
 import { logout } from "./actions/session_actions";
 import "./styles/main.scss";
+import "./util/fontawesome_library";
 
 document.addEventListener("DOMContentLoaded", () => {
   let store;
