@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { makeFriendlyTime, joinObjectLinks } from "../../util/formatting_util";
 import { Link } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export default class TracksIndexItem extends Component {
   constructor(props) {
@@ -46,8 +47,13 @@ export default class TracksIndexItem extends Component {
       <li className="tracks-index-item">
         <div className="main-track-details">
           <span className="track-expand-info">
-            <button className="link-button" onClick={this.toggleTrackPersonnel}>
-              {showTrackPersonnel ? "-" : "+"}
+            <button
+              className="icosn-button"
+              onClick={this.toggleTrackPersonnel}
+            >
+              <FontAwesomeIcon
+                icon={showTrackPersonnel ? "minus-square" : "plus-square"}
+              />
             </button>
           </span>
           <span className="track-order">{ordered ? order : "*"}</span>

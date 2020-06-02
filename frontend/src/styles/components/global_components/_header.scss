@@ -16,9 +16,13 @@
   .nav-menu {
     display: flex;
     flex-direction: row;
-    justify-content: flex-end;
+    justify-content: space-between;
     padding: 1rem 0;
     background-color: #2a2a2a;
+
+    .nav-resources-menu {
+      margin-left: 2rem;
+    }
 
     a,
     button {
