@@ -29,3 +29,14 @@ export const joinObjectLinks = (
 
 export const makeFriendlyTime = duration =>
   `${parseInt(duration / 60)}:${duration % 60}`;
+
+export const makeReleaseHtmlTitle = release => {
+  const { title, format, releaseYear, mainArtists, releaseCountry } = release;
+  const mainArtistsString = mainArtists.map(a => a.name).join(", ");
+  const detailsString = [releaseYear, format, releaseCountry]
+    .filter(Boolean)
+    .join(", ");
+  return `${mainArtists.length > 0 ? mainArtistsString : ""} - ${title}${
+    detailsString ? ` (${detailsString})` : ""
+  } | dancey`;
+};
