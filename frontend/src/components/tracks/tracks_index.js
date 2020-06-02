@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import TracksIndexItemContainer from "./tracks_index_item_container";
 import { makeFriendlyTime } from "../../util/formatting_util";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import LoadingSpinner from "../loading/loading_spinner";
 
 export default class TracksIndex extends Component {
   constructor(props) {
@@ -10,8 +11,10 @@ export default class TracksIndex extends Component {
       initialLoad: false,
       showTrackPersonnel: false,
       loadedTrackPersonnel: false,
+      sortRule: !!this.props.trackListing ? "trackOrderAsc" : "alphaAsc",
     };
     this.toggleTrackPersonnel = this.toggleTrackPersonnel.bind(this);
+    this.makeIndexTracks = this.makeIndexTracks.bind(this);
   }
 
   componentDidMount() {
@@ -24,8 +27,16 @@ export default class TracksIndex extends Component {
     fetchResourceTracks(resourceType, resourceId);
     if (this.state.showTrackPersonnel && !this.state.loadedTrackPersonnel) {
       fetchResourceTracksPersonnel(resourceType, resourceId);
-      this.setState({ initialLoad: true, loadedTrackPersonnel: true });
-    } else {
+      this.setState({ loadedTrackPersonnel: true });
+    }
+  }
+
+  componentDidUpdate(prevProps) {
+    if (
+      !this.state.initialLoad &&
+      prevProps.tracksLoading &&
+      !this.props.tracksLoading
+    ) {
       this.setState({ initialLoad: true });
     }
   }
@@ -48,38 +59,36 @@ export default class TracksIndex extends Component {
     }
   }
 
+  makeIndexTracks() {
+    const { trackListing, stateTracks } = this.props;
+    switch (this.state.sortRule) {
+      case "trackOrderAsc":
+        return trackListing
+          .sort((a, b) => a.order - b.order)
+          .map(listingItem => stateTracks[listingItem.trackId]);
+      case "trackOrderDesc":
+        return trackListing
+          .sort((a, b) => b.order - a.order)
+          .map(listingItem => stateTracks[listingItem.trackId]);
+      case "alphaAsc":
+        return Object.values(stateTracks).sort((a, b) => a.title - b.title);
+      case "alphaDesc":
+        return Object.values(stateTracks).sort((a, b) => b.title - a.title);
+      default:
+        return [];
+    }
+  }
+
   render() {
-    const {
-      stateTracks,
-      tracksLoading,
-      hideHeader,
-      showEditButtons,
-    } = this.props;
+    const { hideHeader, showEditButtons, trackListing } = this.props;
     const {
       initialLoad,
       showTrackPersonnel,
       loadedTrackPersonnel,
     } = this.state;
+    const indexTracks = this.makeIndexTracks();
 
-    if (initialLoad && !tracksLoading) {
-      const trackListing = this.props.trackListing
-        ? this.props.trackListing
-        : null;
-      let indexTracks, totalDuration;
-
-      if (!!trackListing) {
-        indexTracks = trackListing
-          .sort((a, b) => a.order - b.order)
-          .map(listingItem => stateTracks[listingItem.trackId]);
-        totalDuration = indexTracks.reduce(
-          (acc, track) => acc + track.duration,
-          0
-        );
-      } else {
-        indexTracks = Object.values(stateTracks).sort(
-          (a, b) => a.title - b.title
-        );
-      }
+    if (true) {
       return (
         <div className="tracks-index-container">
           {!hideHeader && (
@@ -106,40 +115,62 @@ export default class TracksIndex extends Component {
                     />
                   </button>
                 </span>
-                <span className="track-order">#</span>
+                <span className="track-order">{!!trackListing ? "#" : ""}</span>
                 <span className="track-title">Title</span>
                 <span className="track-duration">Duration</span>
               </div>
             </li>
-            {indexTracks.length > 0 &&
-              indexTracks.map((track, index) => {
-                return (
-                  <TracksIndexItemContainer
-                    key={track._id}
-                    track={track}
-                    ordered={!!trackListing}
-                    order={index + 1}
-                    showPersonnel={showTrackPersonnel}
-                    loadedTrackPersonnel={loadedTrackPersonnel}
-                  />
-                );
-              })}
-            {!!trackListing && (
-              <li className="tracks-index-item">
-                <div className="main-track-details">
-                  <span className="tracks-total-duration">
-                    {trackListing.length} track
-                    {trackListing.length === 1 ? "" : "s"} — Total Duration:{" "}
-                    {makeFriendlyTime(totalDuration)}
-                  </span>
-                </div>
-              </li>
+            {initialLoad ? (
+              <>
+                {indexTracks.length > 0 &&
+                  indexTracks.map((track, index) => {
+                    return (
+                      <TracksIndexItemContainer
+                        key={track._id}
+                        track={track}
+                        ordered={!!trackListing}
+                        order={index + 1}
+                        showPersonnel={showTrackPersonnel}
+                        loadedTrackPersonnel={loadedTrackPersonnel}
+                      />
+                    );
+                  })}
+                {!!trackListing && (
+                  <li className="tracks-index-item tracks-index-duration-item">
+                    <div className="main-track-details">
+                      <span className="tracks-total-duration">
+                        {trackListing.length} track
+                        {trackListing.length === 1 ? "" : "s"} — Total Duration:{" "}
+                        {makeFriendlyTime(
+                          indexTracks.reduce(
+                            (acc, track) => acc + track.duration,
+                            0
+                          )
+                        )}
+                      </span>
+                    </div>
+                  </li>
+                )}
+              </>
+            ) : (
+              <>
+                <li className="tracks-index-item">
+                  <LoadingSpinner />
+                </li>
+                <li className="tracks-index-item tracks-index-duration-item placeholder">
+                  Loading...
+                </li>
+              </>
             )}
           </ul>
         </div>
       );
     } else {
-      return <p>LOADING</p>;
+      return (
+        <div className="tracks-index-container">
+          <LoadingSpinner />
+        </div>
+      );
     }
   }
 }

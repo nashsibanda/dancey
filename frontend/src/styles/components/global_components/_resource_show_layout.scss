@@ -1,4 +1,8 @@
 .resource-show-container {
+  & > .loading-spinner {
+    padding: 3rem 0;
+    font-size: 10rem;
+  }
   .resource-show-body {
     display: flex;
     justify-content: space-between;

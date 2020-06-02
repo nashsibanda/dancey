@@ -6,12 +6,13 @@ import ReleaseMainInfo from "./release_main_info";
 import ReviewsIndexContainer from "../reviews/reviews_index_container";
 import { Helmet } from "react-helmet";
 import { makeReleaseHtmlTitle } from "../../util/formatting_util";
+import LoadingSpinner from "../loading/loading_spinner";
 
 export default class ReleaseShow extends Component {
   constructor(props) {
     super(props);
 
-    this.state = { showEditButtons: false };
+    this.state = { showEditButtons: false, initialLoad: false };
     this.loadReleaseData = this.loadReleaseData.bind(this);
     this.toggleEditButtons = this.toggleEditButtons.bind(this);
   }
@@ -25,14 +26,20 @@ export default class ReleaseShow extends Component {
     this.loadReleaseData();
   }
 
+  componentDidUpdate(prevProps) {
+    if (prevProps.loading && !this.props.loading) {
+      this.setState({ initialLoad: true });
+    }
+  }
+
   toggleEditButtons() {
     this.setState({ showEditButtons: !this.state.showEditButtons });
   }
 
   render() {
-    const { release, loading, loggedIn, updateRelease } = this.props;
-    const { showEditButtons } = this.state;
-    if (release && !loading) {
+    const { release, loggedIn, updateRelease } = this.props;
+    const { showEditButtons, initialLoad } = this.state;
+    if (release && initialLoad) {
       const { personnel, trackListing, comments, _id } = release;
 
       return (
@@ -86,7 +93,11 @@ export default class ReleaseShow extends Component {
         </div>
       );
     } else {
-      return <p>LOADING</p>;
+      return (
+        <div className="resource-show-container">
+          <LoadingSpinner />
+        </div>
+      );
     }
   }
 }

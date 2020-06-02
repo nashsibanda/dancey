@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import PersonnelIndexItem from "./personnel_index_item";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import LoadingSpinner from "../loading/loading_spinner";
 
 export default class PersonnelIndex extends Component {
   componentDidMount() {
@@ -14,6 +15,7 @@ export default class PersonnelIndex extends Component {
       statePersonnel,
       showEditButtons,
       hideHeader,
+      loading,
     } = this.props;
     return (
       <div className="personnel-index-container">
@@ -29,7 +31,12 @@ export default class PersonnelIndex extends Component {
           </div>
         )}
         <ul className="personnel-index">
-          {resourcePersonnel.length > 0 &&
+          {loading ? (
+            <li className="personnel-index-item">
+              <LoadingSpinner />
+            </li>
+          ) : (
+            resourcePersonnel.length > 0 &&
             resourcePersonnel.map((rPersonnel, index) => {
               const itemPersonnel = statePersonnel[rPersonnel.personnelId];
               return (
@@ -41,7 +48,8 @@ export default class PersonnelIndex extends Component {
                   />
                 )
               );
-            })}
+            })
+          )}
         </ul>
       </div>
     );

@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import ReactStars from "react-rating-stars-component";
 import ReviewsIndexItem from "./reviews_index_item";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import LoadingSpinner from "../loading/loading_spinner";
 
 export default class ReviewsIndex extends Component {
   componentDidMount() {
@@ -16,6 +17,7 @@ export default class ReviewsIndex extends Component {
       stateReviews,
       fetchOneReview,
       loggedIn,
+      loading,
     } = this.props;
 
     const indexReviews = Object.values(stateReviews).filter(
@@ -55,7 +57,12 @@ export default class ReviewsIndex extends Component {
           </div>
         </div>
         <ul className="reviews-index">
-          {indexReviews.length > 0 &&
+          {loading ? (
+            <li className="reviews-index-item">
+              <LoadingSpinner className="extra-vertical-padding" />
+            </li>
+          ) : (
+            indexReviews.length > 0 &&
             indexReviews.map(review => {
               return (
                 review && (
@@ -66,7 +73,8 @@ export default class ReviewsIndex extends Component {
                   />
                 )
               );
-            })}
+            })
+          )}
         </ul>
       </div>
     );

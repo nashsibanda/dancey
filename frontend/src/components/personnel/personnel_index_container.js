@@ -4,6 +4,7 @@ import { fetchResourcePersonnel } from "../../actions/personnel_actions";
 
 const mapStateToProps = state => ({
   statePersonnel: state.entities.personnel,
+  loading: state.loading.personnel,
 });
 
 const mapDispatchToProps = dispatch => ({
