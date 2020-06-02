@@ -10,11 +10,11 @@ export default class ReleaseMainInfo extends React.Component {
     super(props);
 
     this.state = {
-      releaseYear: this.props.release.releaseYear,
+      releaseYear: this.props.release.releaseYear || "",
       editYear: false,
-      releaseCountry: this.props.release.releaseCountry,
+      releaseCountry: this.props.release.releaseCountry || "",
       editCountry: false,
-      format: this.props.release.format,
+      format: this.props.release.format || "",
       editFormat: false,
     };
 
@@ -26,7 +26,7 @@ export default class ReleaseMainInfo extends React.Component {
     return e =>
       this.setState({
         [toggle]: !this.state[toggle],
-        [field]: this.props.release[field],
+        [field]: this.props.release[field] || "",
       });
   }
 
