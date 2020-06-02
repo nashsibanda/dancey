@@ -43,11 +43,17 @@
       position: absolute;
       bottom: 0rem;
       right: 0rem;
-      background-color: $graydarker;
-      color: $graylighter;
 
-      svg {
+      &.edit-mode-on {
         color: $graylighter;
+        background-color: $graydarker;
+        svg {
+          color: $graylighter;
+        }
+      }
+
+      &.edit-mode-off {
+        color: $graydarker;
       }
     }
 
@@ -58,6 +64,8 @@
     div {
       display: flex;
       flex-direction: row;
+      align-items: center;
+      min-height: 2.5rem;
     }
     .details-label {
       width: 10rem;

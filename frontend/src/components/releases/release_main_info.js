@@ -2,6 +2,8 @@ import React from "react";
 import { joinObjectLinks } from "../../util/formatting_util";
 import plainRecordImage from "../../assets/plain_record.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import countries from "../../util/validation/countries";
+import formats from "../../util/validation/formats";
 
 export default class ReleaseMainInfo extends React.Component {
   constructor(props) {
@@ -10,14 +12,22 @@ export default class ReleaseMainInfo extends React.Component {
     this.state = {
       releaseYear: this.props.release.releaseYear,
       editYear: false,
+      releaseCountry: this.props.release.releaseCountry,
+      editCountry: false,
+      format: this.props.release.format,
+      editFormat: false,
     };
 
     this.toggleForm = this.toggleForm.bind(this);
     this.updateField = this.updateField.bind(this);
   }
 
-  toggleForm(form) {
-    return e => this.setState({ [form]: !this.state[form] });
+  toggleForm(field, toggle) {
+    return e =>
+      this.setState({
+        [toggle]: !this.state[toggle],
+        [field]: this.props.release[field],
+      });
   }
 
   updateField(field) {
@@ -28,13 +38,14 @@ export default class ReleaseMainInfo extends React.Component {
     }
   }
 
-  handleSubmit(field) {
+  handleSubmit(field, toggle) {
     return e => {
       e.preventDefault();
       const updateData = {
         [field]: this.state[field],
       };
       this.props.updateRelease(this.props.release._id, updateData);
+      this.setState({ [toggle]: false });
     };
   }
 
@@ -45,15 +56,15 @@ export default class ReleaseMainInfo extends React.Component {
       toggleEditButtons,
       showEditButtons,
     } = this.props;
+    const { images, mainArtists, label, title } = release;
     const {
-      images,
-      mainArtists,
-      label,
-      format,
+      editYear,
+      releaseYear,
       releaseCountry,
-      title,
-    } = release;
-    const { editYear, releaseYear } = this.state;
+      editCountry,
+      editFormat,
+      format,
+    } = this.state;
 
     const mainImage = images.find(({ mainImage }) => mainImage === true);
 
@@ -77,13 +88,18 @@ export default class ReleaseMainInfo extends React.Component {
         <div className="resource-details">
           {loggedIn && (
             <button
-              className="big-button toggle-edit-button"
+              className={
+                "big-button toggle-edit-button " +
+                (showEditButtons ? "edit-mode-on" : "edit-mode-off")
+              }
               onClick={toggleEditButtons}
             >
               <FontAwesomeIcon
                 icon={showEditButtons ? "toggle-on" : "toggle-off"}
               />
-              <span>{showEditButtons ? "Finish Editing" : "Edit Release"}</span>
+              <span>
+                {showEditButtons ? "Edit Mode: On" : "Edit Mode: Off"}
+              </span>
             </button>
           )}
           <h2>
@@ -95,16 +111,98 @@ export default class ReleaseMainInfo extends React.Component {
           </div>
           <div>
             <span className="details-label">Format:</span>
-            <span className="details-value">{format}</span>
+            {editFormat ? (
+              <form onSubmit={this.handleSubmit("format", "editFormat")}>
+                <select
+                  onChange={this.updateField("format")}
+                  value={format}
+                  placeholder="Format"
+                >
+                  <option disabled value="">
+                    Select a release format
+                  </option>
+                  {formats.map(format => (
+                    <option key={format} value={format}>
+                      {format}
+                    </option>
+                  ))}
+                </select>
+                <button className="icon-button" type="submit">
+                  <FontAwesomeIcon icon="save" />
+                </button>
+                <button
+                  className="icon-button"
+                  type="button"
+                  onClick={this.toggleForm("format", "editFormat")}
+                >
+                  <FontAwesomeIcon icon="undo-alt" />
+                </button>
+              </form>
+            ) : (
+              <span className="details-value">
+                {format}
+                {showEditButtons && (
+                  <button
+                    className="icon-button"
+                    type="button"
+                    onClick={this.toggleForm("format", "editFormat")}
+                  >
+                    <FontAwesomeIcon icon="edit" />
+                  </button>
+                )}
+              </span>
+            )}
           </div>
           <div>
             <span className="details-label">Release Country:</span>
-            <span className="details-value">{releaseCountry}</span>
+            {editCountry ? (
+              <form
+                onSubmit={this.handleSubmit("releaseCountry", "editCountry")}
+              >
+                <select
+                  onChange={this.updateField("releaseCountry")}
+                  value={releaseCountry}
+                  placeholder="Release Country"
+                >
+                  <option disabled value="">
+                    Select a country
+                  </option>
+                  {Object.keys(countries).map(country => (
+                    <option key={country} value={country}>
+                      {country}
+                    </option>
+                  ))}
+                </select>
+                <button className="icon-button" type="submit">
+                  <FontAwesomeIcon icon="save" />
+                </button>
+                <button
+                  className="icon-button"
+                  type="button"
+                  onClick={this.toggleForm("releaseCountry", "editCountry")}
+                >
+                  <FontAwesomeIcon icon="undo-alt" />
+                </button>
+              </form>
+            ) : (
+              <span className="details-value">
+                {releaseCountry}
+                {showEditButtons && (
+                  <button
+                    className="icon-button"
+                    type="button"
+                    onClick={this.toggleForm("releaseCountry", "editCountry")}
+                  >
+                    <FontAwesomeIcon icon="edit" />
+                  </button>
+                )}
+              </span>
+            )}
           </div>
           <div>
             <span className="details-label">Release Year:</span>
             {editYear ? (
-              <form onSubmit={this.handleSubmit("releaseYear")}>
+              <form onSubmit={this.handleSubmit("releaseYear", "editYear")}>
                 <input
                   type="number"
                   min="1890"
@@ -118,7 +216,7 @@ export default class ReleaseMainInfo extends React.Component {
                 <button
                   className="icon-button"
                   type="button"
-                  onClick={this.toggleForm("editYear")}
+                  onClick={this.toggleForm("releaseYear", "editYear")}
                 >
                   <FontAwesomeIcon icon="undo-alt" />
                 </button>
@@ -130,7 +228,7 @@ export default class ReleaseMainInfo extends React.Component {
                   <button
                     className="icon-button"
                     type="button"
-                    onClick={this.toggleForm("editYear")}
+                    onClick={this.toggleForm("releaseYear", "editYear")}
                   >
                     <FontAwesomeIcon icon="edit" />
                   </button>
