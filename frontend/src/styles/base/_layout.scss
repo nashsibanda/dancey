@@ -60,7 +60,14 @@ a {
 input[type="text"],
 input[type="email"],
 input[type="password"],
-input[type="number"] {
+input[type="number"],
+select {
   border: 1px solid $graylighter;
   padding: 0.5rem;
+}
+
+select {
+  font-family: $sans-serif;
+  font-size: 1rem;
+  max-width: 15rem;
 }

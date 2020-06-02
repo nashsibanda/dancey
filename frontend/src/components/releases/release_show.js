@@ -11,7 +11,7 @@ export default class ReleaseShow extends Component {
   constructor(props) {
     super(props);
 
-    this.state = { showEditButtons: true };
+    this.state = { showEditButtons: false };
     this.loadReleaseData = this.loadReleaseData.bind(this);
     this.toggleEditButtons = this.toggleEditButtons.bind(this);
   }
@@ -42,7 +42,7 @@ export default class ReleaseShow extends Component {
           </Helmet>
           <ReleaseMainInfo
             release={release}
-            loggedIn={true}
+            loggedIn={loggedIn}
             updateRelease={updateRelease}
             toggleEditButtons={this.toggleEditButtons}
             showEditButtons={showEditButtons}
