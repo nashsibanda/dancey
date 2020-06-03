@@ -126,11 +126,13 @@ router.post("/login", joiValidator.body(loginValidation), (req, res, next) => {
         isAdmin: user.isAdmin,
       };
 
+      const expiryTime = user.isAdmin ? "1d" : 3600;
+
       // Sign in user with jsonwebtoken
       jsonwebtoken.sign(
         payload,
         keys.secretOrKey,
-        { expiresIn: 3600 },
+        { expiresIn: expiryTime },
         (err, token) => {
           res.json({
             success: true,
