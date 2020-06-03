@@ -48,13 +48,10 @@ export default class TracksIndexItem extends Component {
     const { title, duration } = track;
     const { showTrackPersonnel } = this.state;
     return (
-      <li className="tracks-index-item">
+      <li className="tracks-index-item tracks-index-track-item">
         <div className="main-track-details">
           <span className="track-expand-info">
-            <button
-              className="icosn-button"
-              onClick={this.toggleTrackPersonnel}
-            >
+            <button className="icon-button" onClick={this.toggleTrackPersonnel}>
               <FontAwesomeIcon
                 icon={showTrackPersonnel ? "minus-square" : "plus-square"}
               />

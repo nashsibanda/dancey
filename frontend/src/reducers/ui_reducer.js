@@ -5,7 +5,7 @@ import {
 } from "../actions/session_actions";
 
 const _initialState = {
-  showSessionFormModal: true,
+  showSessionFormModal: false,
 };
 
 const UiReducer = (state = _initialState, action) => {

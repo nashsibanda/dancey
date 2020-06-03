@@ -3,6 +3,7 @@ import TracksIndexItemContainer from "./tracks_index_item_container";
 import { makeFriendlyTime } from "../../util/formatting_util";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import LoadingSpinner from "../loading/loading_spinner";
+import TrackFormContainer from "./track_form_container";
 
 export default class TracksIndex extends Component {
   constructor(props) {
@@ -12,9 +13,12 @@ export default class TracksIndex extends Component {
       showTrackPersonnel: false,
       loadedTrackPersonnel: false,
       sortRule: !!this.props.trackListing ? "trackOrderAsc" : "alphaAsc",
+      showMainEditMenu: true,
+      showNewTrackForm: true,
     };
     this.toggleTrackPersonnel = this.toggleTrackPersonnel.bind(this);
     this.makeIndexTracks = this.makeIndexTracks.bind(this);
+    this.toggleEditSection = this.toggleEditSection.bind(this);
   }
 
   componentDidMount() {
@@ -79,12 +83,18 @@ export default class TracksIndex extends Component {
     }
   }
 
+  toggleEditSection(field) {
+    return e => this.setState({ [field]: !this.state[field] });
+  }
+
   render() {
     const { hideHeader, showEditButtons, trackListing } = this.props;
     const {
       initialLoad,
       showTrackPersonnel,
       loadedTrackPersonnel,
+      showMainEditMenu,
+      showNewTrackForm,
     } = this.state;
     const indexTracks = this.makeIndexTracks();
 
@@ -95,7 +105,10 @@ export default class TracksIndex extends Component {
             <div className="resource-show-section-header">
               <h2>Track List</h2>
               {showEditButtons && (
-                <button className="big-button">
+                <button
+                  className="big-button"
+                  onClick={this.toggleEditSection("showMainEditMenu")}
+                >
                   <FontAwesomeIcon icon="edit" />
                   <span>Edit Tracks</span>
                 </button>
@@ -103,11 +116,30 @@ export default class TracksIndex extends Component {
             </div>
           )}
           <ul className="tracks-index">
-            <li className="tracks-index-item">
+            {showMainEditMenu && (
+              <>
+                <div className="tracks-index-item tracks-index-menu-row">
+                  <button
+                    className="big-button"
+                    onClick={this.toggleEditSection("showNewTrackForm")}
+                  >
+                    <FontAwesomeIcon icon="plus" />
+                    <span>Add Track</span>
+                  </button>
+                </div>
+                {showNewTrackForm && (
+                  <div className="tracks-index-item tracks-index-form-row">
+                    <TrackFormContainer style="inline" />
+                  </div>
+                )}
+              </>
+            )}
+            {/* Tracks List Header Row */}
+            <div className="tracks-index-item tracks-index-header-row">
               <div className="main-track-details tracks-index-column-titles">
                 <span className="track-expand-info">
                   <button
-                    className="icosn-button"
+                    className="icon-button"
                     onClick={this.toggleTrackPersonnel}
                   >
                     <FontAwesomeIcon
@@ -119,7 +151,8 @@ export default class TracksIndex extends Component {
                 <span className="track-title">Title</span>
                 <span className="track-duration">Duration</span>
               </div>
-            </li>
+            </div>
+            {/* Tracks List */}
             {initialLoad ? (
               <>
                 {indexTracks.length > 0 &&
@@ -136,7 +169,7 @@ export default class TracksIndex extends Component {
                     );
                   })}
                 {!!trackListing && (
-                  <li className="tracks-index-item tracks-index-duration-item">
+                  <li className="tracks-index-item tracks-index-header-row">
                     <div className="main-track-details">
                       <span className="tracks-total-duration">
                         {trackListing.length} track
@@ -157,7 +190,7 @@ export default class TracksIndex extends Component {
                 <li className="tracks-index-item">
                   <LoadingSpinner />
                 </li>
-                <li className="tracks-index-item tracks-index-duration-item placeholder">
+                <li className="tracks-index-item tracks-index-header-row">
                   Loading...
                 </li>
               </>
