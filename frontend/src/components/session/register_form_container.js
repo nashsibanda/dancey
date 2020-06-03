@@ -3,8 +3,9 @@ import { connect } from "react-redux";
 import RegisterForm from "./register_form";
 
 const mapStateToProps = state => ({
-  loggedIn: state.session.loggedIn,
+  loggedIn: state.session.isAuthenticated,
   errors: state.errors.session,
+  loading: state.loading.session,
 });
 
 const mapDispatchToProps = dispatch => ({

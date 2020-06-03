@@ -3,7 +3,9 @@ import { connect } from "react-redux";
 import LoginForm from "./login_form";
 
 const mapStateToProps = state => ({
+  loggedIn: state.session.isAuthenticated,
   errors: state.errors.session,
+  loading: state.loading.session,
 });
 
 const mapDispatchToProps = dispatch => ({

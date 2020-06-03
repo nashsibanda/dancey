@@ -2,6 +2,7 @@ import React from "react";
 import { withRouter } from "react-router-dom";
 import countries from "../../util/validation/countries";
 import { Helmet } from "react-helmet";
+import LoadingSpinner from "../loading/loading_spinner";
 
 class RegisterForm extends React.Component {
   constructor(props) {
@@ -69,6 +70,7 @@ class RegisterForm extends React.Component {
   }
 
   render() {
+    const { loading } = this.props;
     const {
       username,
       email,
@@ -79,67 +81,72 @@ class RegisterForm extends React.Component {
       confPassword,
     } = this.state;
     return (
-      <div>
-        <Helmet>
-          <title>Register — dancey</title>
-        </Helmet>
-        <form onSubmit={this.handleSubmit}>
-          <input
-            type="email"
-            value={email}
-            onChange={this.update("email")}
-            placeholder="Email"
-          />
-          <input
-            type="text"
-            value={username}
-            onChange={this.update("username")}
-            placeholder="Username"
-          />
-          <input
-            type="password"
-            value={password}
-            onChange={this.update("password")}
-            placeholder="Password"
-          />
-          <input
-            type="password"
-            value={confPassword}
-            onChange={this.update("confPassword")}
-            placeholder="Confirm Password"
-          />
-          <input
-            type="text"
-            value={firstName}
-            onChange={this.update("firstName")}
-            placeholder="First Name"
-          />
-          <input
-            type="text"
-            value={lastName}
-            onChange={this.update("lastName")}
-            placeholder="Last Name"
-          />
-          <select
-            onChange={this.update("location")}
-            value={location}
-            placeholder="Country"
-          >
-            <option disabled value="">
-              Select a country
+      <form onSubmit={this.handleSubmit} className="session-form">
+        <input
+          type="email"
+          value={email}
+          onChange={this.update("email")}
+          placeholder="Email"
+          required
+        />
+        <input
+          type="text"
+          value={username}
+          onChange={this.update("username")}
+          placeholder="Username"
+          required
+        />
+        <input
+          type="password"
+          value={password}
+          onChange={this.update("password")}
+          placeholder="Password"
+          required
+        />
+        <input
+          type="password"
+          value={confPassword}
+          onChange={this.update("confPassword")}
+          placeholder="Confirm Password"
+          required
+        />
+        <input
+          type="text"
+          value={firstName}
+          onChange={this.update("firstName")}
+          placeholder="First Name"
+          required
+        />
+        <input
+          type="text"
+          value={lastName}
+          onChange={this.update("lastName")}
+          placeholder="Last Name"
+          required
+        />
+        <select
+          onChange={this.update("location")}
+          value={location}
+          placeholder="Country"
+        >
+          <option disabled value="">
+            Country of Residence
+          </option>
+          {Object.keys(countries).map(country => (
+            <option key={country} value={country}>
+              {country}
             </option>
-            {Object.keys(countries).map(country => (
-              <option key={country} value={country}>
-                {country}
-              </option>
-            ))}
-          </select>
+          ))}
+        </select>
+        {loading ? (
+          <LoadingSpinner />
+        ) : (
           <button className="big-button" type="submit">
-            Submit
+            Register New Account
           </button>
-          {this.renderErrors()}
-        </form>
-      </div>
+        )}
+        {this.renderErrors()}
+      </form>
     );
   }
 }

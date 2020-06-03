@@ -1,6 +1,7 @@
 import React from "react";
 import { withRouter } from "react-router-dom";
 import { Helmet } from "react-helmet";
+import LoadingSpinner from "../loading/loading_spinner";
 
 class LoginForm extends React.Component {
   constructor(props) {
@@ -50,33 +51,38 @@ class LoginForm extends React.Component {
   }
 
   render() {
+    const { warning, loading } = this.props;
     const { email, password } = this.state;
     return (
-      <div className="login-form-container">
-        <Helmet>
-          <title>Log In — dancey</title>
-        </Helmet>
-        <form onSubmit={this.handleSubmit}>
-          <div>
-            <input
-              type="email"
-              value={email}
-              onChange={this.update("email")}
-              placeholder="Email"
-            />
-            <input
-              type="password"
-              value={password}
-              onChange={this.update("password")}
-              placeholder="Password"
-            />
-            <button className="big-button" type="submit">
-              Log In
-            </button>
-            {this.renderErrors()}
-          </div>
-        </form>
-      </div>
+      <form onSubmit={this.handleSubmit} className="session-form">
+        {warning && (
+          <h2 className="login-form-warning">
+            You must be logged in to do this.
+          </h2>
+        )}
+        <input
+          type="email"
+          value={email}
+          onChange={this.update("email")}
+          placeholder="Email"
+          required
+        />
+        <input
+          type="password"
+          value={password}
+          onChange={this.update("password")}
+          placeholder="Password"
+          required
+        />
+        {loading ? (
+          <LoadingSpinner />
+        ) : (
+          <button className="big-button" type="submit">
+            Log In
+          </button>
+        )}
+        {this.renderErrors()}
+      </form>
     );
   }
 }
