@@ -1,0 +1,24 @@
+.track-form {
+  .form-section {
+    display: flex;
+    align-items: flex-end;
+    flex-direction: row;
+
+    & > * {
+      margin-right: 0.5rem;
+    }
+
+    span {
+      padding: 0.5rem;
+    }
+  }
+
+  .time-input {
+    max-width: 3.5rem;
+    text-align: right;
+  }
+
+  .title-input {
+    flex-grow: 1;
+  }
+}

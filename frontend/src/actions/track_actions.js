@@ -45,3 +45,16 @@ export const fetchTrack = id => dispatch => {
       dispatch(tracksLoadingOff());
     });
 };
+
+export const createTrack = trackData => dispatch => {
+  dispatch(tracksLoadingOn());
+  TrackAPIUtil.postTrack(trackData)
+    .then(newTrack => {
+      dispatch(receiveTrack(newTrack.data));
+      dispatch(tracksLoadingOff());
+    })
+    .catch(err => {
+      dispatch(receiveTrackErrors(err.response.data));
+      dispatch(tracksLoadingOff());
+    });
+};

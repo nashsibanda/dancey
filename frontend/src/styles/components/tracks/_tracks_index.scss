@@ -3,31 +3,39 @@
     display: flex;
     flex-direction: column;
     border: 1px solid $graylighter;
+    border-radius: 3px;
+
+    .tracks-index-track-item {
+      background-color: $graylightest;
+    }
+
+    .tracks-index-track-item:nth-of-type(2n) {
+      background-color: $graylighter;
+    }
+
+    .tracks-index-header-row {
+      background-color: $graydark;
+      color: white;
+      font-weight: 700;
+    }
+
+    .tracks-index-menu-row {
+      button {
+        background-color: $graydark;
+        font-weight: 700;
+
+        & > * {
+          color: white;
+        }
+      }
+    }
 
     .tracks-index-item {
-      background-color: $graylighter;
       border-top: 1px solid $graylight;
       padding: 0.7rem;
 
-      &:nth-of-type(2n) {
-        background-color: $graylightest;
-      }
-
-      &:first-of-type {
-        background-color: $graydark;
-        color: white;
-        font-weight: 700;
+      &:first-child {
         border-top: none;
-      }
-
-      &.tracks-index-duration-item {
-        background-color: $graydark;
-        color: white;
-        font-weight: 700;
-
-        &.placeholder {
-          color: $graydark;
-        }
       }
 
       .main-track-details {
