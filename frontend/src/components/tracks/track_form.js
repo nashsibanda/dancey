@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import PersonnelSearchContainer from "../search/personnel_search_container";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export default class TrackForm extends Component {
   constructor(props) {
@@ -14,11 +15,13 @@ export default class TrackForm extends Component {
       writers: null,
       originalVersion: "",
       _id: null,
-      showPersonnelDetails: false,
+      personnelInputSelector: "",
     };
     this.updateField = this.updateField.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.updateSelectField = this.updateSelectField.bind(this);
+    this.selectPersonnelField = this.selectPersonnelField.bind(this);
+    this.getDefaultArtists = this.getDefaultArtists.bind(this);
   }
 
   componentDidMount() {
@@ -42,6 +45,9 @@ export default class TrackForm extends Component {
         durationSecs: duration % 60,
         _id,
       });
+    } else if (this.props.releaseId) {
+      const { stateReleases, releaseId } = this.props;
+      this.setState({ mainArtists: stateReleases[releaseId].mainArtists });
     }
   }
 
@@ -51,6 +57,14 @@ export default class TrackForm extends Component {
 
   updateSelectField(field, value) {
     this.setState({ [field]: value });
+  }
+
+  selectPersonnelField(field) {
+    return e =>
+      this.setState({
+        personnelInputSelector:
+          this.state.personnelInputSelector === field ? "" : field,
+      });
   }
 
   handleSubmit(e) {
@@ -77,8 +91,34 @@ export default class TrackForm extends Component {
     this.props.createTrackListing(trackData, this.props.releaseId);
   }
 
+  getDefaultArtists() {
+    const {
+      statePersonnel,
+      stateTracks,
+      stateReleases,
+      releaseId,
+    } = this.props;
+    return releaseId && Object.keys(statePersonnel).length > 0
+      ? stateReleases[releaseId].mainArtists.map(
+          artistId => statePersonnel[artistId]
+        )
+      : [];
+  }
+
   render() {
-    const { title, durationMins, durationSecs } = this.state;
+    const {
+      title,
+      durationMins,
+      durationSecs,
+      personnelInputSelector,
+    } = this.state;
+    const {
+      statePersonnel,
+      stateTracks,
+      stateReleases,
+      releaseId,
+    } = this.props;
+
     return (
       <form className="track-form" onSubmit={this.handleSubmit}>
         <div className="form-section">
@@ -117,13 +157,40 @@ export default class TrackForm extends Component {
             Add Track
           </button>
         </div>
-        <div className="form-section">
-          <PersonnelSearchContainer
-            formUpdate={this.updateSelectField}
-            fieldName={"mainArtists"}
-          />
-          {/* TODO ADD PERSONNEL, ARTIST, WRITER INPUTS - USE MATERIAL UI ASYNC DROPDOWNS */}
+        <div className="form-section add-personnel-menu">
+          <button
+            className="link-button"
+            onClick={this.selectPersonnelField("mainArtists")}
+          >
+            <FontAwesomeIcon icon="plus" />
+            <span>Add Artist(s)</span>
+          </button>
+          <button
+            className="link-button"
+            onClick={this.selectPersonnelField("writers")}
+          >
+            <FontAwesomeIcon icon="plus" />
+            <span>Add Writer(s)</span>
+          </button>
+          <button
+            className="link-button"
+            onClick={this.selectPersonnelField("personnel")}
+          >
+            <FontAwesomeIcon icon="plus" />
+            <span>Add Other Credits</span>
+          </button>
         </div>
+        {personnelInputSelector === "mainArtists" && (
+          <div className="form-section">
+            <PersonnelSearchContainer
+              formUpdate={this.updateSelectField}
+              fieldName={"mainArtists"}
+              placeholderText={"Main Artist(s)..."}
+              defaultSelected={this.getDefaultArtists()}
+            />
+          </div>
+        )}
+        {/* TODO ADD PERSONNEL, ARTIST, WRITER INPUTS - USE MATERIAL UI ASYNC DROPDOWNS */}
       </form>
     );
   }

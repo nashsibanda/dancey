@@ -14,6 +14,20 @@ export default class SearchAutocomplete extends Component {
     this.updateInputValue = this.updateInputValue.bind(this);
     this.makeOptions = this.makeOptions.bind(this);
     this.updateSelected = this.updateSelected.bind(this);
+    this.setDefaultOptions = this.setDefaultOptions.bind(this);
+  }
+
+  componentDidMount() {
+    if (this.props.defaultSelected) {
+      const { formUpdate, fieldName, defaultSelected } = this.props;
+
+      this.setState({ selected: this.makeOptions(defaultSelected) }, () =>
+        formUpdate(
+          fieldName,
+          this.state.selected.map(obj => obj.value)
+        )
+      );
+    }
   }
 
   updateInputValue(newValue) {
@@ -29,7 +43,6 @@ export default class SearchAutocomplete extends Component {
       moreInfoField1: object[this.props.moreInfoField1],
       moreInfoField2: object[this.props.moreInfoField2],
     }));
-    console.log(options);
     return options;
   }
 
@@ -50,8 +63,11 @@ export default class SearchAutocomplete extends Component {
         this.state.selected.map(obj => obj.value)
       )
     );
-    console.log(selected);
   };
+
+  setDefaultOptions() {
+    return this.makeOptions(Object.values(this.props.statePersonnel));
+  }
 
   render() {
     return (
@@ -61,8 +77,8 @@ export default class SearchAutocomplete extends Component {
         className="search-autocomplete"
         classNamePrefix="search-autocomplete"
         loadOptions={this.fetchData}
-        defaultOptions
-        placeholder="Main Artist(s)..."
+        defaultOptions={this.setDefaultOptions()}
+        placeholder={this.props.placeholderText}
         onInputChange={this.updateInputValue}
         formatOptionLabel={this.props.formatOptionLabel}
         onChange={this.updateSelected}

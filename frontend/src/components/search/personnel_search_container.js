@@ -33,6 +33,7 @@ const mapStateToProps = state => ({
   labelField: "name",
   moreInfoField1: "countryOfOrigin",
   moreInfoField2: "dateOfBirth",
+  statePersonnel: state.entities.personnel,
 });
 
 const mapDispatchToProps = dispatch => ({
