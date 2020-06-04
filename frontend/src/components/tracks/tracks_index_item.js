@@ -47,6 +47,11 @@ export default class TracksIndexItem extends Component {
     } = this.props;
     const { title, duration } = track;
     const { showTrackPersonnel } = this.state;
+    const anyCredits =
+      track.personnel.length > 0 ||
+      track.mainArtists.length > 0 ||
+      track.writers.length > 0;
+
     return (
       <li className="tracks-index-item tracks-index-track-item">
         <div className="main-track-details">
@@ -64,37 +69,54 @@ export default class TracksIndexItem extends Component {
         {showTrackPersonnel &&
           (!trackPersonnelLoading ? (
             <div className="track-personnel-details">
-              <div className="track-personnel-main">
-                <span>
-                  <span className="track-personnel-label">Performed by:</span>
-                  {joinObjectLinks(
-                    track.mainArtists.map(artist => statePersonnel[artist])
+              {anyCredits && (
+                <>
+                  <div className="track-personnel-main">
+                    {track.mainArtists.length > 0 && (
+                      <span>
+                        <span className="track-personnel-label">
+                          Performed by:
+                        </span>
+                        {joinObjectLinks(
+                          track.mainArtists.map(
+                            artist => statePersonnel[artist]
+                          )
+                        )}
+                      </span>
+                    )}
+                    {track.writers.length > 0 && (
+                      <span>
+                        <span className="track-personnel-label">
+                          Written by:
+                        </span>
+                        {joinObjectLinks(
+                          track.writers.map(writer => statePersonnel[writer])
+                        )}
+                      </span>
+                    )}
+                  </div>
+                  {track.personnel.length > 0 && (
+                    <div className="track-personnel-credits">
+                      <span className="track-personnel-label">Credits:</span>
+                      {track.personnel.map((personnel, index) => {
+                        const personnelObject =
+                          statePersonnel[personnel.personnelId];
+                        return (
+                          <span
+                            key={`${personnelObject._id}-${index}`}
+                            className="track-personnel-credit"
+                          >
+                            {personnel.role} —{" "}
+                            <Link to={`personnel/${personnelObject._id}`}>
+                              {personnelObject.name}
+                            </Link>
+                          </span>
+                        );
+                      })}
+                    </div>
                   )}
-                </span>
-                <span>
-                  <span className="track-personnel-label">Written by:</span>
-                  {joinObjectLinks(
-                    track.writers.map(writer => statePersonnel[writer])
-                  )}
-                </span>
-              </div>
-              <div className="track-personnel-credits">
-                <span className="track-personnel-label">Credits:</span>
-                {track.personnel.map((personnel, index) => {
-                  const personnelObject = statePersonnel[personnel.personnelId];
-                  return (
-                    <span
-                      key={`${personnelObject._id}-${index}`}
-                      className="track-personnel-credit"
-                    >
-                      {personnel.role} —{" "}
-                      <Link to={`personnel/${personnelObject._id}`}>
-                        {personnelObject.name}
-                      </Link>
-                    </span>
-                  );
-                })}
-              </div>
+                </>
+              )}
             </div>
           ) : (
             <div className="track-personnel-details">

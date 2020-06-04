@@ -10,6 +10,9 @@ export const getResourceTracks = (resourceType, resourceId) =>
 export const postTrack = trackPostData =>
   axios.post("/api/tracks/", trackPostData);
 
+export const postTrackToRelease = (trackPostData, releaseId) =>
+  axios.post(`api/tracks/post/release/${releaseId}`, trackPostData);
+
 export const putTrack = (id, trackUpdateData) =>
   axios.put(`/api/tracks/${id}`, trackUpdateData);
 
