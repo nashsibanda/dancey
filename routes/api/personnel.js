@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const passport = require("passport");
+const escapeStringRegexp = require("escape-string-regexp");
 
 const joiValidator = require("express-joi-validation").createValidator({
   passError: true,
@@ -20,6 +21,17 @@ const Track = require("../../models/Track");
 router.get("/", (req, res, next) => {
   Personnel.find()
     .sort({ createdAt: -1 })
+    .then(personnelCollection => res.json(personnelCollection))
+    .catch(err => next(new RecordNotFoundError("No personnel found")));
+});
+
+// GET personnel based on query
+router.get("/search", (req, res, next) => {
+  const escapedQueryString = escapeStringRegexp(req.query.keyword);
+  Personnel.find({
+    name: { $regex: ".*" + escapedQueryString + ".*", $options: "i" },
+  })
+    .sort({ name: -1 })
     .then(personnelCollection => res.json(personnelCollection))
     .catch(err => next(new RecordNotFoundError("No personnel found")));
 });
