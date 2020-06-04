@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import PersonnelSearchContainer from "../search/personnel_search_container";
 
 export default class TrackForm extends Component {
   constructor(props) {
@@ -17,6 +18,7 @@ export default class TrackForm extends Component {
     };
     this.updateField = this.updateField.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.updateSelectField = this.updateSelectField.bind(this);
   }
 
   componentDidMount() {
@@ -47,6 +49,10 @@ export default class TrackForm extends Component {
     return e => this.setState({ [field]: e.target.value });
   }
 
+  updateSelectField(field, value) {
+    this.setState({ [field]: value });
+  }
+
   handleSubmit(e) {
     e.preventDefault();
     const {
@@ -68,7 +74,7 @@ export default class TrackForm extends Component {
       ...(!!originalVersion && { originalVersion }),
       ...(!!_id && { _id }),
     };
-    this.props.createTrack(trackData);
+    this.props.createTrackListing(trackData, this.props.releaseId);
   }
 
   render() {
@@ -113,6 +119,10 @@ export default class TrackForm extends Component {
           </button>
         </div>
         <div className="form-section">
+          <PersonnelSearchContainer
+            formUpdate={this.updateSelectField}
+            fieldName={"mainArtists"}
+          />
           {/* TODO ADD PERSONNEL, ARTIST, WRITER INPUTS - USE MATERIAL UI ASYNC DROPDOWNS */}
         </div>
       </form>

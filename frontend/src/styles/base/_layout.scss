@@ -86,3 +86,26 @@ select {
     padding: 0.5rem 0;
   }
 }
+
+.search-autocomplete {
+  min-width: 10rem;
+  width: 100%;
+
+  .search-autocomplete-option {
+    display: flex;
+    flex-direction: column;
+
+    & > div {
+      display: flex;
+      justify-content: space-between;
+    }
+  }
+
+  .search-autocomplete__value-container {
+    .search-autocomplete-option {
+      .more-info {
+        display: none;
+      }
+    }
+  }
+}
