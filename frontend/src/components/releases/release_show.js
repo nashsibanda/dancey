@@ -2,11 +2,11 @@ import React, { Component } from "react";
 import TracksIndexContainer from "../tracks/tracks_index_container";
 import PersonnelIndexContainer from "../personnel/personnel_index_container";
 import CommentsSectionContainer from "../comments/comments_section_container";
-import ReleaseMainInfo from "./release_main_info";
 import ReviewsIndexContainer from "../reviews/reviews_index_container";
 import { Helmet } from "react-helmet";
 import { makeReleaseHtmlTitle } from "../../util/formatting_util";
 import LoadingSpinner from "../loading/loading_spinner";
+import ReleaseMainInfoContainer from "./release_main_info_container";
 
 export default class ReleaseShow extends Component {
   constructor(props) {
@@ -47,9 +47,11 @@ export default class ReleaseShow extends Component {
           <Helmet>
             <title>{makeReleaseHtmlTitle(release)}</title>
           </Helmet>
-          <ReleaseMainInfo
+          <ReleaseMainInfoContainer
             release={release}
             loggedIn={loggedIn}
+            resourceId={_id}
+            resourceType={"release"}
             updateRelease={updateRelease}
             toggleEditButtons={this.toggleEditButtons}
             showEditButtons={showEditButtons}
