@@ -78,7 +78,6 @@ export default class TrackForm extends Component {
   }
 
   render() {
-    const { style } = this.props;
     const { title, durationMins, durationSecs } = this.state;
     return (
       <form className="track-form" onSubmit={this.handleSubmit}>
