@@ -10,16 +10,23 @@ export default class TracksIndexItem extends Component {
 
     this.state = {
       showTrackPersonnel: this.props.showPersonnel,
-      trackPersonnelLoaded: this.props.showPersonnel
-        ? this.props.showPersonnel
-        : false,
+      trackPersonnelLoaded: false,
     };
     this.toggleTrackPersonnel = this.toggleTrackPersonnel.bind(this);
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps, prevState) {
     if (prevProps.showPersonnel !== this.props.showPersonnel) {
-      this.setState({ showTrackPersonnel: this.props.showPersonnel });
+      this.setState({
+        showTrackPersonnel: this.props.showPersonnel,
+      });
+    }
+    if (
+      !this.state.trackPersonnelLoaded &&
+      this.state.showTrackPersonnel &&
+      !this.props.trackPersonnelLoading
+    ) {
+      this.setState({ trackPersonnelLoaded: true });
     }
   }
 
@@ -30,7 +37,6 @@ export default class TracksIndexItem extends Component {
       fetchResourcePersonnel("track", track._id);
       this.setState({
         showTrackPersonnel: !showTrackPersonnel,
-        trackPersonnelLoaded: true,
       });
     } else {
       this.setState({ showTrackPersonnel: !showTrackPersonnel });
@@ -46,7 +52,7 @@ export default class TracksIndexItem extends Component {
       trackPersonnelLoading,
     } = this.props;
     const { title, duration } = track;
-    const { showTrackPersonnel } = this.state;
+    const { showTrackPersonnel, trackPersonnelLoaded } = this.state;
     const anyCredits =
       track.personnel.length > 0 ||
       track.mainArtists.length > 0 ||
@@ -67,9 +73,9 @@ export default class TracksIndexItem extends Component {
           <span className="track-duration">{makeFriendlyTime(duration)}</span>
         </div>
         {showTrackPersonnel &&
-          (!trackPersonnelLoading ? (
+          (!trackPersonnelLoading || trackPersonnelLoaded ? (
             <div className="track-personnel-details">
-              {anyCredits && (
+              {anyCredits ? (
                 <>
                   <div className="track-personnel-main">
                     {track.mainArtists.length > 0 && (
@@ -116,6 +122,10 @@ export default class TracksIndexItem extends Component {
                     </div>
                   )}
                 </>
+              ) : (
+                <div className="track-personnel-main">
+                  <span>No track credits added yet...</span>
+                </div>
               )}
             </div>
           ) : (
