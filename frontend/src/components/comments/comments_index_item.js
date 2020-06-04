@@ -1,6 +1,7 @@
 import React from "react";
 import CommentsIndexContainer from "./comments_index_container";
 import { Link } from "react-router-dom";
+import moment from "moment";
 
 export default function CommentsIndexItem(props) {
   const {
@@ -10,9 +11,7 @@ export default function CommentsIndexItem(props) {
     resourceType,
     resourceId,
   } = props;
-  const { body, username, userId } = comment;
-  const createdAt = new Date(comment.createdAt);
-  const updatedAt = new Date(comment.updatedAt);
+  const { body, username, userId, createdAt, updatedAt } = comment;
   return (
     <li className="comment">
       <div className="comment-body">{body}</div>
@@ -24,11 +23,11 @@ export default function CommentsIndexItem(props) {
           className="comment-created-on"
           title={
             comment.createdAt === comment.updatedAt
-              ? `posted at ${createdAt.toString()}`
-              : `edited at ${updatedAt.toString()}`
+              ? `posted at ${moment(createdAt).format("LLL")}`
+              : `edited at ${moment(updatedAt).format("LLL")}`
           }
         >
-          Posted on {createdAt.toDateString()}
+          Posted on {moment(createdAt).format("LLL")}
         </span>
         <span className="comment-reply">
           <button className="link-button">Reply</button>

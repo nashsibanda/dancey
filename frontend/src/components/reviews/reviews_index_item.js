@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import CommentsIndexContainer from "../comments/comments_index_container";
 import ReactStars from "react-rating-stars-component";
+import moment from "moment";
 
 export default class ReviewsIndexItem extends Component {
   constructor(props) {
@@ -29,9 +30,17 @@ export default class ReviewsIndexItem extends Component {
   render() {
     const { review } = this.props;
     const { showComments } = this.state;
-    const { rating, body, username, userId, comments, _id } = review;
-    const createdAt = new Date(review.createdAt);
-    const updatedAt = new Date(review.updatedAt);
+    const {
+      rating,
+      body,
+      username,
+      userId,
+      comments,
+      _id,
+      createdAt,
+      updatedAt,
+    } = review;
+
     return (
       <li className="reviews-index-item">
         <div className="review-details">
@@ -41,12 +50,12 @@ export default class ReviewsIndexItem extends Component {
           <span
             className="review-created-on"
             title={
-              review.createdAt === review.updatedAt
-                ? `posted at ${createdAt.toString()}`
-                : `edited at ${updatedAt.toString()}`
+              createdAt === updatedAt
+                ? `posted at ${moment(createdAt).format("LLL")}`
+                : `edited at ${moment(updatedAt).format("LLL")}`
             }
           >
-            on {createdAt.toDateString()}
+            on {moment(createdAt).format("LL")}
           </span>
           <div className="review-interactions">
             <span className="review-add-comment">
