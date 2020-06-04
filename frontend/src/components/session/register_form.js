@@ -1,7 +1,6 @@
 import React from "react";
 import { withRouter } from "react-router-dom";
 import countries from "../../util/validation/countries";
-import { Helmet } from "react-helmet";
 import LoadingSpinner from "../loading/loading_spinner";
 
 class RegisterForm extends React.Component {

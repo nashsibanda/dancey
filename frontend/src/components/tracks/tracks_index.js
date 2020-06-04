@@ -134,7 +134,7 @@ export default class TracksIndex extends Component {
                 </div>
                 {showNewTrackForm && (
                   <div className="tracks-index-item tracks-index-form-row">
-                    <TrackFormContainer style="inline" releaseId={resourceId} />
+                    <TrackFormContainer releaseId={resourceId} />
                   </div>
                 )}
               </>

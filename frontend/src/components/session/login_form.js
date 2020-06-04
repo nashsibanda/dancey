@@ -1,6 +1,5 @@
 import React from "react";
 import { withRouter } from "react-router-dom";
-import { Helmet } from "react-helmet";
 import LoadingSpinner from "../loading/loading_spinner";
 
 class LoginForm extends React.Component {
