@@ -12,6 +12,10 @@
     & > span {
       padding: 0.5rem;
     }
+
+    &.add-personnel-menu {
+      justify-content: space-between;
+    }
   }
 
   .time-input {
