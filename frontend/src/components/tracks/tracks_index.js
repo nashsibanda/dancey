@@ -121,7 +121,7 @@ export default class TracksIndex extends Component {
             </div>
           )}
           <ul className="tracks-index">
-            {showMainEditMenu && (
+            {showEditButtons && showMainEditMenu && (
               <>
                 <div className="tracks-index-item tracks-index-menu-row">
                   <button
