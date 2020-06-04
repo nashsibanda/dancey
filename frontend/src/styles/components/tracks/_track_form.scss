@@ -3,6 +3,7 @@
     display: flex;
     align-items: flex-end;
     flex-direction: row;
+    margin-bottom: 0.5rem;
 
     & > * {
       margin-right: 0.5rem;
@@ -14,8 +15,15 @@
   }
 
   .time-input {
-    max-width: 3.5rem;
+    max-width: 3rem;
     text-align: right;
+    -moz-appearance: textfield;
+
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
   }
 
   .title-input {
