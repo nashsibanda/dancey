@@ -28,7 +28,9 @@ export const joinObjectLinks = (
 };
 
 export const makeFriendlyTime = duration =>
-  `${parseInt(duration / 60)}:${duration % 60}`;
+  `${parseInt(duration / 60)}:${
+    duration % 60 > 9 ? duration % 60 : "0" + (duration % 60)
+  }`;
 
 export const makeReleaseHtmlTitle = release => {
   const { title, format, releaseYear, mainArtists, releaseCountry } = release;

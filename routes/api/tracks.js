@@ -72,6 +72,51 @@ router.post(
   }
 );
 
+// POST a new track to a release
+router.post(
+  "/post/release/:release_id",
+  passport.authenticate("jwt", { session: false }),
+  joiValidator.body(newTrackValidation),
+  (req, res, next) => {
+    const newTrack = new Track({
+      ...req.body,
+    });
+
+    newTrack
+      .save()
+      .then(savedTrack => {
+        Release.findById(req.params.release_id)
+          .then(release => {
+            const trackNumbers = release.trackListing
+              .map(track => track.order)
+              .sort();
+            let trackNum = 1;
+            while (trackNum === trackNumbers[trackNum - 1]) trackNum++;
+            const updatedTrackListings = [
+              ...release.trackListing,
+              { order: trackNum, trackId: savedTrack._id },
+            ];
+            Release.findOneAndReplace(
+              { _id: req.params.release_id },
+              Object.assign(
+                {},
+                release.toObject(),
+                { trackListing: updatedTrackListings },
+                { updatedAt: Date.now() }
+              ),
+              { new: true },
+              (err, updatedRelease) => {
+                if (err) return next(err);
+                res.json({ updatedRelease: updatedRelease, track: savedTrack });
+              }
+            );
+          })
+          .catch(err => next(new RecordNotFoundError("No release found")));
+      })
+      .catch(err => next(err));
+  }
+);
+
 // PUT replacement info for a track
 router.put(
   "/:id",

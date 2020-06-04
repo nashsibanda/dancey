@@ -88,7 +88,12 @@ export default class TracksIndex extends Component {
   }
 
   render() {
-    const { hideHeader, showEditButtons, trackListing } = this.props;
+    const {
+      hideHeader,
+      showEditButtons,
+      trackListing,
+      resourceId,
+    } = this.props;
     const {
       initialLoad,
       showTrackPersonnel,
@@ -129,7 +134,7 @@ export default class TracksIndex extends Component {
                 </div>
                 {showNewTrackForm && (
                   <div className="tracks-index-item tracks-index-form-row">
-                    <TrackFormContainer style="inline" />
+                    <TrackFormContainer style="inline" releaseId={resourceId} />
                   </div>
                 )}
               </>
