@@ -4,6 +4,9 @@ export const getAllPersonnel = () => axios.get("/api/personnel/");
 
 export const getPersonnel = id => axios.get(`/api/personnel/${id}`);
 
+export const getQueryPersonnel = (query = "") =>
+  axios.get(`api/personnel/search?keyword=${query}`);
+
 export const getResourcePersonnel = (resourceType, resourceId) =>
   axios.get(`/api/personnel/get/${resourceType}/${resourceId}`);
 
