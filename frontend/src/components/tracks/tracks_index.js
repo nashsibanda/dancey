@@ -191,6 +191,7 @@ export default class TracksIndex extends Component {
                 )}
               </>
             ) : (
+              /* Loading Spinner */
               <>
                 <li className="tracks-index-item">
                   <LoadingSpinner />
