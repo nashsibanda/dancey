@@ -3,7 +3,8 @@ import TracksIndexItemContainer from "./tracks_index_item_container";
 import { makeFriendlyTime } from "../../util/formatting_util";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import LoadingSpinner from "../loading/loading_spinner";
-import TrackFormContainer from "./track_form_container";
+import TrackListingFormContainer from "./track_listing_form_container";
+import analogSides from "../../util/validation/analog_sides";
 
 export default class TracksIndex extends Component {
   constructor(props) {
@@ -14,11 +15,15 @@ export default class TracksIndex extends Component {
       loadedTrackPersonnel: false,
       sortRule: !!this.props.trackListing ? "trackOrderAsc" : "alphaAsc",
       showMainEditMenu: true,
-      showNewTrackForm: true,
+      showNewTrackForm: false,
+      numberOfSides: null,
+      letterSides: null,
+      sideLabels: [],
     };
     this.toggleTrackPersonnel = this.toggleTrackPersonnel.bind(this);
     this.makeIndexTracks = this.makeIndexTracks.bind(this);
     this.toggleEditSection = this.toggleEditSection.bind(this);
+    this.makeSectionedTracks = this.makeSectionedTracks.bind(this);
   }
 
   componentDidMount() {
@@ -27,12 +32,30 @@ export default class TracksIndex extends Component {
       fetchResourceTracksPersonnel,
       resourceType,
       resourceId,
+      releaseFormat,
     } = this.props;
     fetchResourceTracks(resourceType, resourceId);
     if (this.state.showTrackPersonnel && !this.state.loadedTrackPersonnel) {
       fetchResourceTracksPersonnel(resourceType, resourceId);
       this.setState({ loadedTrackPersonnel: true });
     }
+    if (releaseFormat) {
+      this.setState(
+        {
+          numberOfSides: this.getNumberOfSides(),
+          letterSides: ["LP", "Cassette"].includes(this.props.releaseFormat),
+        },
+        () => {
+          this.setState({ sideLabels: this.getSideLabels() });
+        }
+      );
+    }
+  }
+
+  getSideLabels(numberOfLabels = this.state.numberOfSides) {
+    return this.state.letterSides
+      ? analogSides.slice(0, numberOfLabels)
+      : [...Array(numberOfLabels).keys()].map(x => x + 1);
   }
 
   componentDidUpdate(prevProps) {
@@ -63,8 +86,8 @@ export default class TracksIndex extends Component {
     }
   }
 
-  makeIndexTracks() {
-    const { trackListing, stateTracks } = this.props;
+  makeIndexTracks(trackListing = this.props.trackListing) {
+    const { stateTracks } = this.props;
     switch (this.state.sortRule) {
       case "trackOrderAsc":
         return trackListing
@@ -83,6 +106,23 @@ export default class TracksIndex extends Component {
     }
   }
 
+  makeSectionedTracks() {
+    const sectionedTracks = [];
+    this.state.sideLabels.forEach((label, index) => {
+      const sectionListings = this.props.trackListing.filter(
+        listing => parseInt(listing.sideOrDisc) === index + 1
+      );
+      sectionedTracks.push(this.makeIndexTracks(sectionListings));
+    });
+    return sectionedTracks;
+  }
+
+  getNumberOfSides() {
+    return this.props.trackListing
+      .map(listing => listing.sideOrDisc)
+      .reduce((acc, curr) => (acc > curr ? acc : curr), 0);
+  }
+
   toggleEditSection(field) {
     return e => this.setState({ [field]: !this.state[field] });
   }
@@ -93,6 +133,7 @@ export default class TracksIndex extends Component {
       showEditButtons,
       trackListing,
       resourceId,
+      releaseFormat,
     } = this.props;
     const {
       initialLoad,
@@ -100,8 +141,13 @@ export default class TracksIndex extends Component {
       loadedTrackPersonnel,
       showMainEditMenu,
       showNewTrackForm,
+      numberOfSides,
+      letterSides,
+      sideLabels,
     } = this.state;
-    const indexTracks = this.makeIndexTracks();
+    const indexTracks = numberOfSides
+      ? this.makeSectionedTracks()
+      : this.makeIndexTracks();
 
     if (true) {
       return (
@@ -121,6 +167,7 @@ export default class TracksIndex extends Component {
             </div>
           )}
           <ul className="tracks-index">
+            {/* Add and Edit Menu */}
             {showEditButtons && showMainEditMenu && (
               <>
                 <div className="tracks-index-item tracks-index-menu-row">
@@ -134,7 +181,12 @@ export default class TracksIndex extends Component {
                 </div>
                 {showNewTrackForm && (
                   <div className="tracks-index-item tracks-index-form-row">
-                    <TrackFormContainer releaseId={resourceId} />
+                    <TrackListingFormContainer
+                      releaseId={resourceId}
+                      releaseFormat={releaseFormat}
+                      numberOfSides={numberOfSides}
+                      letterSides={letterSides}
+                    />
                   </div>
                 )}
               </>
@@ -159,37 +211,86 @@ export default class TracksIndex extends Component {
             </div>
             {/* Tracks List */}
             {initialLoad ? (
-              <>
-                {indexTracks.length > 0 &&
-                  indexTracks.map((track, index) => {
-                    return (
-                      <TracksIndexItemContainer
-                        key={track._id}
-                        track={track}
-                        ordered={!!trackListing}
-                        order={index + 1}
-                        showPersonnel={showTrackPersonnel}
-                        loadedTrackPersonnel={loadedTrackPersonnel}
-                      />
-                    );
-                  })}
-                {!!trackListing && (
-                  <li className="tracks-index-item tracks-index-header-row">
-                    <div className="main-track-details">
-                      <span className="tracks-total-duration">
-                        {trackListing.length} track
-                        {trackListing.length === 1 ? "" : "s"} — Total Duration:{" "}
-                        {makeFriendlyTime(
-                          indexTracks.reduce(
-                            (acc, track) => acc + track.duration,
-                            0
-                          )
-                        )}
-                      </span>
-                    </div>
-                  </li>
-                )}
-              </>
+              numberOfSides ? (
+                <>
+                  {indexTracks.length > 0 &&
+                    indexTracks.map((section, index) => {
+                      return (
+                        <>
+                          <li className="tracks-index-item tracks-index-side-row">
+                            <span>
+                              {letterSides ? "Side " : "Disc "}
+                              {sideLabels[index]}
+                            </span>
+                          </li>
+                          {section.map((track, index) => {
+                            return (
+                              <TracksIndexItemContainer
+                                key={track._id}
+                                track={track}
+                                ordered={!!trackListing}
+                                order={index + 1}
+                                showPersonnel={showTrackPersonnel}
+                                loadedTrackPersonnel={loadedTrackPersonnel}
+                              />
+                            );
+                          })}
+                        </>
+                      );
+                    })}
+                  )
+                  {!!trackListing && (
+                    <li className="tracks-index-item tracks-index-header-row">
+                      <div className="main-track-details">
+                        <span className="tracks-total-duration">
+                          {trackListing.length} track
+                          {trackListing.length === 1 ? "" : "s"} — Total
+                          Duration:{" "}
+                          {makeFriendlyTime(
+                            indexTracks.reduce(
+                              (acc, track) => acc + track.duration,
+                              0
+                            )
+                          )}
+                        </span>
+                      </div>
+                    </li>
+                  )}
+                </>
+              ) : (
+                <>
+                  {indexTracks.length > 0 &&
+                    indexTracks.map((track, index) => {
+                      return (
+                        <TracksIndexItemContainer
+                          key={track._id}
+                          track={track}
+                          ordered={!!trackListing}
+                          order={index + 1}
+                          showPersonnel={showTrackPersonnel}
+                          loadedTrackPersonnel={loadedTrackPersonnel}
+                        />
+                      );
+                    })}
+                  {!!trackListing && (
+                    <li className="tracks-index-item tracks-index-header-row">
+                      <div className="main-track-details">
+                        <span className="tracks-total-duration">
+                          {trackListing.length} track
+                          {trackListing.length === 1 ? "" : "s"} — Total
+                          Duration:{" "}
+                          {makeFriendlyTime(
+                            indexTracks.reduce(
+                              (acc, track) => acc + track.duration,
+                              0
+                            )
+                          )}
+                        </span>
+                      </div>
+                    </li>
+                  )}
+                </>
+              )
             ) : (
               /* Loading Spinner */
               <>
