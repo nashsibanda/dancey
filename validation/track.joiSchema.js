@@ -24,5 +24,18 @@ const trackValidation = Joi.object({
 
 const newTrackValidation = trackValidation.tailor("new");
 const updateTrackValidation = trackValidation;
+const trackListingValidation = Joi.object({
+  track: newTrackValidation,
+  trackListing: Joi.object()
+    .keys({
+      order: Joi.number().integer().min(1),
+      sideOrDisc: Joi.number().integer().min(1).allow(null),
+    })
+    .label("Track listing"),
+});
 
-module.exports = { newTrackValidation, updateTrackValidation };
+module.exports = {
+  newTrackValidation,
+  updateTrackValidation,
+  trackListingValidation,
+};
