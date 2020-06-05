@@ -92,12 +92,7 @@ export default class TrackForm extends Component {
   }
 
   getDefaultArtists() {
-    const {
-      statePersonnel,
-      stateTracks,
-      stateReleases,
-      releaseId,
-    } = this.props;
+    const { statePersonnel, stateReleases, releaseId } = this.props;
     return releaseId && Object.keys(statePersonnel).length > 0
       ? stateReleases[releaseId].mainArtists.map(
           artistId => statePersonnel[artistId]
@@ -112,12 +107,12 @@ export default class TrackForm extends Component {
       durationSecs,
       personnelInputSelector,
     } = this.state;
-    const {
-      statePersonnel,
-      stateTracks,
-      stateReleases,
-      releaseId,
-    } = this.props;
+    // const {
+    //   statePersonnel,
+    //   stateTracks,
+    //   stateReleases,
+    //   releaseId,
+    // } = this.props;
 
     return (
       <form className="track-form" onSubmit={this.handleSubmit}>
