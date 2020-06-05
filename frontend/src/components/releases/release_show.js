@@ -38,7 +38,7 @@ export default class ReleaseShow extends Component {
     const { release, loggedIn, updateRelease } = this.props;
     const { showEditButtons, initialLoad } = this.state;
     if (release && initialLoad) {
-      const { personnel, trackListing, comments, _id } = release;
+      const { personnel, trackListing, comments, _id, format } = release;
 
       return (
         <div className="resource-show-container">
@@ -58,6 +58,7 @@ export default class ReleaseShow extends Component {
                   trackListing={trackListing}
                   resourceId={_id}
                   resourceType={"release"}
+                  releaseFormat={format}
                   showEditButtons={showEditButtons}
                 />
               </div>
