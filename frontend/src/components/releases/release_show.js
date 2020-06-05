@@ -3,8 +3,6 @@ import TracksIndexContainer from "../tracks/tracks_index_container";
 import PersonnelIndexContainer from "../personnel/personnel_index_container";
 import CommentsSectionContainer from "../comments/comments_section_container";
 import ReviewsIndexContainer from "../reviews/reviews_index_container";
-import { Helmet } from "react-helmet";
-import { makeReleaseHtmlTitle } from "../../util/formatting_util";
 import LoadingSpinner from "../loading/loading_spinner";
 import ReleaseMainInfoContainer from "./release_main_info_container";
 
@@ -44,9 +42,6 @@ export default class ReleaseShow extends Component {
 
       return (
         <div className="resource-show-container">
-          <Helmet>
-            <title>{makeReleaseHtmlTitle(release)}</title>
-          </Helmet>
           <ReleaseMainInfoContainer
             release={release}
             loggedIn={loggedIn}
