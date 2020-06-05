@@ -1,9 +1,13 @@
 import React from "react";
-import { joinObjectLinks } from "../../util/formatting_util";
+import {
+  joinObjectLinks,
+  makeReleaseHtmlTitle,
+} from "../../util/formatting_util";
 import plainRecordImage from "../../assets/plain_record.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import countries from "../../util/validation/countries";
 import formats from "../../util/validation/formats";
+import { Helmet } from "react-helmet";
 
 export default class ReleaseMainInfo extends React.Component {
   constructor(props) {
@@ -17,6 +21,10 @@ export default class ReleaseMainInfo extends React.Component {
       format: this.props.release.format || "",
       editFormat: false,
       mainArtists: null,
+      editTitle: false,
+      title: this.props.release.title || "",
+      editLabel: false,
+      label: null,
     };
 
     this.toggleForm = this.toggleForm.bind(this);
@@ -35,6 +43,12 @@ export default class ReleaseMainInfo extends React.Component {
         artistId => statePersonnel[artistId]
       );
       this.setState({ mainArtists });
+    }
+
+    if (!this.state.label && prevProps.loading && !this.props.loading) {
+      const { release, statePersonnel } = this.props;
+      const label = release.label.map(labelId => statePersonnel[labelId]);
+      this.setState({ label });
     }
   }
 
@@ -125,9 +139,14 @@ export default class ReleaseMainInfo extends React.Component {
               </button>
             )}
             {mainArtists && (
-              <h2>
-                {joinObjectLinks(mainArtists)} — {title}
-              </h2>
+              <>
+                <h2>
+                  {joinObjectLinks(mainArtists)} — {title}
+                </h2>
+                <Helmet>
+                  <title>{makeReleaseHtmlTitle(this.state)}</title>
+                </Helmet>
+              </>
             )}
             <div>
               <span className="details-label">Label:</span>
