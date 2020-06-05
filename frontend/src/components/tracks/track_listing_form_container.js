@@ -9,7 +9,8 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  submitTrack: trackData => dispatch(createTrack(trackData)),
+  submitTrack: (trackData, releaseId) =>
+    dispatch(createTrackListing(trackData, releaseId)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(TrackForm);
