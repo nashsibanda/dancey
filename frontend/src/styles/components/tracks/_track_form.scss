@@ -18,6 +18,15 @@
     }
   }
 
+  .track-number {
+    display: flex;
+    flex-direction: column;
+
+    .track-number-input {
+      max-width: 4rem;
+    }
+  }
+
   .time-input {
     max-width: 3rem;
     text-align: right;

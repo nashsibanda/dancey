@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import PersonnelSearchContainer from "../search/personnel_search_container";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import analogSides from "../../util/validation/analog_sides";
 
 export default class TrackForm extends Component {
   constructor(props) {
@@ -16,12 +17,19 @@ export default class TrackForm extends Component {
       originalVersion: "",
       _id: null,
       personnelInputSelector: "",
+      sideOrDisc: "",
+      order: "",
+      numberOfSides: this.props.numberOfSides,
+      sideLabels: [],
+      letterSides: this.props.letterSides,
     };
     this.updateField = this.updateField.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.updateSelectField = this.updateSelectField.bind(this);
     this.selectPersonnelField = this.selectPersonnelField.bind(this);
     this.getDefaultArtists = this.getDefaultArtists.bind(this);
+    this.addSide = this.addSide.bind(this);
+    this.getSideLabels = this.getSideLabels.bind(this);
   }
 
   componentDidMount() {
@@ -49,6 +57,15 @@ export default class TrackForm extends Component {
       const { stateReleases, releaseId } = this.props;
       this.setState({ mainArtists: stateReleases[releaseId].mainArtists });
     }
+    if (this.props.releaseFormat) {
+      this.setState({ sideLabels: this.getSideLabels() });
+    }
+  }
+
+  getSideLabels(numberOfLabels = this.state.numberOfSides) {
+    return this.props.letterSides
+      ? analogSides.slice(0, numberOfLabels)
+      : [...Array(numberOfLabels).keys()].map(x => x + 1);
   }
 
   updateField(field) {
@@ -78,6 +95,8 @@ export default class TrackForm extends Component {
       writers,
       originalVersion,
       _id,
+      sideOrDisc,
+      order,
     } = this.state;
     const trackData = {
       title,
@@ -88,7 +107,15 @@ export default class TrackForm extends Component {
       ...(!!originalVersion && { originalVersion }),
       ...(!!_id && { _id }),
     };
-    this.props.createTrackListing(trackData, this.props.releaseId);
+    if (!_id) {
+      const trackReleaseData = {
+        track: trackData,
+        trackListing: { order, sideOrDisc },
+      };
+      this.props.submitTrack(trackReleaseData, this.props.releaseId);
+    } else {
+      this.props.submitTrack(trackData, this.props.releaseId);
+    }
   }
 
   getDefaultArtists() {
@@ -100,24 +127,36 @@ export default class TrackForm extends Component {
       : [];
   }
 
+  addSide() {
+    const newSides = this.state.numberOfSides + 1;
+    this.setState({
+      numberOfSides: newSides,
+      sideLabels: this.getSideLabels(newSides),
+    });
+  }
+
   render() {
     const {
       title,
       durationMins,
       durationSecs,
       personnelInputSelector,
+      sideOrDisc,
+      order,
+      sideLabels,
     } = this.state;
-    // const {
-    //   statePersonnel,
-    //   stateTracks,
-    //   stateReleases,
-    //   releaseId,
-    // } = this.props;
+    const {
+      releaseFormat,
+      //   statePersonnel,
+      //   stateTracks,
+      //   stateReleases,
+      //   releaseId,
+    } = this.props;
 
     return (
       <form className="track-form" onSubmit={this.handleSubmit}>
         <div className="form-section">
-          <span>Track Details:</span>
+          {/* <span>Track Details:</span> */}
           <input
             type="text"
             placeholder="Title"
@@ -126,6 +165,42 @@ export default class TrackForm extends Component {
             className="title-input"
             onChange={this.updateField("title")}
           />
+          <div className="track-number">
+            <div>Track Number</div>
+            <button className="link-button" onClick={this.addSide}>
+              <FontAwesomeIcon icon="plus" />
+              <span>Add Side</span>
+            </button>
+            <div>
+              <select
+                className="track-side-input"
+                onChange={this.updateField("sideOrDisc")}
+                defaultValue={""}
+              >
+                <option disabled value="">
+                  Side
+                </option>
+                {sideLabels.length > 0 &&
+                  sideLabels.map((side, index) => (
+                    <option
+                      value={index + 1}
+                      key={`${releaseFormat}${side}${index}`}
+                    >
+                      {side}
+                    </option>
+                  ))}
+              </select>
+              <input
+                type="number"
+                placeholder="No."
+                value={order}
+                min={1}
+                required
+                className="track-number-input"
+                onChange={this.updateField("order")}
+              />
+            </div>
+          </div>
           <div>
             <div>Duration</div>
             <div>
@@ -133,6 +208,7 @@ export default class TrackForm extends Component {
                 type="number"
                 placeholder="MM"
                 value={durationMins}
+                min={0}
                 onChange={this.updateField("durationMins")}
                 className="time-input"
               />
@@ -142,6 +218,7 @@ export default class TrackForm extends Component {
                 placeholder="SS"
                 value={durationSecs}
                 required
+                min={1}
                 max={59}
                 className="time-input"
                 onChange={this.updateField("durationSecs")}
@@ -185,7 +262,7 @@ export default class TrackForm extends Component {
             />
           </div>
         )}
-        {/* TODO ADD PERSONNEL, ARTIST, WRITER INPUTS - USE MATERIAL UI ASYNC DROPDOWNS */}
+        {/* TODO ADD PERSONNEL, ARTIST, WRITER INPUTS - USE ASYNC SELECT */}
       </form>
     );
   }
