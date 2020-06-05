@@ -10,6 +10,7 @@ const { RecordNotFoundError } = require("../../validation/errors");
 const {
   newTrackValidation,
   updateTrackValidation,
+  trackListingValidation,
 } = require("../../validation/track.joiSchema");
 
 const Track = require("../../models/Track");
@@ -76,10 +77,11 @@ router.post(
 router.post(
   "/post/release/:release_id",
   passport.authenticate("jwt", { session: false }),
-  joiValidator.body(newTrackValidation),
+  joiValidator.body(trackListingValidation),
   (req, res, next) => {
+    console.log(req.body);
     const newTrack = new Track({
-      ...req.body,
+      ...req.body.track,
     });
 
     newTrack
@@ -87,14 +89,9 @@ router.post(
       .then(savedTrack => {
         Release.findById(req.params.release_id)
           .then(release => {
-            const trackNumbers = release.trackListing
-              .map(track => track.order)
-              .sort();
-            let trackNum = 1;
-            while (trackNum === trackNumbers[trackNum - 1]) trackNum++;
             const updatedTrackListings = [
               ...release.trackListing,
-              { order: trackNum, trackId: savedTrack._id },
+              { ...req.body.trackListing, trackId: savedTrack._id },
             ];
             Release.findOneAndReplace(
               { _id: req.params.release_id },
