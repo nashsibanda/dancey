@@ -30,6 +30,7 @@ const ReleaseSchema = new Schema(
     trackListing: [
       {
         order: Number,
+        sideOrDisc: { type: Number, default: null },
         trackId: {
           type: mongoose.Schema.Types.ObjectId,
           ref: "Track",
