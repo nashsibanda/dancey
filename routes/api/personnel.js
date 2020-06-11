@@ -57,7 +57,7 @@ router.get("/get/release/:release_id", (req, res) => {
     .then(release => {
       const personnelIds = [];
       release.personnel.forEach(personnel => {
-        personnelIds.push(personnel.personnelId);
+        personnelIds.push(...personnel.personnelIds);
       });
       Personnel.find({ _id: { $in: personnelIds } })
         .then(personnelCollection => res.json(personnelCollection))
@@ -74,8 +74,9 @@ router.get("/get/release/:release_id/tracks", (req, res) => {
       const personnelIdSet = new Set();
       release.trackListing.forEach(({ trackId }) => {
         trackId.personnel.forEach(personnel => {
-          personnelIdSet.add(personnel.personnelId);
+          personnelIdSet.add(...personnel.personnelIds);
         });
+        console.log(personnelIdSet);
         trackId.mainArtists.forEach(mainArtist => {
           personnelIdSet.add(mainArtist);
         });
@@ -97,7 +98,7 @@ router.get("/get/track/:track_id", (req, res) => {
     .then(track => {
       const personnelIdSet = new Set();
       track.personnel.forEach(personnel => {
-        personnelIdSet.add(personnel.personnelId);
+        personnelIdSet.add(...personnel.personnelIds);
       });
       track.mainArtists.forEach(mainArtist => {
         personnelIdSet.add(mainArtist);

@@ -18,10 +18,12 @@ const ReleaseSchema = new Schema(
     ],
     personnel: [
       {
-        personnelId: {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: "Personnel",
-        },
+        personnelIds: [
+          {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Personnel",
+          },
+        ],
         role: {
           type: String,
         },

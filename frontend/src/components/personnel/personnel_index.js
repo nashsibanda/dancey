@@ -38,9 +38,11 @@ export default class PersonnelIndex extends Component {
           ) : (
             resourcePersonnel.length > 0 &&
             resourcePersonnel.map((rPersonnel, index) => {
-              const itemPersonnel = statePersonnel[rPersonnel.personnelId];
+              const itemPersonnel = rPersonnel.personnelIds.map(
+                id => statePersonnel[id]
+              );
               return (
-                itemPersonnel && (
+                itemPersonnel[0] && (
                   <PersonnelIndexItem
                     personnel={itemPersonnel}
                     role={rPersonnel.role}
