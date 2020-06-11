@@ -141,8 +141,6 @@ export default class TrackForm extends Component {
       title,
       durationMins,
       durationSecs,
-      personnelInputSelector,
-      sideOrDisc,
       order,
       sideLabels,
       showMainArtistsField,
