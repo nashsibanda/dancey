@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import LoadingSpinner from "../loading/loading_spinner";
 import TrackListingFormContainer from "./track_listing_form_container";
 import analogSides from "../../util/validation/analog_sides";
+import plainRecordImage from "../../assets/plain_record.png";
 
 export default class TracksIndex extends Component {
   constructor(props) {
@@ -219,8 +220,20 @@ export default class TracksIndex extends Component {
                         <>
                           <li className="tracks-index-item tracks-index-side-row">
                             <span>
+                              <img
+                                src={plainRecordImage}
+                                className={"default-image record-side-icon"}
+                              />
                               {letterSides ? "Side " : "Disc "}
                               {sideLabels[index]}
+                            </span>
+                            <span className="track-duration">
+                              {makeFriendlyTime(
+                                section.reduce(
+                                  (acc, track) => acc + track.duration,
+                                  0
+                                )
+                              )}
                             </span>
                           </li>
                           {section.map((track, index) => {
@@ -238,7 +251,7 @@ export default class TracksIndex extends Component {
                         </>
                       );
                     })}
-                  )
+
                   {!!trackListing && (
                     <li className="tracks-index-item tracks-index-header-row">
                       <div className="main-track-details">
@@ -247,7 +260,7 @@ export default class TracksIndex extends Component {
                           {trackListing.length === 1 ? "" : "s"} — Total
                           Duration:{" "}
                           {makeFriendlyTime(
-                            indexTracks.reduce(
+                            this.makeIndexTracks().reduce(
                               (acc, track) => acc + track.duration,
                               0
                             )
