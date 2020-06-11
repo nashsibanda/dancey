@@ -16,7 +16,9 @@ export default class TrackForm extends Component {
       writers: null,
       originalVersion: "",
       _id: null,
-      personnelInputSelector: "",
+      showMainArtistsField: false,
+      showWritersField: false,
+      showPersonnelField: false,
       sideOrDisc: "",
       order: "",
       numberOfSides: this.props.numberOfSides,
@@ -26,7 +28,7 @@ export default class TrackForm extends Component {
     this.updateField = this.updateField.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.updateSelectField = this.updateSelectField.bind(this);
-    this.selectPersonnelField = this.selectPersonnelField.bind(this);
+    this.showPersonnelField = this.showPersonnelField.bind(this);
     this.getDefaultArtists = this.getDefaultArtists.bind(this);
     this.addSide = this.addSide.bind(this);
     this.getSideLabels = this.getSideLabels.bind(this);
@@ -76,11 +78,10 @@ export default class TrackForm extends Component {
     this.setState({ [field]: value });
   }
 
-  selectPersonnelField(field) {
+  showPersonnelField(field) {
     return e =>
       this.setState({
-        personnelInputSelector:
-          this.state.personnelInputSelector === field ? "" : field,
+        [field]: !this.state[field],
       });
   }
 
@@ -144,6 +145,9 @@ export default class TrackForm extends Component {
       sideOrDisc,
       order,
       sideLabels,
+      showMainArtistsField,
+      showPersonnelField,
+      showWritersField,
     } = this.state;
     const {
       releaseFormat,
@@ -167,7 +171,11 @@ export default class TrackForm extends Component {
           />
           <div className="track-number">
             <div>Track Number</div>
-            <button className="link-button" onClick={this.addSide}>
+            <button
+              className="link-button"
+              type="button"
+              onClick={this.addSide}
+            >
               <FontAwesomeIcon icon="plus" />
               <span>Add Side</span>
             </button>
@@ -232,33 +240,47 @@ export default class TrackForm extends Component {
         <div className="form-section add-personnel-menu">
           <button
             className="link-button"
-            onClick={this.selectPersonnelField("mainArtists")}
+            type="button"
+            onClick={this.showPersonnelField("showMainArtistsField")}
           >
-            <FontAwesomeIcon icon="plus" />
-            <span>Add Artist(s)</span>
+            <FontAwesomeIcon icon={showMainArtistsField ? "minus" : "plus"} />
+            <span>{showMainArtistsField ? "Ignore" : "Add"} Artist(s)</span>
           </button>
           <button
             className="link-button"
-            onClick={this.selectPersonnelField("writers")}
+            type="button"
+            onClick={this.showPersonnelField("showWritersField")}
           >
-            <FontAwesomeIcon icon="plus" />
-            <span>Add Writer(s)</span>
+            <FontAwesomeIcon icon={showWritersField ? "minus" : "plus"} />
+            <span>{showWritersField ? "Ignore" : "Add"} Writer(s)</span>
           </button>
           <button
             className="link-button"
-            onClick={this.selectPersonnelField("personnel")}
+            type="button"
+            onClick={this.showPersonnelField("showPersonnelField")}
           >
-            <FontAwesomeIcon icon="plus" />
-            <span>Add Other Credits</span>
+            <FontAwesomeIcon icon={showPersonnelField ? "minus" : "plus"} />
+            <span>{showPersonnelField ? "Ignore" : "Add"} Other Credits</span>
           </button>
         </div>
-        {personnelInputSelector === "mainArtists" && (
+        {showMainArtistsField && (
           <div className="form-section">
+            <span>Main Artists:</span>
             <PersonnelSearchContainer
               formUpdate={this.updateSelectField}
               fieldName={"mainArtists"}
               placeholderText={"Main Artist(s)..."}
               defaultSelected={this.getDefaultArtists()}
+            />
+          </div>
+        )}
+        {showWritersField && (
+          <div className="form-section">
+            <span>Writers:</span>
+            <PersonnelSearchContainer
+              formUpdate={this.updateSelectField}
+              fieldName={"writers"}
+              placeholderText={"Writer(s)..."}
             />
           </div>
         )}
