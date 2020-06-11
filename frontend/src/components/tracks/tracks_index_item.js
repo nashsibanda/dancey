@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { makeFriendlyTime, joinObjectLinks } from "../../util/formatting_util";
-import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import LoadingSpinner from "../loading/loading_spinner";
 
@@ -105,17 +104,17 @@ export default class TracksIndexItem extends Component {
                     <div className="track-personnel-credits">
                       <span className="track-personnel-label">Credits:</span>
                       {track.personnel.map((personnel, index) => {
-                        const personnelObject =
-                          statePersonnel[personnel.personnelId];
+                        console.log(personnel);
+                        const personnelObjects = personnel.personnelIds.map(
+                          id => statePersonnel[id]
+                        );
                         return (
                           <span
-                            key={`${personnelObject._id}-${index}`}
+                            key={`${personnel._id}-${index}`}
                             className="track-personnel-credit"
                           >
                             {personnel.role} —{" "}
-                            <Link to={`personnel/${personnelObject._id}`}>
-                              {personnelObject.name}
-                            </Link>
+                            {joinObjectLinks(personnelObjects)}
                           </span>
                         );
                       })}
