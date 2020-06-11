@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import TracksIndexItemContainer from "./tracks_index_item_container";
 import { makeFriendlyTime } from "../../util/formatting_util";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -217,12 +217,13 @@ export default class TracksIndex extends Component {
                   {indexTracks.length > 0 &&
                     indexTracks.map((section, index) => {
                       return (
-                        <>
+                        <Fragment key={`section-${index}`}>
                           <li className="tracks-index-item tracks-index-side-row">
                             <span>
                               <img
                                 src={plainRecordImage}
                                 className={"default-image record-side-icon"}
+                                alt=""
                               />
                               {letterSides ? "Side " : "Disc "}
                               {sideLabels[index]}
@@ -248,7 +249,7 @@ export default class TracksIndex extends Component {
                               />
                             );
                           })}
-                        </>
+                        </Fragment>
                       );
                     })}
 
