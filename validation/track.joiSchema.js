@@ -10,7 +10,7 @@ const trackValidation = Joi.object({
   personnel: Joi.array()
     .items(
       Joi.object().keys({
-        personnelId: Joi.objectId(),
+        personnelIds: Joi.array().items(Joi.objectId()),
         role: Joi.string().max(200).label("Role"),
         _id: Joi.objectId(),
       })
