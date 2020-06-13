@@ -16,6 +16,10 @@ const {
 const Personnel = require("../../models/Personnel");
 const Release = require("../../models/Release");
 const Track = require("../../models/Track");
+const {
+  cleanupReleasePersonnel,
+  cleanupTrackPersonnel,
+} = require("../../util/cleanup_processes");
 
 // GET all personnel
 router.get("/", (req, res, next) => {
@@ -178,49 +182,11 @@ router.delete(
                 return next(new RecordNotFoundError("No personnel found"));
               } else {
                 // Remove all personnel references in Release documents
-                Release.updateMany(
-                  {
-                    $or: [
-                      {
-                        mainArtists: {
-                          $elemMatch: { $eq: deletedPersonnel._id },
-                        },
-                      },
-                      { "personnel.personnelId": deletedPersonnel._id },
-                    ],
-                  },
-                  {
-                    $pull: {
-                      personnel: { personnelId: deletedPersonnel._id },
-                      mainArtists: deletedPersonnel._id,
-                    },
-                  }
-                ).then(() => {
+                cleanupReleasePersonnel(deletedPersonnel).then(_ => {
                   // Remove all personnel references in Track documents
-                  Track.updateMany(
-                    {
-                      $or: [
-                        { "personnel.personnelId": deletedPersonnel._id },
-                        {
-                          writers: {
-                            $elemMatch: { $eq: deletedPersonnel._id },
-                          },
-                        },
-                        {
-                          artists: {
-                            $elemMatch: { $eq: deletedPersonnel._id },
-                          },
-                        },
-                      ],
-                    },
-                    {
-                      $pull: {
-                        personnel: { personnelId: deletedPersonnel._id },
-                        artists: deletedPersonnel._id,
-                        writers: deletedPersonnel._id,
-                      },
-                    }
-                  ).then(() => res.json(deletedPersonnel));
+                  cleanupTrackPersonnel(deletedPersonnel).then(_ =>
+                    res.json(deletedPersonnel)
+                  );
                 });
               }
             }
