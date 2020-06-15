@@ -16,6 +16,23 @@ export default class PersonnelRoleFormSection extends Component {
     this.displayPersonnelLinks = this.displayPersonnelLinks.bind(this);
   }
 
+  componentDidMount() {
+    if (this.props.currentPersonnel) {
+      const { currentPersonnel } = this.props;
+      const personnel = {};
+      const displayPersonnel = {};
+
+      currentPersonnel.forEach(personnelObj => {
+        const randId = makeRandomId();
+        const { role, personnelIds, personnelDisplay, _id } = personnelObj;
+        personnel[randId] = { role, personnelIds, _id };
+        displayPersonnel[randId] = { role, personnelDisplay };
+      });
+
+      this.setState({ personnel, displayPersonnel });
+    }
+  }
+
   componentDidUpdate(prevProps, prevState) {
     if (prevState.personnel !== this.state.personnel) {
       const { personnel } = this.state;
@@ -75,7 +92,7 @@ export default class PersonnelRoleFormSection extends Component {
         <ul className="selected-personnel-list">
           {personnelKeys.length > 0 &&
             personnelKeys.map(key => (
-              <li key={key} className="track-form-selected-personnel">
+              <li key={key} className="personnel-role-form-selected-personnel">
                 <button
                   type="button"
                   onClick={this.removeFromPersonnel(key)}

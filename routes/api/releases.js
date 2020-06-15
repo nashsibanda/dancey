@@ -28,8 +28,6 @@ router.get("/", (req, res, next) => {
 // GET a single release
 router.get("/:id", (req, res, next) => {
   Release.findById(req.params.id)
-    .populate("label")
-    .populate("comments")
     .then(release => res.json(release))
     .catch(err => next(new RecordNotFoundError("No release found")));
 });

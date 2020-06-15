@@ -1,0 +1,74 @@
+.personnel-role-form {
+  .submit-section {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 0.5rem;
+  }
+
+  .personnel-role-form-section {
+    width: 100%;
+
+    .personnel-role-form-select {
+      width: 100%;
+      & > div {
+        display: flex;
+        & > * {
+          margin-right: 0.5rem;
+        }
+      }
+
+      button {
+        font-size: 1.5rem;
+        color: $graydark;
+      }
+    }
+
+    .selected-personnel-list {
+      padding: 0.5rem;
+      li {
+        display: flex;
+
+        @media (hover: hover) {
+          &:hover {
+            background-color: $graylightest;
+          }
+        }
+
+        & > * {
+          margin-right: 0.5rem;
+        }
+
+        & > span {
+          border-left: 1px solid $graylight;
+          padding: 0 0.5rem;
+        }
+
+        button {
+          @keyframes remove-slider {
+            from {
+              width: 0rem;
+            }
+            to {
+              width: 3.7rem;
+            }
+          }
+          span {
+            display: inline-flex;
+            overflow: hidden;
+            width: 0rem;
+          }
+
+          &:hover {
+            color: red;
+
+            span {
+              animation-name: remove-slider;
+              animation-duration: 0.5s;
+              animation-fill-mode: both;
+            }
+          }
+        }
+      }
+    }
+  }
+}
