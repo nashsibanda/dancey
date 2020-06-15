@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import PersonnelSearchContainer from "../search/personnel_search_container";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import analogSides from "../../util/validation/analog_sides";
-import TrackFormPersonnelSection from "./track_form_personnel_section";
+import PersonnelRoleFormSection from "../personnel/personnel_role_form_section";
 
 export default class TrackForm extends Component {
   constructor(props) {
@@ -292,10 +292,9 @@ export default class TrackForm extends Component {
         {showPersonnelField && (
           <div className="form-section personnel-section">
             <span>Other Credit(s):</span>
-            <TrackFormPersonnelSection formUpdate={this.updatePersonnelField} />
+            <PersonnelRoleFormSection formUpdate={this.updatePersonnelField} />
           </div>
         )}
-        {/* TODO ADD PERSONNEL, ARTIST, WRITER INPUTS - USE ASYNC SELECT */}
       </form>
     );
   }

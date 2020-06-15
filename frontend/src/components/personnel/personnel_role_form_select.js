@@ -3,7 +3,7 @@ import PersonnelSearchContainer from "../search/personnel_search_container";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { makeRandomId } from "../../util/formatting_util";
 
-export default class TrackFormPersonnelSelect extends Component {
+export default class PersonnelRoleFormSelect extends Component {
   constructor(props) {
     super(props);
 
@@ -66,7 +66,7 @@ export default class TrackFormPersonnelSelect extends Component {
 
   render() {
     return (
-      <div className="track-form-personnel-select">
+      <div className="personnel-role-form-select">
         <div>
           <input
             type="text"
