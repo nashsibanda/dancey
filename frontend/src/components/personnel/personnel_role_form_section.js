@@ -1,9 +1,9 @@
 import React, { Component } from "react";
-import TrackFormPersonnelSelect from "./track_form_personnel_select";
+import PersonnelRoleFormSelect from "./personnel_role_form_select";
 import { makeRandomId, joinObjectLinks } from "../../util/formatting_util";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-export default class TrackFormPersonnelSection extends Component {
+export default class PersonnelRoleFormSection extends Component {
   constructor(props) {
     super(props);
 
@@ -70,8 +70,8 @@ export default class TrackFormPersonnelSection extends Component {
     const { personnel, displayPersonnel } = this.state;
     const personnelKeys = Object.keys(personnel);
     return (
-      <div className="track-form-personnel-section">
-        <TrackFormPersonnelSelect addToPersonnel={this.addToPersonnel} />
+      <div className="personnel-role-form-section">
+        <PersonnelRoleFormSelect addToPersonnel={this.addToPersonnel} />
         <ul className="selected-personnel-list">
           {personnelKeys.length > 0 &&
             personnelKeys.map(key => (
