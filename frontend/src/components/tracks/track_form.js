@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import PersonnelSearchContainer from "../search/personnel_search_container";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import analogSides from "../../util/validation/analog_sides";
+import TrackFormPersonnelSection from "./track_form_personnel_section";
 
 export default class TrackForm extends Component {
   constructor(props) {
@@ -18,7 +19,7 @@ export default class TrackForm extends Component {
       _id: null,
       showMainArtistsField: false,
       showWritersField: false,
-      showPersonnelField: false,
+      showPersonnelField: true,
       sideOrDisc: "",
       order: "",
       numberOfSides: this.props.numberOfSides,
@@ -32,6 +33,7 @@ export default class TrackForm extends Component {
     this.getDefaultArtists = this.getDefaultArtists.bind(this);
     this.addSide = this.addSide.bind(this);
     this.getSideLabels = this.getSideLabels.bind(this);
+    this.updatePersonnelField = this.updatePersonnelField.bind(this);
   }
 
   componentDidMount() {
@@ -75,7 +77,12 @@ export default class TrackForm extends Component {
   }
 
   updateSelectField(field, value) {
-    this.setState({ [field]: value });
+    const selectedIds = value ? value.map(x => x.value) : null;
+    this.setState({ [field]: selectedIds });
+  }
+
+  updatePersonnelField(value) {
+    this.setState({ personnel: value });
   }
 
   showPersonnelField(field) {
@@ -280,6 +287,11 @@ export default class TrackForm extends Component {
               fieldName={"writers"}
               placeholderText={"Writer(s)..."}
             />
+          </div>
+        )}
+        {showPersonnelField && (
+          <div className="form-section">
+            <TrackFormPersonnelSection formUpdate={this.updatePersonnelField} />
           </div>
         )}
         {/* TODO ADD PERSONNEL, ARTIST, WRITER INPUTS - USE ASYNC SELECT */}
