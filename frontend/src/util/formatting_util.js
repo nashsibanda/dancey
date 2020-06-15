@@ -1,29 +1,39 @@
-import React from "react";
+import React, { Fragment } from "react";
 import { Link } from "react-router-dom";
 
 export const joinObjectLinks = (
   objectArray,
+  newTabOrWindow = false,
   collection = "personnel",
   identifier = "name"
 ) => {
+  const randId = makeRandomId();
   if (objectArray.length > 0) {
     return (
-      <>
+      <Fragment key={`${randId}-main`}>
         {objectArray.slice(0, -1).map(object => (
-          <>
-            <Link to={`/${collection}/${object._id}`}>
+          <Fragment key={`${randId}-${object._id}`}>
+            <Link
+              to={`/${collection}/${object._id}`}
+              target={newTabOrWindow ? "_blank" : "_self"}
+              rel="noopener noreferrer"
+            >
               {object[identifier]}
             </Link>
             {", "}
-          </>
+          </Fragment>
         ))}
-        <Link to={`/${collection}/${objectArray[objectArray.length - 1]._id}`}>
+        <Link
+          to={`/${collection}/${objectArray[objectArray.length - 1]._id}`}
+          target={newTabOrWindow ? "_blank" : "_self"}
+          rel="noopener noreferrer"
+        >
           {objectArray[objectArray.length - 1][identifier]}
         </Link>
-      </>
+      </Fragment>
     );
   } else {
-    return <></>;
+    return <Fragment key={randId}></Fragment>;
   }
 };
 
