@@ -10,7 +10,12 @@
     }
 
     & > span {
+      width: 15%;
       padding: 0.5rem;
+    }
+
+    &.personnel-section {
+      align-items: flex-start;
     }
 
     &.add-personnel-menu {
@@ -24,7 +29,7 @@
         width: 100%;
         & > div {
           display: flex;
-          * {
+          & > * {
             margin-right: 0.5rem;
           }
         }

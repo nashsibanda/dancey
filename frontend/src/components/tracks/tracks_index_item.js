@@ -104,7 +104,6 @@ export default class TracksIndexItem extends Component {
                     <div className="track-personnel-credits">
                       <span className="track-personnel-label">Credits:</span>
                       {track.personnel.map((personnel, index) => {
-                        console.log(personnel);
                         const personnelObjects = personnel.personnelIds.map(
                           id => statePersonnel[id]
                         );

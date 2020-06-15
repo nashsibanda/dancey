@@ -5,7 +5,10 @@ import {
   receivePersonnelErrors,
 } from "../../actions/personnel_actions";
 import { connect } from "react-redux";
-import { getQueryPersonnel } from "../../util/personnel_api_util";
+import {
+  getQueryPersonnel,
+  postPersonnel,
+} from "../../util/personnel_api_util";
 import SearchAutocomplete from "./search_autocomplete";
 import moment from "moment";
 
@@ -15,12 +18,16 @@ const formatPersonnelOptionLabel = ({
   moreInfoField1,
   moreInfoField2,
 }) => (
-  <div className="search-autocomplete-option">
-    <div>
+  <div className="search-autocomplete-option personnel-option">
+    <div className="main-label">
       <span>{label}</span>
     </div>
     <div className="more-info">
-      <span>{moreInfoField1}</span>
+      <span>
+        {moreInfoField1 && moreInfoField1.length > 0
+          ? `aka. ${moreInfoField1.join(", ")}`
+          : ""}
+      </span>
       <span>
         {moreInfoField2 ? `b. ${moment(moreInfoField2).format("YYYY")}` : ""}
       </span>
@@ -31,7 +38,7 @@ const formatPersonnelOptionLabel = ({
 const mapStateToProps = state => ({
   formatOptionLabel: formatPersonnelOptionLabel,
   labelField: "name",
-  moreInfoField1: "countryOfOrigin",
+  moreInfoField1: "alsoKnownAs",
   moreInfoField2: "dateOfBirth",
   statePersonnel: state.entities.personnel,
 });
@@ -41,6 +48,7 @@ const mapDispatchToProps = dispatch => ({
   getQueryData: query => getQueryPersonnel(query),
   receiveSelectedData: data => dispatch(receiveOnePersonnel(data)),
   receiveResponseErrors: errors => dispatch(receivePersonnelErrors(errors)),
+  createNewEntry: name => postPersonnel({ name }),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(SearchAutocomplete);
