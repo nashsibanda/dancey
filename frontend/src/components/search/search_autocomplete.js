@@ -58,10 +58,7 @@ export default class SearchAutocomplete extends Component {
   updateSelected = selected => {
     const { formUpdate, fieldName } = this.props;
     this.setState({ selected }, () =>
-      formUpdate(
-        fieldName,
-        this.state.selected.map(obj => obj.value)
-      )
+      formUpdate(fieldName, this.state.selected)
     );
   };
 

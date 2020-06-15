@@ -102,6 +102,7 @@ select {
   }
 
   .search-autocomplete__value-container {
+    flex-grow: 1;
     .search-autocomplete-option {
       .more-info {
         display: none;
