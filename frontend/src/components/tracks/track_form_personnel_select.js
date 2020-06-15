@@ -73,12 +73,11 @@ export default class TrackFormPersonnelSelect extends Component {
             placeholder="Role..."
             onChange={this.updateRoleField}
             value={this.state.role}
-            required
           />
           <PersonnelSearchContainer
             formUpdate={this.updatePersonnelSelectField}
             fieldName={"personnelIds"}
-            placeholderText={"Personnel..."}
+            placeholderText={"Search..."}
             key={this.state.randKey}
           />
           <button
@@ -86,7 +85,7 @@ export default class TrackFormPersonnelSelect extends Component {
             className="icon-button"
             onClick={this.handleSubmit}
           >
-            <FontAwesomeIcon icon="check-square" />
+            <FontAwesomeIcon icon="plus-square" />
           </button>
         </div>
         {this.state.showError && (

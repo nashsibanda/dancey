@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import TrackFormPersonnelSelect from "./track_form_personnel_select";
-import { makeRandomId } from "../../util/formatting_util";
+import { makeRandomId, joinObjectLinks } from "../../util/formatting_util";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export default class TrackFormPersonnelSection extends Component {
@@ -13,16 +13,16 @@ export default class TrackFormPersonnelSection extends Component {
     };
     this.addToPersonnel = this.addToPersonnel.bind(this);
     this.removeFromPersonnel = this.removeFromPersonnel.bind(this);
+    this.displayPersonnelLinks = this.displayPersonnelLinks.bind(this);
   }
 
-  // componentDidUpdate(prevProps, prevState) {
-  //   if (prevState.personnel !== this.state.personnel) {
-  //     const { personnel } = this.state;
-  //     const personnelArray =
-  //       Object.values(personnel).length > 0 ? Object.values(personnel) : null;
-  //     this.props.formUpdate(personnelArray);
-  //   }
-  // }
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.personnel !== this.state.personnel) {
+      const { personnel } = this.state;
+      const personnelArray = Object.values(personnel);
+      this.props.formUpdate(personnelArray);
+    }
+  }
 
   addToPersonnel(newPersonnel) {
     const randId = makeRandomId();
@@ -39,11 +39,31 @@ export default class TrackFormPersonnelSection extends Component {
 
   removeFromPersonnel(id) {
     return e => {
-      const { personnel, displayPersonnel } = this.state;
-      delete personnel[id];
-      delete displayPersonnel[id];
-      this.setState({ personnel, displayPersonnel });
+      const lessPersonnel = Object.assign({}, this.state.personnel);
+      const lessDisplayPersonnel = Object.assign(
+        {},
+        this.state.displayPersonnel
+      );
+      delete lessPersonnel[id];
+      delete lessDisplayPersonnel[id];
+      this.setState({
+        personnel: lessPersonnel,
+        displayPersonnel: lessDisplayPersonnel,
+      });
     };
+  }
+
+  displayPersonnelLinks(key) {
+    const { personnel, displayPersonnel } = this.state;
+    const objectsForLinks = displayPersonnel[key]["personnelDisplay"].map(
+      (x, i) => {
+        return {
+          _id: personnel[key]["personnelIds"][i],
+          name: x,
+        };
+      }
+    );
+    return joinObjectLinks(objectsForLinks, true);
   }
 
   render() {
@@ -65,7 +85,7 @@ export default class TrackFormPersonnelSection extends Component {
                   <span>Remove</span>
                 </button>
                 <span>{displayPersonnel[key]["role"]}</span>
-                <span>{displayPersonnel[key]["personnelDisplay"]}</span>
+                <span>{this.displayPersonnelLinks(key)}</span>
               </li>
             ))}
         </ul>

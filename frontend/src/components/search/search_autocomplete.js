@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 
-import AsyncSelect from "react-select/async";
+import AsyncCreatableSelect from "react-select/async-creatable";
 
 export default class SearchAutocomplete extends Component {
   constructor(props) {
@@ -15,6 +15,7 @@ export default class SearchAutocomplete extends Component {
     this.makeOptions = this.makeOptions.bind(this);
     this.updateSelected = this.updateSelected.bind(this);
     this.setDefaultOptions = this.setDefaultOptions.bind(this);
+    this.handleCreate = this.handleCreate.bind(this);
   }
 
   componentDidMount() {
@@ -22,16 +23,16 @@ export default class SearchAutocomplete extends Component {
       const { formUpdate, fieldName, defaultSelected } = this.props;
 
       this.setState({ selected: this.makeOptions(defaultSelected) }, () =>
-        formUpdate(
-          fieldName,
-          this.state.selected.map(obj => obj.value)
-        )
+        formUpdate(fieldName, this.state.selected)
       );
     }
   }
 
   updateInputValue(newValue) {
-    const inputValue = newValue.replace(/\W/g, "");
+    const inputValue = newValue.replace(
+      /[^\w\d\-_ 　\u3040-\u309F\u30A0-\u30FF\uFF00-\uFFEF\u4E00-\u9FAF]/g,
+      ""
+    );
     this.setState({ inputValue });
     return inputValue;
   }
@@ -55,6 +56,16 @@ export default class SearchAutocomplete extends Component {
       .catch(err => receiveResponseErrors(err.response.data));
   }
 
+  handleCreate(inputValue) {
+    this.setState({ isLoading: true });
+    this.props.createNewEntry(inputValue).then(newEntry => {
+      const newOption = this.makeOptions([newEntry.data]);
+      this.setState({ isLoading: false });
+      const newSelected = this.state.selected.concat(newOption);
+      this.updateSelected(newSelected);
+    });
+  }
+
   updateSelected = selected => {
     const { formUpdate, fieldName } = this.props;
     this.setState({ selected }, () =>
@@ -68,7 +79,7 @@ export default class SearchAutocomplete extends Component {
 
   render() {
     return (
-      <AsyncSelect
+      <AsyncCreatableSelect
         isMulti
         cacheOptions
         className="search-autocomplete"
@@ -78,6 +89,7 @@ export default class SearchAutocomplete extends Component {
         placeholder={this.props.placeholderText}
         onInputChange={this.updateInputValue}
         formatOptionLabel={this.props.formatOptionLabel}
+        onCreateOption={this.handleCreate}
         onChange={this.updateSelected}
         value={this.state.selected}
       />

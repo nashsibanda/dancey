@@ -8,6 +8,7 @@ const mapStateToProps = state => ({
   statePersonnel: state.entities.personnel,
   tracksLoading: state.loading.tracks,
   tracksPersonnelLoading: state.loading.tracksPersonnel,
+  personnelLoading: state.loading.personnel,
 });
 
 const mapDispatchToProps = dispatch => ({

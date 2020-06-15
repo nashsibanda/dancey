@@ -15,7 +15,7 @@ export default class TracksIndex extends Component {
       showTrackPersonnel: false,
       loadedTrackPersonnel: false,
       sortRule: !!this.props.trackListing ? "trackOrderAsc" : "alphaAsc",
-      showMainEditMenu: true,
+      showMainEditMenu: false,
       showNewTrackForm: false,
       numberOfSides: null,
       letterSides: null,
@@ -66,6 +66,17 @@ export default class TracksIndex extends Component {
       !this.props.tracksLoading
     ) {
       this.setState({ initialLoad: true });
+    }
+    if (
+      prevProps.trackListing !== this.props.trackListing &&
+      this.state.showTrackPersonnel
+    ) {
+      const {
+        fetchResourceTracksPersonnel,
+        resourceId,
+        resourceType,
+      } = this.props;
+      fetchResourceTracksPersonnel(resourceType, resourceId);
     }
   }
 
@@ -135,6 +146,7 @@ export default class TracksIndex extends Component {
       trackListing,
       resourceId,
       releaseFormat,
+      personnelLoading,
     } = this.props;
     const {
       initialLoad,
@@ -180,7 +192,7 @@ export default class TracksIndex extends Component {
                     <span>Add Track</span>
                   </button>
                 </div>
-                {showNewTrackForm && (
+                {showNewTrackForm && !personnelLoading && (
                   <div className="tracks-index-item tracks-index-form-row">
                     <TrackListingFormContainer
                       releaseId={resourceId}

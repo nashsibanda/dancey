@@ -95,6 +95,15 @@ select {
     display: flex;
     flex-direction: column;
 
+    .more-info {
+      font-size: 0.8rem;
+      font-style: italic;
+
+      span {
+        padding-right: 0.2rem;
+      }
+    }
+
     & > div {
       display: flex;
       justify-content: space-between;
@@ -107,6 +116,10 @@ select {
       .more-info {
         display: none;
       }
+    }
+
+    .search-autocomplete__placeholder {
+      z-index: 0;
     }
   }
 }

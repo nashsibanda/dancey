@@ -17,8 +17,8 @@ export default class TrackForm extends Component {
       writers: null,
       originalVersion: "",
       _id: null,
-      showMainArtistsField: false,
-      showWritersField: false,
+      showMainArtistsField: true,
+      showWritersField: true,
       showPersonnelField: true,
       sideOrDisc: "",
       order: "",
@@ -82,7 +82,7 @@ export default class TrackForm extends Component {
   }
 
   updatePersonnelField(value) {
-    this.setState({ personnel: value });
+    this.setState({ personnel: value.length > 0 ? value : null });
   }
 
   showPersonnelField(field) {
@@ -270,7 +270,7 @@ export default class TrackForm extends Component {
         </div>
         {showMainArtistsField && (
           <div className="form-section">
-            <span>Main Artists:</span>
+            <span>Main Artist(s):</span>
             <PersonnelSearchContainer
               formUpdate={this.updateSelectField}
               fieldName={"mainArtists"}
@@ -281,7 +281,7 @@ export default class TrackForm extends Component {
         )}
         {showWritersField && (
           <div className="form-section">
-            <span>Writers:</span>
+            <span>Writer(s):</span>
             <PersonnelSearchContainer
               formUpdate={this.updateSelectField}
               fieldName={"writers"}
@@ -290,7 +290,8 @@ export default class TrackForm extends Component {
           </div>
         )}
         {showPersonnelField && (
-          <div className="form-section">
+          <div className="form-section personnel-section">
+            <span>Other Credit(s):</span>
             <TrackFormPersonnelSection formUpdate={this.updatePersonnelField} />
           </div>
         )}
