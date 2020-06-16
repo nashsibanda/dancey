@@ -56,6 +56,42 @@ a {
 
 .link-button {
   color: $blue;
+
+  &.likes-button {
+    position: relative;
+    &.liked {
+      color: salmon;
+      @media (hover: hover) {
+        &:hover::after {
+          content: "Unlike";
+          position: absolute;
+          background-color: $graylightest;
+          padding: 0.3rem;
+          top: -1.8rem;
+          left: -0.2rem;
+          border-radius: 5px;
+          color: $blue;
+        }
+      }
+    }
+
+    &.unliked {
+      @media (hover: hover) {
+        &:hover {
+          color: salmon;
+          &::after {
+            content: "Like";
+            position: absolute;
+            background-color: $graylightest;
+            padding: 0.3rem;
+            top: -1.8rem;
+            left: -0.2rem;
+            border-radius: 5px;
+          }
+        }
+      }
+    }
+  }
 }
 
 input[type="text"],

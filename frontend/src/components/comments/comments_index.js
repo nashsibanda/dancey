@@ -8,9 +8,10 @@ export default class CommentsIndex extends Component {
       resourceComments,
       indentLevel,
       parentCommentId,
-      // entityComments,
+      likeComment,
       resourceType,
       resourceId,
+      currentUser,
     } = this.props;
     const indexComments = Object.values(stateComments).filter(
       comment =>
@@ -51,6 +52,8 @@ export default class CommentsIndex extends Component {
                     indentLevel={indentLevel + 1}
                     resourceId={resourceId}
                     resourceType={resourceType}
+                    likeComment={likeComment}
+                    currentUser={currentUser}
                   />
                 )
               );

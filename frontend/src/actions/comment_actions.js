@@ -51,3 +51,9 @@ export const createNewComment = commentData => dispatch => {
     .then(comment => dispatch(receiveOneComment(comment.data)))
     .catch(err => dispatch(receiveCommentErrors(err.response.data)));
 };
+
+export const likeComment = id => dispatch => {
+  CommentAPIUtil.putCommentLike(id)
+    .then(comment => dispatch(receiveOneComment(comment.data)))
+    .catch(err => dispatch(receiveCommentErrors(err.response.data)));
+};

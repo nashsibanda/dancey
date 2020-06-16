@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import ReactStars from "react-rating-stars-component";
 import moment from "moment";
 import CommentsSectionContainer from "../comments/comments_section_container";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export default class ReviewsIndexItem extends Component {
   constructor(props) {
@@ -11,6 +12,7 @@ export default class ReviewsIndexItem extends Component {
     this.state = {
       commentsFetched: false,
     };
+    this.handleLike = this.handleLike.bind(this);
   }
 
   componentDidMount() {
@@ -19,8 +21,13 @@ export default class ReviewsIndexItem extends Component {
     this.setState({ commentsFetched: true });
   }
 
+  handleLike() {
+    const { review, likeReview } = this.props;
+    likeReview(review._id);
+  }
+
   render() {
-    const { review } = this.props;
+    const { review, currentUser } = this.props;
     const {
       rating,
       body,
@@ -30,7 +37,11 @@ export default class ReviewsIndexItem extends Component {
       _id,
       createdAt,
       updatedAt,
+      likes,
     } = review;
+
+    const liked =
+      currentUser && likes ? (likes[currentUser.id] ? true : false) : false;
 
     return (
       <li className="reviews-index-item">
@@ -53,7 +64,15 @@ export default class ReviewsIndexItem extends Component {
               <button className="link-button">Add Comment</button>
             </span>
             <span className="review-like">
-              <button className="link-button">Like</button>
+              <button
+                className={`link-button likes-button ${
+                  liked ? "liked" : "unliked"
+                }`}
+                onClick={this.handleLike}
+              >
+                <FontAwesomeIcon icon="heart" />
+                <span>{likes ? Object.values(likes).length : 0}</span>
+              </button>
             </span>
           </div>
         </div>

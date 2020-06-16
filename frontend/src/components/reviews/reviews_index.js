@@ -19,6 +19,8 @@ export default class ReviewsIndex extends Component {
       loggedIn,
       loading,
       fetchResourceComments,
+      likeReview,
+      currentUser,
     } = this.props;
 
     const indexReviews = Object.values(stateReviews).filter(
@@ -72,6 +74,8 @@ export default class ReviewsIndex extends Component {
                     key={review._id}
                     fetchOneReview={fetchOneReview}
                     fetchResourceComments={fetchResourceComments}
+                    likeReview={likeReview}
+                    currentUser={currentUser}
                   />
                 )
               );
