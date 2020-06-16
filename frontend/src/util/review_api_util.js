@@ -11,6 +11,8 @@ export const postReview = reviewPostData =>
   axios.post("/api/reviews", reviewPostData);
 
 export const updateReview = (id, reviewUpdateData) =>
-  axios.post(`/api/reviews/${id}`, reviewUpdateData);
+  axios.put(`/api/reviews/${id}`, reviewUpdateData);
+
+export const putReviewLike = id => axios.put(`/api/reviews/${id}/like`);
 
 export const deleteReview = id => axios.delete(`api/reviews/${id}`);

@@ -3,6 +3,7 @@ import CommentsIndexContainer from "./comments_index_container";
 import { Link } from "react-router-dom";
 import moment from "moment";
 import CommentFormContainer from "./comment_form_container";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export default class CommentsIndexItem extends Component {
   constructor(props) {
@@ -12,10 +13,16 @@ export default class CommentsIndexItem extends Component {
       showCommentForm: false,
     };
     this.toggleCommentForm = this.toggleCommentForm.bind(this);
+    this.handleLike = this.handleLike.bind(this);
   }
 
   toggleCommentForm() {
     this.setState({ showCommentForm: !this.state.showCommentForm });
+  }
+
+  handleLike() {
+    const { likeComment, comment } = this.props;
+    likeComment(comment._id);
   }
 
   render() {
@@ -25,9 +32,13 @@ export default class CommentsIndexItem extends Component {
       indentLevel,
       resourceType,
       resourceId,
+      currentUser,
     } = this.props;
-    const { body, username, userId, createdAt, updatedAt } = comment;
+    const { body, username, userId, createdAt, updatedAt, likes } = comment;
     const { showCommentForm } = this.state;
+
+    const liked =
+      currentUser && likes ? (likes[currentUser.id] ? true : false) : false;
 
     return (
       <li className="comment">
@@ -52,7 +63,15 @@ export default class CommentsIndexItem extends Component {
             </button>
           </span>
           <span className="comment-like">
-            <button className="link-button">Like</button>
+            <button
+              className={`link-button likes-button ${
+                liked ? "liked" : "unliked"
+              }`}
+              onClick={this.handleLike}
+            >
+              <FontAwesomeIcon icon="heart" />
+              <span>{likes ? Object.values(likes).length : 0}</span>
+            </button>
           </span>
         </div>
         {showCommentForm && (
