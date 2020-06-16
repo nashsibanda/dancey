@@ -1,0 +1,10 @@
+.comment-form {
+  display: flex;
+  align-items: flex-start;
+
+  textarea {
+    flex-grow: 1;
+    margin-right: 0.5rem;
+    max-height: 15rem;
+  }
+}
