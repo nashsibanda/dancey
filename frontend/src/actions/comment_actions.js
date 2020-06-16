@@ -45,3 +45,9 @@ export const fetchOneComment = id => dispatch => {
       dispatch(commentsLoadingOff());
     });
 };
+
+export const createNewComment = commentData => dispatch => {
+  CommentAPIUtil.postComment(commentData)
+    .then(comment => dispatch(receiveOneComment(comment.data)))
+    .catch(err => dispatch(receiveCommentErrors(err.response.data)));
+};
