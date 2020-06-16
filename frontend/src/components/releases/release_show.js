@@ -72,7 +72,7 @@ export default class ReleaseShow extends Component {
               </div>
               <div className="comments-container">
                 <CommentsSectionContainer
-                  entityComments={comments}
+                  resourceComments={comments}
                   resourceId={_id}
                   resourceType={"release"}
                 />

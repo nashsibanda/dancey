@@ -18,6 +18,7 @@ export default class ReviewsIndex extends Component {
       fetchOneReview,
       loggedIn,
       loading,
+      fetchResourceComments,
     } = this.props;
 
     const indexReviews = Object.values(stateReviews).filter(
@@ -46,7 +47,7 @@ export default class ReviewsIndex extends Component {
         </div>
         <div className="reviews-average-rating">
           <ReactStars
-            value={Math.round(avgRating * 10) / 10}
+            value={Math.round(avgRating * 10) / 10 || 0}
             size={18}
             half={true}
             edit={false}
@@ -70,6 +71,7 @@ export default class ReviewsIndex extends Component {
                     review={review}
                     key={review._id}
                     fetchOneReview={fetchOneReview}
+                    fetchResourceComments={fetchResourceComments}
                   />
                 )
               );
