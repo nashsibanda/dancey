@@ -5,6 +5,7 @@ import { fetchResourceComments } from "../../actions/comment_actions";
 const mapStateToProps = state => ({
   loggedIn: state.session.isAuthenticated,
   loading: state.loading.comments,
+  stateComments: state.entities.comments,
 });
 
 const mapDispatchToProps = dispatch => ({
