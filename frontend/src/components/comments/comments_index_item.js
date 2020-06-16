@@ -55,7 +55,14 @@ export default class CommentsIndexItem extends Component {
             <button className="link-button">Like</button>
           </span>
         </div>
-        {showCommentForm && <CommentFormContainer />}
+        {showCommentForm && (
+          <CommentFormContainer
+            resourceType={resourceType}
+            resourceId={resourceId}
+            parentCommentId={comment._id}
+            hideCommentForm={this.toggleCommentForm}
+          />
+        )}
 
         <CommentsIndexContainer
           resourceComments={resourceComments}

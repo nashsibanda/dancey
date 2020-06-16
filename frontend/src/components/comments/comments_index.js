@@ -12,10 +12,14 @@ export default class CommentsIndex extends Component {
       resourceType,
       resourceId,
     } = this.props;
-    const entityComments = resourceComments.map(id => stateComments[id]);
-    const indexComments = entityComments.filter(
-      comment => comment.parentCommentId === parentCommentId
+    const indexComments = Object.values(stateComments).filter(
+      comment =>
+        comment.resourceId === resourceId &&
+        comment.parentCommentId === parentCommentId
     );
+    // const indexComments = entityComments.filter(
+    //   comment => comment.parentCommentId === parentCommentId
+    // );
     return (
       <ul className={"comments-index indent-" + indentLevel}>
         {indexComments.length > 0 &&

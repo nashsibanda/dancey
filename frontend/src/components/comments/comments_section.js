@@ -92,7 +92,14 @@ export default class CommentsSection extends Component {
             )}
           </div>
         )}
-        {showCommentForm && <CommentFormContainer />}
+        {showCommentForm && (
+          <CommentFormContainer
+            resourceType={resourceType}
+            resourceId={resourceId}
+            parentCommentId={null}
+            hideCommentForm={this.toggleCommentForm}
+          />
+        )}
         {initialLoad && !loading && showComments && (
           <CommentsIndexContainer
             resourceComments={resourceComments}

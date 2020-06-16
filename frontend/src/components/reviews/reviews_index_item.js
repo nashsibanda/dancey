@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import CommentsIndexContainer from "../comments/comments_index_container";
 import ReactStars from "react-rating-stars-component";
 import moment from "moment";
 import CommentsSectionContainer from "../comments/comments_section_container";
@@ -22,7 +21,6 @@ export default class ReviewsIndexItem extends Component {
 
   render() {
     const { review } = this.props;
-    const { showComments } = this.state;
     const {
       rating,
       body,
