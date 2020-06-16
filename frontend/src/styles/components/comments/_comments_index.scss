@@ -2,11 +2,12 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: 0.5rem;
 }
 
 .comments-index {
   padding-left: 0.7rem;
-  border-left: 2px solid $graylighter;
+  border-left: 2px solid;
 
   &.indent-0 {
     margin-left: 0;
