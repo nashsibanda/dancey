@@ -3,13 +3,29 @@ import CommentsIndexContainer from "./comments_index_container";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export default class CommentsSection extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      initialLoad: false,
+    };
+  }
+
+  componentDidMount() {
+    const { fetchResourceComments, resourceId, resourceType } = this.props;
+    fetchResourceComments(resourceType, resourceId);
+    console.log("FETCHING");
+    this.setState({ initialLoad: true });
+  }
+
   render() {
     const {
-      entityComments,
+      resourceComments,
       resourceId,
       resourceType,
       loggedIn,
       hideHeader,
+      loading,
     } = this.props;
     return (
       <div>
@@ -24,13 +40,15 @@ export default class CommentsSection extends Component {
             )}
           </div>
         )}
-        <CommentsIndexContainer
-          entityComments={entityComments}
-          indentLevel={0}
-          resourceId={resourceId}
-          resourceType={resourceType}
-          parentCommentId={null}
-        />
+        {this.state.initialLoad && !loading && (
+          <CommentsIndexContainer
+            resourceComments={resourceComments}
+            indentLevel={0}
+            resourceId={resourceId}
+            resourceType={resourceType}
+            parentCommentId={null}
+          />
+        )}
       </div>
     );
   }

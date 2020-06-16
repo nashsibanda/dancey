@@ -5,12 +5,14 @@ export default class CommentsIndex extends Component {
   render() {
     const {
       stateComments,
+      resourceComments,
       indentLevel,
       parentCommentId,
-      entityComments,
+      // entityComments,
       resourceType,
       resourceId,
     } = this.props;
+    const entityComments = resourceComments.map(id => stateComments[id]);
     const indexComments = entityComments.filter(
       comment => comment.parentCommentId === parentCommentId
     );
@@ -26,7 +28,7 @@ export default class CommentsIndex extends Component {
                   <CommentsIndexItem
                     key={itemComment._id}
                     comment={itemComment}
-                    entityComments={entityComments}
+                    resourceComments={resourceComments}
                     indentLevel={indentLevel + 1}
                     resourceId={resourceId}
                     resourceType={resourceType}

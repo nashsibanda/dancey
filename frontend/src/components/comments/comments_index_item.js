@@ -6,7 +6,7 @@ import moment from "moment";
 export default function CommentsIndexItem(props) {
   const {
     comment,
-    entityComments,
+    resourceComments,
     indentLevel,
     resourceType,
     resourceId,
@@ -38,7 +38,7 @@ export default function CommentsIndexItem(props) {
       </div>
 
       <CommentsIndexContainer
-        entityComments={entityComments}
+        resourceComments={resourceComments}
         indentLevel={indentLevel}
         parentCommentId={comment._id}
         resourceId={resourceId}

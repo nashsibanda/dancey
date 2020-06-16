@@ -15,11 +15,17 @@ export default class ReviewsIndexItem extends Component {
     this.toggleComments = this.toggleComments.bind(this);
   }
 
+  componentDidMount() {
+    const { _id, comments } = this.props.review;
+    if (comments.length > 0) this.props.fetchResourceComments("review", _id);
+    this.setState({ commentsFetched: true });
+  }
+
   toggleComments(e) {
     e.preventDefault();
-    const { fetchOneReview, review } = this.props;
+    const { fetchResourceComments, review } = this.props;
     if (!this.state.commentsFetched) {
-      fetchOneReview(review._id);
+      fetchResourceComments("review", review._id);
     }
     this.setState({
       showComments: !this.state.showComments,
@@ -89,7 +95,7 @@ export default class ReviewsIndexItem extends Component {
         <div>
           {showComments && (
             <CommentsIndexContainer
-              entityComments={comments}
+              resourceComments={comments}
               indentLevel={0}
               resourceId={_id}
               parentCommentId={null}

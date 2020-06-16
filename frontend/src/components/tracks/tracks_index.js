@@ -147,6 +147,7 @@ export default class TracksIndex extends Component {
       resourceId,
       releaseFormat,
       personnelLoading,
+      tracksLoading,
     } = this.props;
     const {
       initialLoad,
@@ -162,7 +163,7 @@ export default class TracksIndex extends Component {
       ? this.makeSectionedTracks()
       : this.makeIndexTracks();
 
-    if (true) {
+    if (!tracksLoading) {
       return (
         <div className="tracks-index-container">
           {!hideHeader && (
