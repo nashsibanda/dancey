@@ -3,34 +3,21 @@ import { Link } from "react-router-dom";
 import CommentsIndexContainer from "../comments/comments_index_container";
 import ReactStars from "react-rating-stars-component";
 import moment from "moment";
+import CommentsSectionContainer from "../comments/comments_section_container";
 
 export default class ReviewsIndexItem extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      showComments: false,
       commentsFetched: false,
     };
-    this.toggleComments = this.toggleComments.bind(this);
   }
 
   componentDidMount() {
     const { _id, comments } = this.props.review;
     if (comments.length > 0) this.props.fetchResourceComments("review", _id);
     this.setState({ commentsFetched: true });
-  }
-
-  toggleComments(e) {
-    e.preventDefault();
-    const { fetchResourceComments, review } = this.props;
-    if (!this.state.commentsFetched) {
-      fetchResourceComments("review", review._id);
-    }
-    this.setState({
-      showComments: !this.state.showComments,
-      commentsFetched: true,
-    });
   }
 
   render() {
@@ -78,30 +65,12 @@ export default class ReviewsIndexItem extends Component {
           <ReactStars value={rating} size={18} edit={false} />
         </div>
         <div>
-          {comments.length > 0 ? (
-            showComments ? (
-              <button className="link-button" onClick={this.toggleComments}>
-                Hide Comment{comments.length === 1 ? "" : "s"}
-              </button>
-            ) : (
-              <button className="link-button" onClick={this.toggleComments}>
-                Show {comments.length} Comment{comments.length === 1 ? "" : "s"}
-              </button>
-            )
-          ) : (
-            <button className="link-button">Add Comment</button>
-          )}
-        </div>
-        <div>
-          {showComments && (
-            <CommentsIndexContainer
-              resourceComments={comments}
-              indentLevel={0}
-              resourceId={_id}
-              parentCommentId={null}
-              resourceType={"review"}
-            />
-          )}
+          <CommentsSectionContainer
+            resourceComments={comments}
+            resourceId={_id}
+            resourceType={"review"}
+            smallCommentsSection
+          />
         </div>
       </li>
     );

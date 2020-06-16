@@ -74,6 +74,11 @@ select {
   font-size: 1rem;
 }
 
+.disabled-void-text {
+  color: $gray;
+  font-style: italic;
+}
+
 .loading-spinner {
   display: flex;
   justify-content: center;
