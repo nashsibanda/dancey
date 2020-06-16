@@ -17,11 +17,26 @@ export default class CommentsIndex extends Component {
         comment.resourceId === resourceId &&
         comment.parentCommentId === parentCommentId
     );
-    // const indexComments = entityComments.filter(
-    //   comment => comment.parentCommentId === parentCommentId
-    // );
+    const borderColor = () => {
+      switch (indentLevel % 4) {
+        case 0:
+          return "olivedrab";
+        case 1:
+          return "royalblue";
+        case 2:
+          return "salmon";
+        case 3:
+          return "rebeccapurple";
+      }
+    };
+    const borderStyle = {
+      borderColor: borderColor(),
+    };
     return (
-      <ul className={"comments-index indent-" + indentLevel}>
+      <ul
+        className={"comments-index indent-" + indentLevel}
+        style={borderStyle}
+      >
         {indexComments.length > 0 &&
           indexComments
             .sort((a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt))
