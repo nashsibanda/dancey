@@ -1,21 +1,20 @@
-import { RECEIVE_RELEASE } from "../../actions/release_actions";
-import { RECEIVE_ONE_REVIEW } from "../../actions/review_actions";
+import {
+  RECEIVE_ONE_COMMENT,
+  RECEIVE_COMMENTS,
+} from "../../actions/comment_actions";
 
 const CommentsReducer = (state = {}, action) => {
   Object.freeze(state);
   switch (action.type) {
-    case RECEIVE_RELEASE:
-      const releaseCommentsOutput = {};
-      action.release.comments.forEach(comment => {
-        releaseCommentsOutput[comment._id] = comment;
+    case RECEIVE_COMMENTS:
+      const commentsOutput = {};
+      action.comments.forEach(comment => {
+        commentsOutput[comment._id] = comment;
       });
-      return releaseCommentsOutput;
-    case RECEIVE_ONE_REVIEW:
-      const reviewCommentsOutput = {};
-      action.review.comments.forEach(comment => {
-        reviewCommentsOutput[comment._id] = comment;
-      });
-      return Object.assign({}, state, reviewCommentsOutput);
+      return Object.assign({}, state, commentsOutput);
+    case RECEIVE_ONE_COMMENT:
+      const { comment } = action;
+      return Object.assign({}, state, { [comment._id]: comment });
     default:
       return state;
   }
