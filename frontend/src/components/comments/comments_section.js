@@ -48,22 +48,27 @@ export default class CommentsSection extends Component {
       loggedIn,
       smallCommentsSection,
       loading,
+      stateComments,
     } = this.props;
     const { initialLoad, showComments, showCommentForm } = this.state;
+
+    const commentsNumber = Object.values(stateComments).filter(
+      comment => comment.resourceId === resourceId
+    ).length;
 
     return (
       <div>
         {smallCommentsSection ? (
           <div className="small-comments-section-header">
-            {resourceComments.length > 0 ? (
+            {commentsNumber > 0 ? (
               showComments ? (
                 <button className="link-button" onClick={this.toggleComments}>
-                  Hide Comment{resourceComments.length === 1 ? "" : "s"}
+                  Hide Comment{commentsNumber === 1 ? "" : "s"}
                 </button>
               ) : (
                 <button className="link-button" onClick={this.toggleComments}>
-                  Show {resourceComments.length} Comment
-                  {resourceComments.length === 1 ? "" : "s"}
+                  Show {commentsNumber} Comment
+                  {commentsNumber === 1 ? "" : "s"}
                 </button>
               )
             ) : (
