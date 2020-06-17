@@ -3,6 +3,11 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 0.5rem;
+  flex-wrap: wrap;
+
+  button {
+    min-width: 10rem;
+  }
 }
 
 .comments-index {

@@ -46,6 +46,12 @@ export const fetchOneReview = id => dispatch => {
     });
 };
 
+export const createNewReview = reviewData => dispatch => {
+  ReviewAPIUtil.postReview(reviewData)
+    .then(review => dispatch(receiveOneReview(review.data)))
+    .catch(err => dispatch(receiveReviewErrors(err.response.data)));
+};
+
 export const likeReview = id => dispatch => {
   ReviewAPIUtil.putReviewLike(id)
     .then(review => dispatch(receiveOneReview(review.data)))
