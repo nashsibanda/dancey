@@ -28,6 +28,8 @@ export default class CommentsIndex extends Component {
           return "salmon";
         case 3:
           return "rebeccapurple";
+        default:
+          return "revert";
       }
     };
     const borderStyle = {
