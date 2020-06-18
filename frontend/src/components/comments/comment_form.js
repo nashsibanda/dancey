@@ -7,7 +7,7 @@ export default class CommentForm extends Component {
     super(props);
 
     this.state = {
-      body: "",
+      body: this.props.comment ? this.props.comment.body : "",
     };
     this.textareaRef = React.createRef();
     this.updateBody = this.updateBody.bind(this);
@@ -25,24 +25,8 @@ export default class CommentForm extends Component {
 
   handleSubmit(e) {
     e.preventDefault();
-    const {
-      resourceId,
-      resourceType,
-      parentCommentId,
-      createNewComment,
-      currentUser,
-      hideCommentForm,
-    } = this.props;
-    const { body } = this.state;
-    const commentData = {
-      resourceType,
-      resourceId,
-      body,
-      parentCommentId,
-      userId: currentUser.id,
-      username: currentUser.username,
-    };
-    createNewComment(commentData);
+    const { submitComment, hideCommentForm } = this.props;
+    submitComment(this.props, this.state);
     hideCommentForm();
   }
 

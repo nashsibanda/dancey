@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import CommentsIndexContainer from "./comments_index_container";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import CommentFormContainer from "./comment_form_container";
+import NewCommentFormContainer from "./new_comment_form_container";
 
 export default class CommentsSection extends Component {
   constructor(props) {
@@ -98,7 +98,7 @@ export default class CommentsSection extends Component {
           </div>
         )}
         {showCommentForm && (
-          <CommentFormContainer
+          <NewCommentFormContainer
             resourceType={resourceType}
             resourceId={resourceId}
             parentCommentId={null}

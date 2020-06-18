@@ -2,24 +2,31 @@ import React, { Component } from "react";
 import CommentsIndexContainer from "./comments_index_container";
 import { Link } from "react-router-dom";
 import moment from "moment";
-import CommentFormContainer from "./comment_form_container";
+import NewCommentFormContainer from "./new_comment_form_container";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import EditCommentFormContainer from "./edit_comment_form_container";
 
 export default class CommentsIndexItem extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      showCommentForm: false,
+      showReplyForm: false,
       deleting: false,
+      showEditForm: false,
     };
-    this.toggleCommentForm = this.toggleCommentForm.bind(this);
+    this.toggleReplyForm = this.toggleReplyForm.bind(this);
+    this.toggleEditForm = this.toggleEditForm.bind(this);
     this.handleLike = this.handleLike.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
   }
 
-  toggleCommentForm() {
-    this.setState({ showCommentForm: !this.state.showCommentForm });
+  toggleReplyForm() {
+    this.setState({ showReplyForm: !this.state.showReplyForm });
+  }
+
+  toggleEditForm() {
+    this.setState({ showEditForm: !this.state.showEditForm });
   }
 
   handleLike() {
@@ -51,7 +58,7 @@ export default class CommentsIndexItem extends Component {
       likes,
       deleted,
     } = comment;
-    const { showCommentForm, deleting } = this.state;
+    const { showReplyForm, deleting, showEditForm } = this.state;
 
     const liked =
       currentUser && likes ? (likes[currentUser.id] ? true : false) : false;
@@ -72,6 +79,13 @@ export default class CommentsIndexItem extends Component {
               }
             >
               {moment(createdAt).format("LLL")}
+              {comment.createdAt === comment.updatedAt ? (
+                ""
+              ) : (
+                <span className="edited-indicator">
+                  *<span className="indicator-text">edited</span>
+                </span>
+              )}
             </span>
           </div>
         ) : (
@@ -81,14 +95,18 @@ export default class CommentsIndexItem extends Component {
         )}
         {!deleted && (
           <>
-            <div className="comment-body">{body}</div>
+            {showEditForm ? (
+              <EditCommentFormContainer
+                comment={comment}
+                hideCommentForm={this.toggleEditForm}
+              />
+            ) : (
+              <div className="comment-body">{body}</div>
+            )}
             <div className="comment-interactions">
               <span className="comment-reply">
-                <button
-                  className="link-button"
-                  onClick={this.toggleCommentForm}
-                >
-                  {showCommentForm ? "Cancel" : "Reply"}
+                <button className="link-button" onClick={this.toggleReplyForm}>
+                  {showReplyForm ? "Cancel" : "Reply"}
                 </button>
               </span>
               <span className="comment-like">
@@ -104,19 +122,32 @@ export default class CommentsIndexItem extends Component {
               </span>
               {currentUser &&
                 (currentUser.id === userId || currentUser.isAdmin) && (
-                  <span className="comment-delete">
-                    <button className="link-button" onClick={this.handleDelete}>
-                      {deleting ? "Deleting..." : "Delete"}
-                    </button>
-                  </span>
+                  <>
+                    <span className="comment-delete">
+                      <button
+                        className="link-button"
+                        onClick={this.handleDelete}
+                      >
+                        {deleting ? "Deleting..." : "Delete"}
+                      </button>
+                    </span>
+                    <span className="comment-edit">
+                      <button
+                        className="link-button"
+                        onClick={this.toggleEditForm}
+                      >
+                        {showEditForm ? "Cancel" : "Edit"}
+                      </button>
+                    </span>
+                  </>
                 )}
             </div>
-            {showCommentForm && (
-              <CommentFormContainer
+            {showReplyForm && (
+              <NewCommentFormContainer
                 resourceType={resourceType}
                 resourceId={resourceId}
                 parentCommentId={comment._id}
-                hideCommentForm={this.toggleCommentForm}
+                hideCommentForm={this.toggleReplyForm}
               />
             )}
           </>

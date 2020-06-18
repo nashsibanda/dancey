@@ -67,6 +67,13 @@ export default class ReviewsIndexItem extends Component {
             }
           >
             on {moment(createdAt).format("LL")}
+            {createdAt === updatedAt ? (
+              ""
+            ) : (
+              <span className="edited-indicator">
+                *<span className="indicator-text">edited</span>
+              </span>
+            )}
           </span>
           <div className="review-interactions">
             <span className="review-add-comment">
