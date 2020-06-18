@@ -107,14 +107,7 @@ export default class ReleaseMainInfo extends React.Component {
   }
 
   render() {
-    const {
-      loggedIn,
-      release,
-      toggleEditButtons,
-      showEditButtons,
-      loadingPersonnel,
-      statePersonnel,
-    } = this.props;
+    const { release, showEditButtons, loadingPersonnel } = this.props;
     const { images, title } = release;
     const {
       editYear,

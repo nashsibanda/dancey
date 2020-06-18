@@ -1,6 +1,6 @@
 import ReviewForm from "./review_form";
 
-const { createNewReview, editReview } = require("../../actions/review_actions");
+const { editReview } = require("../../actions/review_actions");
 const { connect } = require("react-redux");
 
 const mapStateToProps = state => ({
