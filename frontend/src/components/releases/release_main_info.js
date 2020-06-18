@@ -8,6 +8,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import countries from "../../util/validation/countries";
 import formats from "../../util/validation/formats";
 import { Helmet } from "react-helmet";
+import PersonnelSearchContainer from "../search/personnel_search_container";
 
 export default class ReleaseMainInfo extends React.Component {
   constructor(props) {
@@ -20,15 +21,21 @@ export default class ReleaseMainInfo extends React.Component {
       editCountry: false,
       format: this.props.release.format || "",
       editFormat: false,
-      mainArtists: null,
+      mainArtists:
+        this.props.release.mainArtists.length > 0
+          ? this.props.release.mainArtists
+          : [],
       editTitle: false,
       title: this.props.release.title || "",
       editLabel: false,
-      label: null,
+      label:
+        this.props.release.label.length > 0 ? this.props.release.label : [],
     };
 
     this.toggleForm = this.toggleForm.bind(this);
     this.updateField = this.updateField.bind(this);
+    this.getDefaultPersonnel = this.getDefaultPersonnel.bind(this);
+    this.updateSelectField = this.updateSelectField.bind(this);
   }
 
   componentDidMount() {
@@ -37,7 +44,10 @@ export default class ReleaseMainInfo extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (!this.state.mainArtists && prevProps.loading && !this.props.loading) {
+    if (
+      (prevProps.loadingPersonnel && !this.props.loadingPersonnel) ||
+      prevProps.release.mainArtists !== this.props.release.mainArtists
+    ) {
       const { release, statePersonnel } = this.props;
       const mainArtists = release.mainArtists.map(
         artistId => statePersonnel[artistId]
@@ -45,18 +55,20 @@ export default class ReleaseMainInfo extends React.Component {
       this.setState({ mainArtists });
     }
 
-    if (!this.state.label && prevProps.loading && !this.props.loading) {
+    if (
+      (prevProps.loadingPersonnel && !this.props.loadingPersonnel) ||
+      prevProps.release.label !== this.props.release.label
+    ) {
       const { release, statePersonnel } = this.props;
       const label = release.label.map(labelId => statePersonnel[labelId]);
       this.setState({ label });
     }
   }
 
-  toggleForm(field, toggle) {
+  toggleForm(toggle) {
     return e =>
       this.setState({
         [toggle]: !this.state[toggle],
-        [field]: this.props.release[field] || "",
       });
   }
 
@@ -71,6 +83,11 @@ export default class ReleaseMainInfo extends React.Component {
     }
   }
 
+  updateSelectField(field, value) {
+    const selectedIds = value ? value.map(x => x.value) : null;
+    this.setState({ [field]: selectedIds });
+  }
+
   handleSubmit(field, toggle) {
     return e => {
       e.preventDefault();
@@ -82,15 +99,23 @@ export default class ReleaseMainInfo extends React.Component {
     };
   }
 
+  getDefaultPersonnel(field) {
+    const { release, statePersonnel } = this.props;
+    return Object.keys(statePersonnel).length > 0
+      ? release[field].map(artistId => statePersonnel[artistId])
+      : [];
+  }
+
   render() {
     const {
       loggedIn,
       release,
       toggleEditButtons,
       showEditButtons,
-      loading,
+      loadingPersonnel,
+      statePersonnel,
     } = this.props;
-    const { images, label, title } = release;
+    const { images, title } = release;
     const {
       editYear,
       releaseYear,
@@ -99,12 +124,14 @@ export default class ReleaseMainInfo extends React.Component {
       editFormat,
       format,
       mainArtists,
+      editLabel,
+      label,
     } = this.state;
 
     const mainImage = images.find(({ mainImage }) => mainImage === true);
 
     return (
-      !loading && (
+      !loadingPersonnel && (
         <div className="resource-main-info">
           <div className="resource-image">
             <img
@@ -122,40 +149,62 @@ export default class ReleaseMainInfo extends React.Component {
             </button>
           </div>
           <div className="resource-details">
-            {loggedIn && (
-              <button
-                className={
-                  "big-button toggle-edit-button " +
-                  (showEditButtons ? "edit-mode-on" : "edit-mode-off")
-                }
-                onClick={toggleEditButtons}
-              >
-                <FontAwesomeIcon
-                  icon={showEditButtons ? "toggle-on" : "toggle-off"}
-                />
-                <span>
-                  {showEditButtons ? "Edit Mode: On" : "Edit Mode: Off"}
-                </span>
-              </button>
-            )}
             {mainArtists && (
-              <>
+              <div className="resource-heading">
                 <h2>
                   {joinObjectLinks(mainArtists)} — {title}
                 </h2>
                 <Helmet>
                   <title>{makeReleaseHtmlTitle(this.state)}</title>
                 </Helmet>
-              </>
+              </div>
             )}
             <div>
               <span className="details-label">Label:</span>
-              <span className="details-value">{joinObjectLinks(label)}</span>
+              {editLabel ? (
+                <form
+                  className="resource-main-info-form"
+                  onSubmit={this.handleSubmit("label", "editLabel")}
+                >
+                  <PersonnelSearchContainer
+                    formUpdate={this.updateSelectField}
+                    fieldName={"label"}
+                    placeholderText={"Label(s)..."}
+                    defaultSelected={this.getDefaultPersonnel("label")}
+                  />
+                  <button className="icon-button" type="submit">
+                    <FontAwesomeIcon icon="save" />
+                  </button>
+                  <button
+                    className="icon-button"
+                    type="button"
+                    onClick={this.toggleForm("editLabel")}
+                  >
+                    <FontAwesomeIcon icon="undo-alt" />
+                  </button>
+                </form>
+              ) : (
+                <span className="details-value">
+                  {label.length > 0 && <span>{joinObjectLinks(label)}</span>}
+                  {showEditButtons && (
+                    <button
+                      className="icon-button"
+                      type="button"
+                      onClick={this.toggleForm("editLabel")}
+                    >
+                      <FontAwesomeIcon icon="edit" />
+                    </button>
+                  )}
+                </span>
+              )}
             </div>
             <div>
               <span className="details-label">Format:</span>
               {editFormat ? (
-                <form onSubmit={this.handleSubmit("format", "editFormat")}>
+                <form
+                  className="resource-main-info-form"
+                  onSubmit={this.handleSubmit("format", "editFormat")}
+                >
                   <select
                     onChange={this.updateField("format")}
                     value={format}
@@ -176,19 +225,19 @@ export default class ReleaseMainInfo extends React.Component {
                   <button
                     className="icon-button"
                     type="button"
-                    onClick={this.toggleForm("format", "editFormat")}
+                    onClick={this.toggleForm("editFormat")}
                   >
                     <FontAwesomeIcon icon="undo-alt" />
                   </button>
                 </form>
               ) : (
                 <span className="details-value">
-                  {format}
+                  {format && <span>{format}</span>}
                   {showEditButtons && (
                     <button
                       className="icon-button"
                       type="button"
-                      onClick={this.toggleForm("format", "editFormat")}
+                      onClick={this.toggleForm("editFormat")}
                     >
                       <FontAwesomeIcon icon="edit" />
                     </button>
@@ -222,19 +271,19 @@ export default class ReleaseMainInfo extends React.Component {
                   <button
                     className="icon-button"
                     type="button"
-                    onClick={this.toggleForm("releaseCountry", "editCountry")}
+                    onClick={this.toggleForm("editCountry")}
                   >
                     <FontAwesomeIcon icon="undo-alt" />
                   </button>
                 </form>
               ) : (
                 <span className="details-value">
-                  {releaseCountry}
+                  {releaseCountry && <span>{releaseCountry}</span>}
                   {showEditButtons && (
                     <button
                       className="icon-button"
                       type="button"
-                      onClick={this.toggleForm("releaseCountry", "editCountry")}
+                      onClick={this.toggleForm("editCountry")}
                     >
                       <FontAwesomeIcon icon="edit" />
                     </button>
@@ -245,7 +294,10 @@ export default class ReleaseMainInfo extends React.Component {
             <div>
               <span className="details-label">Release Year:</span>
               {editYear ? (
-                <form onSubmit={this.handleSubmit("releaseYear", "editYear")}>
+                <form
+                  className="resource-main-info-form"
+                  onSubmit={this.handleSubmit("releaseYear", "editYear")}
+                >
                   <input
                     type="number"
                     min="1890"
@@ -259,19 +311,19 @@ export default class ReleaseMainInfo extends React.Component {
                   <button
                     className="icon-button"
                     type="button"
-                    onClick={this.toggleForm("releaseYear", "editYear")}
+                    onClick={this.toggleForm("editYear")}
                   >
                     <FontAwesomeIcon icon="undo-alt" />
                   </button>
                 </form>
               ) : (
                 <span className="details-value">
-                  {releaseYear}
+                  {releaseYear && <span>{releaseYear}</span>}
                   {showEditButtons && (
                     <button
                       className="icon-button"
                       type="button"
-                      onClick={this.toggleForm("releaseYear", "editYear")}
+                      onClick={this.toggleForm("editYear")}
                     >
                       <FontAwesomeIcon icon="edit" />
                     </button>

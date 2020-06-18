@@ -1,8 +1,11 @@
 .resource-main-info {
+  width: 100%;
+  flex: 1;
   display: flex;
   flex-direction: row;
   align-items: center;
   padding: 2rem $main-margins;
+  box-sizing: border-box;
   border-bottom: 1px solid $graylighter;
 
   $image-size: 12rem;
@@ -27,46 +30,47 @@
   }
 
   .resource-details {
-    display: flex;
-    flex-grow: 1;
-    flex-direction: column;
-    justify-content: space-around;
+    display: table;
     height: $image-size;
     position: relative;
 
+    .resource-heading {
+      display: table;
+      margin-bottom: 1rem;
+    }
+
     .icon-button {
-      margin-left: 0.6rem;
       color: $gray;
     }
 
-    .toggle-edit-button {
-      position: absolute;
-      bottom: 0rem;
-      right: 0rem;
-
-      &.edit-mode-on {
-        color: $graylighter;
-        background-color: $graydarker;
-        svg {
-          color: $graylighter;
-        }
-      }
-
-      &.edit-mode-off {
-        color: $graydarker;
-      }
+    .details-value > * {
+      margin-right: 0.5rem;
     }
 
     h2 {
       font-size: 2rem;
     }
 
-    div {
+    & > div {
       display: flex;
       flex-direction: row;
       align-items: center;
-      min-height: 2.5rem;
+      min-height: 3rem;
     }
+
+    .search-autocomplete {
+      width: 100%;
+      max-width: 25rem;
+    }
+
+    .resource-main-info-form {
+      display: flex;
+      width: 40vw;
+      button {
+        margin-left: 1rem;
+      }
+    }
+
     .details-label {
       width: 10rem;
     }
