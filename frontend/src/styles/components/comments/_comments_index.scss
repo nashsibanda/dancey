@@ -21,14 +21,15 @@
   }
 
   .comment {
-    .comment-body {
-      margin-top: 0.5rem;
+    .comment-details {
+      margin-top: 1.2rem;
     }
 
-    .comment-details {
+    .comment-details,
+    .comment-interactions {
       font-size: 0.8rem;
       font-weight: 700;
-      color: $gray;
+      color: $graylight;
       display: flex;
       flex-direction: row;
 
