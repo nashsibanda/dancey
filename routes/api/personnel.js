@@ -57,7 +57,6 @@ router.get("/:id", (req, res, next) => {
 
 // GET all personnel by release
 router.get("/get/release/:release_id", (req, res, next) => {
-  console.log("HELLO");
   Release.findById(req.params.release_id)
     .then(release => {
       const personnelArrayIds = [];
