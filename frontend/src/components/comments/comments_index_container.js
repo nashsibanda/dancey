@@ -3,6 +3,7 @@ import CommentsIndex from "./comments_index";
 import {
   fetchResourceComments,
   likeComment,
+  deleteComment,
 } from "../../actions/comment_actions";
 
 const mapStateToProps = state => ({
@@ -16,6 +17,7 @@ const mapDispatchToProps = dispatch => ({
   fetchResourceComments: (resourceType, resourceId) =>
     dispatch(fetchResourceComments(resourceType, resourceId)),
   likeComment: id => dispatch(likeComment(id)),
+  deleteComment: id => dispatch(deleteComment(id)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(CommentsIndex);

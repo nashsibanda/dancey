@@ -3,6 +3,7 @@ import * as CommentAPIUtil from "../util/comment_api_util";
 
 export const RECEIVE_COMMENTS = "RECEIVE_COMMENTS";
 export const RECEIVE_ONE_COMMENT = "RECEIVE_ONE_COMMENT";
+export const REMOVE_ONE_COMMENT = "REMOVE_ONE_COMMENT";
 export const RECEIVE_COMMENT_ERRORS = "RECEIVE_COMMENT_ERRORS";
 
 const receiveComments = comments => ({
@@ -18,6 +19,11 @@ const receiveOneComment = comment => ({
 const receiveCommentErrors = errors => ({
   type: RECEIVE_COMMENT_ERRORS,
   errors,
+});
+
+const clearOneComment = comment => ({
+  type: REMOVE_ONE_COMMENT,
+  comment,
 });
 
 export const fetchResourceComments = (resourceType, resourceId) => dispatch => {
@@ -54,6 +60,12 @@ export const createNewComment = commentData => dispatch => {
 
 export const likeComment = id => dispatch => {
   CommentAPIUtil.putCommentLike(id)
+    .then(comment => dispatch(receiveOneComment(comment.data)))
+    .catch(err => dispatch(receiveCommentErrors(err.response.data)));
+};
+
+export const deleteComment = id => dispatch => {
+  CommentAPIUtil.deleteComment(id)
     .then(comment => dispatch(receiveOneComment(comment.data)))
     .catch(err => dispatch(receiveCommentErrors(err.response.data)));
 };
