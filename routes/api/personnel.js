@@ -56,13 +56,18 @@ router.get("/:id", (req, res, next) => {
 });
 
 // GET all personnel by release
-router.get("/get/release/:release_id", (req, res) => {
+router.get("/get/release/:release_id", (req, res, next) => {
+  console.log("HELLO");
   Release.findById(req.params.release_id)
     .then(release => {
-      const personnelIds = [];
+      const personnelArrayIds = [];
       release.personnel.forEach(personnel => {
-        personnelIds.push(...personnel.personnelIds);
+        personnelArrayIds.push(...personnel.personnelIds);
       });
+      const personnelIds = personnelArrayIds.concat(
+        release.label,
+        release.mainArtists
+      );
       Personnel.find({ _id: { $in: personnelIds } })
         .then(personnelCollection => res.json(personnelCollection))
         .catch(err => next(new RecordNotFoundError("No personnel found")));
