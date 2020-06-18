@@ -61,7 +61,7 @@ export default class CommentsIndexItem extends Component {
         {!deleted ? (
           <div className="comment-details">
             <span className="comment-attribution">
-              Posted by <Link to={`/user/${userId}`}>{username}</Link>
+              <Link to={`/user/${userId}`}>{username}</Link>
             </span>
             <span
               className="comment-created-on"
@@ -71,12 +71,12 @@ export default class CommentsIndexItem extends Component {
                   : `edited at ${moment(updatedAt).format("LLL")}`
               }
             >
-              Posted on {moment(createdAt).format("LLL")}
+              {moment(createdAt).format("LLL")}
             </span>
           </div>
         ) : (
           <div className="comment-details deleted">
-            <span>Comment deleted...</span>
+            <span>[This comment has been deleted]</span>
           </div>
         )}
         {!deleted && (
@@ -102,13 +102,14 @@ export default class CommentsIndexItem extends Component {
                   <span>{likes ? Object.values(likes).length : 0}</span>
                 </button>
               </span>
-              {currentUser && currentUser.id === userId && (
-                <span className="comment-delete">
-                  <button className="link-button" onClick={this.handleDelete}>
-                    {deleting ? "Deleting..." : "Delete"}
-                  </button>
-                </span>
-              )}
+              {currentUser &&
+                (currentUser.id === userId || currentUser.isAdmin) && (
+                  <span className="comment-delete">
+                    <button className="link-button" onClick={this.handleDelete}>
+                      {deleting ? "Deleting..." : "Delete"}
+                    </button>
+                  </span>
+                )}
             </div>
             {showCommentForm && (
               <CommentFormContainer

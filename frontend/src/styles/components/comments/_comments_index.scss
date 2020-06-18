@@ -23,6 +23,11 @@
   .comment {
     .comment-details {
       margin-top: 1.2rem;
+
+      &.deleted {
+        font-style: italic;
+        color: $graylight;
+      }
     }
 
     .comment-details,
