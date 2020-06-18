@@ -35,6 +35,7 @@ export default class ReviewsIndex extends Component {
       fetchResourceComments,
       likeReview,
       currentUser,
+      deleteReview,
     } = this.props;
     const { showReviewForm } = this.state;
 
@@ -99,6 +100,7 @@ export default class ReviewsIndex extends Component {
                     fetchResourceComments={fetchResourceComments}
                     likeReview={likeReview}
                     currentUser={currentUser}
+                    deleteReview={deleteReview}
                   />
                 )
               );

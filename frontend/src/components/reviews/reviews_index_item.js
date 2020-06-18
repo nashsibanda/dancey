@@ -11,8 +11,10 @@ export default class ReviewsIndexItem extends Component {
 
     this.state = {
       commentsFetched: false,
+      deleting: false,
     };
     this.handleLike = this.handleLike.bind(this);
+    this.handleDelete = this.handleDelete.bind(this);
   }
 
   componentDidMount() {
@@ -24,6 +26,12 @@ export default class ReviewsIndexItem extends Component {
   handleLike() {
     const { review, likeReview } = this.props;
     likeReview(review._id);
+  }
+
+  handleDelete() {
+    const { review, deleteReview } = this.props;
+    deleteReview(review._id);
+    this.setState({ deleting: true });
   }
 
   render() {
@@ -39,6 +47,7 @@ export default class ReviewsIndexItem extends Component {
       updatedAt,
       likes,
     } = review;
+    const { deleting } = this.state;
 
     const liked =
       currentUser && likes ? (likes[currentUser.id] ? true : false) : false;
@@ -74,6 +83,13 @@ export default class ReviewsIndexItem extends Component {
                 <span>{likes ? Object.values(likes).length : 0}</span>
               </button>
             </span>
+            {currentUser && currentUser.id === userId && (
+              <span className="review-delete">
+                <button className="link-button" onClick={this.handleDelete}>
+                  {deleting ? "Deleting..." : "Delete"}
+                </button>
+              </span>
+            )}
           </div>
         </div>
         <div>{body}</div>
