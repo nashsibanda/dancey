@@ -5,6 +5,7 @@ import CommentsSectionContainer from "../comments/comments_section_container";
 import ReviewsIndexContainer from "../reviews/reviews_index_container";
 import LoadingSpinner from "../loading/loading_spinner";
 import ReleaseMainInfoContainer from "./release_main_info_container";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export default class ReleaseShow extends Component {
   constructor(props) {
@@ -42,6 +43,22 @@ export default class ReleaseShow extends Component {
 
       return (
         <div className="resource-show-container">
+          {loggedIn && (
+            <button
+              className={
+                "big-button toggle-edit-button " +
+                (showEditButtons ? "edit-mode-on" : "edit-mode-off")
+              }
+              onClick={this.toggleEditButtons}
+            >
+              <FontAwesomeIcon
+                icon={showEditButtons ? "toggle-on" : "toggle-off"}
+              />
+              <span>
+                {showEditButtons ? "Edit Mode: On" : "Edit Mode: Off"}
+              </span>
+            </button>
+          )}
           <ReleaseMainInfoContainer
             release={release}
             loggedIn={loggedIn}
