@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { fetchResourcePersonnel } from "../../actions/personnel_actions";
 
 const mapStateToProps = state => ({
-  loading: state.loading.personnel,
+  loadingPersonnel: state.loading.personnel,
   statePersonnel: state.entities.personnel,
 });
 
