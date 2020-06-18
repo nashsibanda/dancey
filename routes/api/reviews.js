@@ -61,7 +61,7 @@ router.get("/get/:resource/:resource_id", (req, res, next) => {
   reviewResource(req.params.resource)
     .findById(req.params.resource_id)
     .then(({ reviews }) => {
-      Review.find({ _id: { $in: reviews } })
+      Review.find({ _id: { $in: reviews }, deleted: false })
         .then(resourceReviews => res.json(resourceReviews))
         .catch(err => next(new RecordNotFoundError("No reviews found")));
     })

@@ -4,6 +4,7 @@ import {
   fetchOneReview,
   fetchResourceReviews,
   likeReview,
+  deleteReview,
 } from "../../actions/review_actions";
 import { fetchResourceComments } from "../../actions/comment_actions";
 
@@ -21,6 +22,7 @@ const mapDispatchToProps = dispatch => ({
   fetchResourceComments: (resourceType, resourceId) =>
     dispatch(fetchResourceComments(resourceType, resourceId)),
   likeReview: id => dispatch(likeReview(id)),
+  deleteReview: id => dispatch(deleteReview(id)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ReviewsIndex);
