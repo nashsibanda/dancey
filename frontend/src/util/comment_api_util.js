@@ -11,7 +11,7 @@ export const postComment = commentPostData =>
   axios.post("/api/comments", commentPostData);
 
 export const updateComment = (id, commentUpdateData) =>
-  axios.post(`/api/comments/${id}`, commentUpdateData);
+  axios.put(`/api/comments/${id}`, commentUpdateData);
 
 export const putCommentLike = id => axios.put(`/api/comments/${id}/like`);
 

@@ -165,3 +165,14 @@ select {
     }
   }
 }
+
+.edited-indicator {
+  .indicator-text {
+    display: none;
+    background-color: #fff;
+    margin-left: 0.1rem;
+    *:hover > & {
+      display: initial;
+    }
+  }
+}

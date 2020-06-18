@@ -21,11 +21,6 @@ const receiveCommentErrors = errors => ({
   errors,
 });
 
-const clearOneComment = comment => ({
-  type: REMOVE_ONE_COMMENT,
-  comment,
-});
-
 export const fetchResourceComments = (resourceType, resourceId) => dispatch => {
   dispatch(commentsLoadingOn());
   CommentAPIUtil.getResourceComments(resourceType, resourceId)
@@ -66,6 +61,12 @@ export const likeComment = id => dispatch => {
 
 export const deleteComment = id => dispatch => {
   CommentAPIUtil.deleteComment(id)
+    .then(comment => dispatch(receiveOneComment(comment.data)))
+    .catch(err => dispatch(receiveCommentErrors(err.response.data)));
+};
+
+export const editComment = (id, commentData) => dispatch => {
+  CommentAPIUtil.updateComment(id, commentData)
     .then(comment => dispatch(receiveOneComment(comment.data)))
     .catch(err => dispatch(receiveCommentErrors(err.response.data)));
 };
