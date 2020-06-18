@@ -4,6 +4,7 @@ import ReactStars from "react-rating-stars-component";
 import moment from "moment";
 import CommentsSectionContainer from "../comments/comments_section_container";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import EditReviewFormContainer from "./edit_review_form_container";
 
 export default class ReviewsIndexItem extends Component {
   constructor(props) {
@@ -12,15 +13,21 @@ export default class ReviewsIndexItem extends Component {
     this.state = {
       commentsFetched: false,
       deleting: false,
+      showEditForm: false,
     };
     this.handleLike = this.handleLike.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
+    this.toggleEditForm = this.toggleEditForm.bind(this);
   }
 
   componentDidMount() {
     const { _id, comments } = this.props.review;
     if (comments.length > 0) this.props.fetchResourceComments("review", _id);
     this.setState({ commentsFetched: true });
+  }
+
+  toggleEditForm() {
+    this.setState({ showEditForm: !this.state.showEditForm });
   }
 
   handleLike() {
@@ -47,7 +54,7 @@ export default class ReviewsIndexItem extends Component {
       updatedAt,
       likes,
     } = review;
-    const { deleting } = this.state;
+    const { deleting, showEditForm } = this.state;
 
     const liked =
       currentUser && likes ? (likes[currentUser.id] ? true : false) : false;
@@ -91,15 +98,29 @@ export default class ReviewsIndexItem extends Component {
               </button>
             </span>
             {currentUser && currentUser.id === userId && (
-              <span className="review-delete">
-                <button className="link-button" onClick={this.handleDelete}>
-                  {deleting ? "Deleting..." : "Delete"}
-                </button>
-              </span>
+              <>
+                <span className="review-edit">
+                  <button className="link-button" onClick={this.toggleEditForm}>
+                    {deleting ? "Cancel" : "Edit"}
+                  </button>
+                </span>
+                <span className="review-delete">
+                  <button className="link-button" onClick={this.handleDelete}>
+                    {deleting ? "Deleting..." : "Delete"}
+                  </button>
+                </span>
+              </>
             )}
           </div>
         </div>
-        <div>{body}</div>
+        {showEditForm ? (
+          <EditReviewFormContainer
+            review={review}
+            hideReviewForm={this.toggleEditForm}
+          />
+        ) : (
+          <div className="review-body">{body}</div>
+        )}
         <div>
           <span>Rating:</span>
           <ReactStars value={rating} size={18} edit={false} />
