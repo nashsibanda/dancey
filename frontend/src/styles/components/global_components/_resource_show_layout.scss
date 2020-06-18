@@ -1,10 +1,34 @@
 .resource-show-container {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  align-items: center;
+
+  .toggle-edit-button {
+    width: 100%;
+    max-width: 20rem;
+
+    &.edit-mode-on {
+      color: $graylighter;
+      background-color: $graydarker;
+      svg {
+        color: $graylighter;
+      }
+    }
+
+    &.edit-mode-off {
+      color: $graydarker;
+    }
+  }
+
   & > .loading-spinner {
     padding: 3rem 0;
     font-size: 10rem;
   }
 
   .resource-show-body {
+    width: 100%;
+    box-sizing: border-box;
     display: flex;
     justify-content: space-between;
     padding: 0 $main-margins;
