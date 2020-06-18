@@ -3,7 +3,7 @@ import ReactStars from "react-rating-stars-component";
 import ReviewsIndexItem from "./reviews_index_item";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import LoadingSpinner from "../loading/loading_spinner";
-import ReviewFormContainer from "./review_form_container";
+import NewReviewFormContainer from "./new_review_form_container";
 
 export default class ReviewsIndex extends Component {
   constructor(props) {
@@ -64,7 +64,7 @@ export default class ReviewsIndex extends Component {
           )}
         </div>
         {showReviewForm ? (
-          <ReviewFormContainer
+          <NewReviewFormContainer
             resourceId={resourceId}
             resourceType={resourceType}
             hideReviewForm={this.toggleReviewForm}

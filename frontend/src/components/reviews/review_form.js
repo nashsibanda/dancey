@@ -8,8 +8,8 @@ export default class ReviewForm extends Component {
     super(props);
 
     this.state = {
-      body: "",
-      rating: 0,
+      body: this.props.review ? this.props.review.body : "",
+      rating: this.props.review ? this.props.review.rating : 0,
     };
     this.textareaRef = React.createRef();
     this.updateBody = this.updateBody.bind(this);
@@ -32,23 +32,8 @@ export default class ReviewForm extends Component {
 
   handleSubmit(e) {
     e.preventDefault();
-    const {
-      resourceId,
-      resourceType,
-      createNewReview,
-      currentUser,
-      hideReviewForm,
-    } = this.props;
-    const { body, rating } = this.state;
-    const reviewData = {
-      resourceType,
-      resourceId,
-      body,
-      rating,
-      userId: currentUser.id,
-      username: currentUser.username,
-    };
-    createNewReview(reviewData);
+    const { submitReview, hideReviewForm } = this.props;
+    submitReview(this.props, this.state);
     if (hideReviewForm) hideReviewForm();
   }
 

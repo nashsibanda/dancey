@@ -69,3 +69,9 @@ export const deleteReview = id => dispatch => {
     .then(review => dispatch(clearOneReview(review.data)))
     .catch(err => dispatch(receiveReviewErrors(err.response.data)));
 };
+
+export const editReview = (id, reviewData) => dispatch => {
+  ReviewAPIUtil.updateReview(id, reviewData)
+    .then(review => dispatch(receiveOneReview(review.data)))
+    .catch(err => dispatch(receiveReviewErrors(err.response.data)));
+};
