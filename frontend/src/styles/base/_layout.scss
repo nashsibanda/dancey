@@ -57,6 +57,12 @@ a {
 .link-button {
   color: $blue;
 
+  @media (hover: hover) {
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
   &.likes-button {
     position: relative;
     &.liked {
