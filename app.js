@@ -4,6 +4,8 @@ const port = process.env.PORT || 5000;
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const passport = require("passport");
+const images = require("./routes/api/images");
+const fileUpload = require("express-fileupload");
 
 // App Setup
 const app = express();
@@ -23,6 +25,7 @@ mongoose
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(passport.initialize());
+app.use(fileUpload());
 require("./config/passport")(passport);
 
 // Routes
@@ -51,6 +54,8 @@ app.use("/api/comments", comments);
 
 const reviews = require("./routes/api/reviews");
 app.use("/api/reviews", reviews);
+
+app.use("/api/images", images);
 
 app.use((err, req, res, next) => {
   if (err) {
