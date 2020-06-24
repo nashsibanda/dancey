@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import ImageFormContainer from "./image_form_container";
 
 export default class ImagesModal extends Component {
   constructor(props) {
@@ -12,7 +13,7 @@ export default class ImagesModal extends Component {
   }
 
   render() {
-    const { toggleImageModal } = this.props;
+    const { toggleImageModal, resourceType, resourceId } = this.props;
     return (
       <div className="images-modal" onClick={toggleImageModal}>
         <div
@@ -26,7 +27,10 @@ export default class ImagesModal extends Component {
             <FontAwesomeIcon icon="times" />
           </button>
           <div className="images-modal-content">
-            <h2>Images in here!</h2>
+            <ImageFormContainer
+              resourceType={resourceType}
+              resourceId={resourceId}
+            />
           </div>
         </div>
       </div>

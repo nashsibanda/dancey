@@ -116,7 +116,7 @@ export default class ReleaseMainInfo extends React.Component {
 
   render() {
     const { release, showEditButtons, loadingPersonnel } = this.props;
-    const { images, title } = release;
+    const { images, title, _id } = release;
     const {
       editYear,
       releaseYear,
@@ -137,7 +137,11 @@ export default class ReleaseMainInfo extends React.Component {
         <div className="resource-main-info">
           <div className="resource-image">
             <img
-              src={mainImage ? mainImage.imageUrl : plainRecordImage}
+              src={
+                mainImage
+                  ? `https://dancey-bucket.s3-ap-northeast-1.amazonaws.com/${mainImage.imageUrl}`
+                  : plainRecordImage
+              }
               className={mainImage ? "" : "default-image"}
               alt={
                 mainImage
@@ -150,7 +154,11 @@ export default class ReleaseMainInfo extends React.Component {
               <span>{showEditButtons ? "Edit Images" : "More Images"}</span>
             </button>
             {showImageModal && (
-              <ImagesModal toggleImageModal={this.toggleImageModal} />
+              <ImagesModal
+                toggleImageModal={this.toggleImageModal}
+                resourceType={"release"}
+                resourceId={_id}
+              />
             )}
           </div>
           <div className="resource-details">
