@@ -9,6 +9,7 @@ import countries from "../../util/validation/countries";
 import formats from "../../util/validation/formats";
 import { Helmet } from "react-helmet";
 import PersonnelSearchContainer from "../search/personnel_search_container";
+import ImagesModal from "../images/images_modal";
 
 export default class ReleaseMainInfo extends React.Component {
   constructor(props) {
@@ -30,12 +31,14 @@ export default class ReleaseMainInfo extends React.Component {
       editLabel: false,
       label:
         this.props.release.label.length > 0 ? this.props.release.label : [],
+      showImageModal: true,
     };
 
     this.toggleForm = this.toggleForm.bind(this);
     this.updateField = this.updateField.bind(this);
     this.getDefaultPersonnel = this.getDefaultPersonnel.bind(this);
     this.updateSelectField = this.updateSelectField.bind(this);
+    this.toggleImageModal = this.toggleImageModal.bind(this);
   }
 
   componentDidMount() {
@@ -70,6 +73,11 @@ export default class ReleaseMainInfo extends React.Component {
       this.setState({
         [toggle]: !this.state[toggle],
       });
+  }
+
+  toggleImageModal(e) {
+    e.preventDefault();
+    this.setState({ showImageModal: !this.state.showImageModal });
   }
 
   updateField(field) {
@@ -119,6 +127,7 @@ export default class ReleaseMainInfo extends React.Component {
       mainArtists,
       editLabel,
       label,
+      showImageModal,
     } = this.state;
 
     const mainImage = images.find(({ mainImage }) => mainImage === true);
@@ -136,10 +145,13 @@ export default class ReleaseMainInfo extends React.Component {
                   : "Default album placeholder image - upload a new one!"
               }
             />
-            <button className="big-button">
+            <button className="big-button" onClick={this.toggleImageModal}>
               <FontAwesomeIcon icon={showEditButtons ? "edit" : "images"} />
               <span>{showEditButtons ? "Edit Images" : "More Images"}</span>
             </button>
+            {showImageModal && (
+              <ImagesModal toggleImageModal={this.toggleImageModal} />
+            )}
           </div>
           <div className="resource-details">
             {mainArtists && (
