@@ -9,7 +9,8 @@ import countries from "../../util/validation/countries";
 import formats from "../../util/validation/formats";
 import { Helmet } from "react-helmet";
 import PersonnelSearchContainer from "../search/personnel_search_container";
-import ImagesModal from "../images/images_modal";
+import ImagesModalContainer from "../images/images_modal_container";
+import LoadingSpinner from "../loading/loading_spinner";
 
 export default class ReleaseMainInfo extends React.Component {
   constructor(props) {
@@ -31,7 +32,7 @@ export default class ReleaseMainInfo extends React.Component {
       editLabel: false,
       label:
         this.props.release.label.length > 0 ? this.props.release.label : [],
-      showImageModal: true,
+      showImageModal: false,
     };
 
     this.toggleForm = this.toggleForm.bind(this);
@@ -133,34 +134,35 @@ export default class ReleaseMainInfo extends React.Component {
     const mainImage = images.find(({ mainImage }) => mainImage === true);
 
     return (
-      !loadingPersonnel && (
-        <div className="resource-main-info">
-          <div className="resource-image">
-            <img
-              src={
-                mainImage
-                  ? `https://dancey-bucket.s3-ap-northeast-1.amazonaws.com/${mainImage.imageUrl}`
-                  : plainRecordImage
-              }
-              className={mainImage ? "" : "default-image"}
-              alt={
-                mainImage
-                  ? mainImage.description
-                  : "Default album placeholder image - upload a new one!"
-              }
+      <div className="resource-main-info">
+        <div className="resource-image">
+          <img
+            src={mainImage ? mainImage.imageUrl : plainRecordImage}
+            className={mainImage ? "main-image" : "main-image default-image"}
+            alt={
+              mainImage
+                ? mainImage.description
+                : "Default album placeholder image - upload a new one!"
+            }
+            onClick={this.toggleImageModal}
+          />
+          <button className="big-button" onClick={this.toggleImageModal}>
+            <FontAwesomeIcon icon={showEditButtons ? "edit" : "images"} />
+            <span>{showEditButtons ? "Edit Images" : "More Images"}</span>
+          </button>
+          {showImageModal && (
+            <ImagesModalContainer
+              toggleImageModal={this.toggleImageModal}
+              resourceType={"release"}
+              resourceId={_id}
             />
-            <button className="big-button" onClick={this.toggleImageModal}>
-              <FontAwesomeIcon icon={showEditButtons ? "edit" : "images"} />
-              <span>{showEditButtons ? "Edit Images" : "More Images"}</span>
-            </button>
-            {showImageModal && (
-              <ImagesModal
-                toggleImageModal={this.toggleImageModal}
-                resourceType={"release"}
-                resourceId={_id}
-              />
-            )}
+          )}
+        </div>
+        {loadingPersonnel ? (
+          <div className="resource-details">
+            <LoadingSpinner />
           </div>
+        ) : (
           <div className="resource-details">
             {mainArtists && (
               <div className="resource-heading">
@@ -345,8 +347,8 @@ export default class ReleaseMainInfo extends React.Component {
               )}
             </div>
           </div>
-        </div>
-      )
+        )}
+      </div>
     );
   }
 }

@@ -18,11 +18,17 @@
     align-items: center;
     position: relative;
 
-    img {
+    .main-image {
       width: $image-size;
       margin-bottom: 0.5rem;
       border: 3px dashed transparent;
       box-sizing: border-box;
+
+      @media (hover: hover) {
+        &:hover {
+          cursor: pointer;
+        }
+      }
 
       &.default-image {
         border-color: $graylight;
@@ -34,6 +40,12 @@
     display: table;
     height: $image-size;
     position: relative;
+
+    .loading-spinner {
+      font-size: 4rem;
+      width: 100%;
+      margin-left: 10vw;
+    }
 
     .resource-heading {
       display: table;
