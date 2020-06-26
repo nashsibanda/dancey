@@ -7,9 +7,13 @@ export default class ImageForm extends Component {
 
     this.state = {
       file: null,
-      fileUrl: "",
-      description: "",
-      mainImage: false,
+      fileUrl: this.props.currentImage ? this.props.currentImage.imageUrl : "",
+      description: this.props.currentImage
+        ? this.props.currentImage.description
+        : "",
+      mainImage: this.props.currentImage
+        ? this.props.currentImage.mainImage
+        : false,
     };
 
     this.updateImageFile = this.updateImageFile.bind(this);
@@ -44,13 +48,14 @@ export default class ImageForm extends Component {
 
   handleSubmit(e) {
     const { file, description, mainImage } = this.state;
-    const { resourceType, resourceId, addImage } = this.props;
+    const { resourceType, resourceId, addImage, toggleForm } = this.props;
     e.preventDefault();
     const formData = new FormData();
     formData.append("file", file);
     formData.append("description", description);
     formData.append("mainImage", JSON.stringify(mainImage));
     addImage(resourceType, resourceId, formData);
+    toggleForm();
   }
 
   render() {
@@ -64,7 +69,9 @@ export default class ImageForm extends Component {
           id="custom-file"
           onChange={this.updateImageFile}
         />
-        {fileUrl && <img src={fileUrl}></img>}
+        {fileUrl && (
+          <img src={fileUrl} className="preview-image" alt="Preview"></img>
+        )}
         <input
           type="text"
           placeholder="Description..."

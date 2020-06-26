@@ -24,9 +24,43 @@
         $amount: 0.3
       );
 
-      span {
+      .description-text {
         background-color: transparent;
         font-size: 1.1rem;
+      }
+
+      .image-info-form {
+        background-color: transparent;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 90%;
+        max-width: 30rem;
+
+        input[type="text"] {
+          width: 100%;
+          margin-bottom: 0.5rem;
+        }
+
+        input[type="checkbox"] {
+          margin-right: 1rem;
+        }
+
+        .submit-buttons {
+          display: flex;
+          justify-content: space-between;
+          width: 100%;
+          margin-top: 0.5rem;
+
+          & > span {
+            max-width: 20rem;
+            color: $graylight;
+          }
+
+          button {
+            max-width: 10rem;
+          }
+        }
       }
     }
   }
@@ -36,6 +70,10 @@
     height: 4rem;
     display: flex;
     justify-content: space-between;
+
+    button {
+      text-align: center;
+    }
   }
 
   .gallery-thumbnail-index {

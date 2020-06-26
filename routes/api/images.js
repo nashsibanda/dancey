@@ -149,4 +149,65 @@ router.put(
   }
 );
 
+router.put(
+  "/edit/:resource_type/:resource_id/:image_object_id",
+  passport.authenticate("jwt", { session: false }),
+  (req, res, next) => {
+    console.log("HELLO");
+    imageResource(req.params.resource_type)
+      .findById(req.params.resource_id)
+      .then(resource => {
+        const newResourceImages = resource.toObject().images.map(image =>
+          image._id.toString() === req.params.image_object_id.toString()
+            ? Object.assign({}, image, {
+                mainImage: req.body.mainImage,
+                description: req.body.description,
+              })
+            : req.body.mainImage
+            ? Object.assign({}, image, { mainImage: false })
+            : image
+        );
+        imageResource(req.params.resource_type).findByIdAndUpdate(
+          resource._id,
+          {
+            $set: { images: newResourceImages },
+          },
+          { new: true },
+          (err, updatedResource) => {
+            if (err) return next(err);
+            res.json(updatedResource);
+          }
+        );
+      });
+  }
+);
+
+router.delete(
+  "/delete/:resource_type/:resource_id/:image_object_id",
+  passport.authenticate("jwt", { session: false }),
+  (req, res, next) => {
+    imageResource(req.params.resource_type)
+      .findById(req.params.resource_id)
+      .then(resource => {
+        const newResourceImages = resource
+          .toObject()
+          .images.filter(
+            image =>
+              image._id.toString() !== req.params.image_object_id.toString()
+          );
+        imageResource(req.params.resource_type).findByIdAndUpdate(
+          resource._id,
+          {
+            $set: { images: newResourceImages },
+          },
+          { new: true },
+          (err, updatedResource) => {
+            if (err) return next(err);
+            res.json(updatedResource);
+          }
+        );
+      });
+  }
+);
+
 module.exports = router;

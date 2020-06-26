@@ -38,6 +38,17 @@ a {
     }
   }
 
+  &.disabled {
+    background-color: $graylight !important;
+    color: $graydark !important;
+
+    @media (hover: hover) {
+      &:hover {
+        cursor: default;
+      }
+    }
+  }
+
   & > svg {
     color: $gray;
 
