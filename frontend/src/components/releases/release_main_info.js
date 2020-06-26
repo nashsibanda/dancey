@@ -32,7 +32,7 @@ export default class ReleaseMainInfo extends React.Component {
       editLabel: false,
       label:
         this.props.release.label.length > 0 ? this.props.release.label : [],
-      showImageModal: true,
+      showImageModal: false,
     };
 
     this.toggleForm = this.toggleForm.bind(this);
@@ -148,7 +148,7 @@ export default class ReleaseMainInfo extends React.Component {
           />
           <button className="big-button" onClick={this.toggleImageModal}>
             <FontAwesomeIcon icon="images" />
-            <span>"More Images"</span>
+            <span>More Images</span>
           </button>
           {showImageModal && (
             <ImagesModalContainer
