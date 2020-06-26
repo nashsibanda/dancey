@@ -147,8 +147,8 @@ export default class ReleaseMainInfo extends React.Component {
             onClick={this.toggleImageModal}
           />
           <button className="big-button" onClick={this.toggleImageModal}>
-            <FontAwesomeIcon icon={showEditButtons ? "edit" : "images"} />
-            <span>{showEditButtons ? "Edit Images" : "More Images"}</span>
+            <FontAwesomeIcon icon="images" />
+            <span>"More Images"</span>
           </button>
           {showImageModal && (
             <ImagesModalContainer
