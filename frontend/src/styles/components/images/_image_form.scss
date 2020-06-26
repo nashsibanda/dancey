@@ -1,0 +1,18 @@
+.image-form {
+  display: flex;
+  flex-direction: column;
+
+  & > * {
+    margin-bottom: 1rem;
+  }
+
+  img {
+    width: 100%;
+  }
+
+  label {
+    input {
+      margin-right: 1rem;
+    }
+  }
+}

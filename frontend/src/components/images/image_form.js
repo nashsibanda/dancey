@@ -7,7 +7,7 @@ export default class ImageForm extends Component {
 
     this.state = {
       file: null,
-      filename: "",
+      fileUrl: "",
       description: "",
       mainImage: false,
     };
@@ -19,10 +19,19 @@ export default class ImageForm extends Component {
   }
 
   updateImageFile(e) {
-    this.setState({
-      file: e.target.files[0],
-      filename: e.target.files[0].name,
-    });
+    const reader = new FileReader();
+    const imageFile = e.target.files[0];
+    reader.onloadend = () =>
+      this.setState({
+        file: imageFile,
+        fileUrl: reader.result,
+      });
+
+    if (imageFile) {
+      reader.readAsDataURL(imageFile);
+    } else {
+      this.setState({ file: null, fileUrl: "" });
+    }
   }
 
   updateDescription(e) {
@@ -45,15 +54,17 @@ export default class ImageForm extends Component {
   }
 
   render() {
-    const { description, mainImage } = this.state;
+    const { description, mainImage, fileUrl } = this.state;
     return (
       <form className="image-form" onSubmit={this.handleSubmit}>
+        <h2>Add Image</h2>
         <input
           type="file"
           className="image-file-input"
           id="custom-file"
           onChange={this.updateImageFile}
         />
+        {fileUrl && <img src={fileUrl}></img>}
         <input
           type="text"
           placeholder="Description..."
