@@ -92,7 +92,7 @@ router.put(
 
         const newImage = {
           description: req.body.description,
-          imageUrl: file.name,
+          imageUrl: `https://dancey-bucket.s3-ap-northeast-1.amazonaws.com/${file.name}`,
           mainImage: req.body.mainImage === "true",
         };
 
