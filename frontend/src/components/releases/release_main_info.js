@@ -32,7 +32,7 @@ export default class ReleaseMainInfo extends React.Component {
       editLabel: false,
       label:
         this.props.release.label.length > 0 ? this.props.release.label : [],
-      showImageModal: false,
+      showImageModal: true,
     };
 
     this.toggleForm = this.toggleForm.bind(this);
@@ -155,6 +155,7 @@ export default class ReleaseMainInfo extends React.Component {
               toggleImageModal={this.toggleImageModal}
               resourceType={"release"}
               resourceId={_id}
+              images={images}
             />
           )}
         </div>

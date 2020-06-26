@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import ImageFormContainer from "./image_form_container";
+import ImagesGallery from "./images_gallery";
 
 export default class ImagesModal extends Component {
   constructor(props) {
@@ -21,7 +22,14 @@ export default class ImagesModal extends Component {
   }
 
   render() {
-    const { toggleImageModal, resourceType, resourceId, loggedIn } = this.props;
+    const {
+      toggleImageModal,
+      resourceType,
+      resourceId,
+      loggedIn,
+      images,
+    } = this.props;
+    const { showNewForm } = this.state;
     return (
       <div className="images-modal" onClick={toggleImageModal}>
         <div
@@ -33,8 +41,8 @@ export default class ImagesModal extends Component {
               className="big-button edit-images-button"
               onClick={this.toggleNewForm}
             >
-              <FontAwesomeIcon icon="edit" />
-              <span>Edit Images</span>
+              <FontAwesomeIcon icon={showNewForm ? "times" : "edit"} />
+              <span>{showNewForm ? "Cancel" : "Add Images"}</span>
             </button>
           )}
           <button
@@ -44,14 +52,14 @@ export default class ImagesModal extends Component {
             <FontAwesomeIcon icon="times" />
           </button>
           <div className="images-modal-content">
-            {this.state.showNewForm ? (
+            {showNewForm ? (
               <ImageFormContainer
                 resourceType={resourceType}
                 resourceId={resourceId}
-                toggleNewForm={this.toggleNewForm}
+                toggleForm={this.toggleNewForm}
               />
             ) : (
-              <h2>NOT</h2>
+              <ImagesGallery images={images} loggedIn={loggedIn} />
             )}
           </div>
         </div>

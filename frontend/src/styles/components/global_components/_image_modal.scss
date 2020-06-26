@@ -12,7 +12,8 @@
   align-items: center;
 
   .images-modal-content-wrapper {
-    background-color: white;
+    background-color: $images-modal-bgcolor;
+    color: white;
     width: 80vw;
     max-width: 50rem;
     height: 80vh;
@@ -23,6 +24,12 @@
     position: relative;
 
     padding: 1rem;
+
+    .big-button,
+    input[type="text"] {
+      background-color: white;
+      color: black;
+    }
 
     .edit-images-button {
       position: absolute;
