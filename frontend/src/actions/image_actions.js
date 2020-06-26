@@ -59,7 +59,7 @@ export const deleteResourceImage = (
   imageObjectId
 ) => dispatch => {
   axios
-    .delete(`/api/images/edit/${resourceType}/${resourceId}/${imageObjectId}`)
+    .delete(`/api/images/delete/${resourceType}/${resourceId}/${imageObjectId}`)
     .then(resource =>
       dispatch(resourceSwitch(resourceType).receiveOne(resource.data))
     )
