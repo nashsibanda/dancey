@@ -14,6 +14,7 @@ export default class ImageInfoForm extends Component {
     this.updateDescription = this.updateDescription.bind(this);
     this.updateMainImage = this.updateMainImage.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.deleteImage = this.deleteImage.bind(this);
   }
 
   updateDescription(e) {
@@ -54,7 +55,9 @@ export default class ImageInfoForm extends Component {
       resourceId,
       currentImage,
       toggleEditForm,
+      decrement,
     } = this.props;
+    decrement();
     deleteResourceImage(resourceType, resourceId, currentImage._id);
     toggleEditForm();
   }
@@ -97,7 +100,11 @@ export default class ImageInfoForm extends Component {
               image first
             </span>
           ) : (
-            <button type="button" className="big-button">
+            <button
+              type="button"
+              className="big-button"
+              onClick={this.deleteImage}
+            >
               <FontAwesomeIcon icon="times" />
               <span>Delete Image</span>
             </button>

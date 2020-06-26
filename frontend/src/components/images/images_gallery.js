@@ -56,7 +56,7 @@ export default class ImagesGallery extends Component {
   render() {
     const { images, loggedIn, resourceId, resourceType } = this.props;
     const { displayedImageIndex, showEditForm } = this.state;
-    return (
+    return images.length > 0 ? (
       <div className="images-gallery">
         <div className="gallery-displayed-image-container">
           <img
@@ -71,6 +71,7 @@ export default class ImagesGallery extends Component {
                 resourceId={resourceId}
                 currentImage={images[displayedImageIndex]}
                 toggleEditForm={this.toggleEditForm}
+                decrement={this.decrementDisplayedImageIndex}
               />
             </div>
           ) : (
@@ -94,7 +95,7 @@ export default class ImagesGallery extends Component {
           {loggedIn && (
             <button className="big-button" onClick={this.toggleEditForm}>
               <FontAwesomeIcon icon={showEditForm ? "times" : "edit"} />
-              <span>{showEditForm ? "Cancel" : "Edit Image Info"}</span>
+              <span>{showEditForm ? "Cancel" : "Edit Image"}</span>
             </button>
           )}
           <button
@@ -118,6 +119,10 @@ export default class ImagesGallery extends Component {
             ></img>
           ))}
         </div>
+      </div>
+    ) : (
+      <div className="images-gallery">
+        <h2>No Images</h2>
       </div>
     );
   }
