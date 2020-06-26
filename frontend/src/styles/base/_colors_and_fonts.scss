@@ -9,6 +9,9 @@ $gray: #7f7f7f;
 $green: #007f17;
 $blue: #00497f;
 
+// Variable Colors
+$images-modal-bgcolor: #222;
+
 // Lightness Scale
 $lightest: 90%;
 $lighter: 70%;
@@ -24,3 +27,11 @@ $graylight: scale-color($gray, $lightness: $light);
 $graydark: scale-color($gray, $lightness: $dark);
 $graydarker: scale-color($gray, $lightness: $darker);
 $graydarkest: scale-color($gray, $lightness: $darkest);
+
+// Blues
+$bluelightest: scale-color($blue, $lightness: $lightest);
+$bluelighter: scale-color($blue, $lightness: $lighter);
+$bluelight: scale-color($blue, $lightness: $light);
+$bluedark: scale-color($blue, $lightness: $dark);
+$bluedarker: scale-color($blue, $lightness: $darker);
+$bluedarkest: scale-color($blue, $lightness: $darkest);
