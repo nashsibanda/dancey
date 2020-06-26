@@ -33,3 +33,37 @@ export const addResourceImage = (
       dispatch(resourceSwitch(resourceType).errors(err.response.data))
     );
 };
+
+export const editResourceImageInfo = (
+  resourceType,
+  resourceId,
+  imageObjectId,
+  imageData
+) => dispatch => {
+  axios
+    .put(
+      `/api/images/edit/${resourceType}/${resourceId}/${imageObjectId}`,
+      imageData
+    )
+    .then(resource =>
+      dispatch(resourceSwitch(resourceType).receiveOne(resource.data))
+    )
+    .catch(err =>
+      dispatch(resourceSwitch(resourceType).errors(err.response.data))
+    );
+};
+
+export const deleteResourceImage = (
+  resourceType,
+  resourceId,
+  imageObjectId
+) => dispatch => {
+  axios
+    .delete(`/api/images/edit/${resourceType}/${resourceId}/${imageObjectId}`)
+    .then(resource =>
+      dispatch(resourceSwitch(resourceType).receiveOne(resource.data))
+    )
+    .catch(err =>
+      dispatch(resourceSwitch(resourceType).errors(err.response.data))
+    );
+};

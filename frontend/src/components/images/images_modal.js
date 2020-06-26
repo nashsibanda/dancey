@@ -59,7 +59,12 @@ export default class ImagesModal extends Component {
                 toggleForm={this.toggleNewForm}
               />
             ) : (
-              <ImagesGallery images={images} loggedIn={loggedIn} />
+              <ImagesGallery
+                images={images}
+                loggedIn={loggedIn}
+                resourceType={resourceType}
+                resourceId={resourceId}
+              />
             )}
           </div>
         </div>

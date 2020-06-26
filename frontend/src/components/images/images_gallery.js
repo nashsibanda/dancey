@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import ImageFormContainer from "./image_form_container";
+import ImageInfoFormContainer from "./image_info_form_container";
 
 export default class ImagesGallery extends Component {
   constructor(props) {
@@ -20,6 +20,11 @@ export default class ImagesGallery extends Component {
       this
     );
     this.setDisplayedImageIndex = this.setDisplayedImageIndex.bind(this);
+    this.toggleEditForm = this.toggleEditForm.bind(this);
+  }
+
+  toggleEditForm() {
+    this.setState({ showEditForm: !this.state.showEditForm });
   }
 
   incrementDisplayedImageIndex() {
@@ -49,11 +54,9 @@ export default class ImagesGallery extends Component {
   }
 
   render() {
-    const { images, loggedIn } = this.props;
+    const { images, loggedIn, resourceId, resourceType } = this.props;
     const { displayedImageIndex, showEditForm } = this.state;
-    return showEditForm ? (
-      <ImageFormContainer />
-    ) : (
+    return (
       <div className="images-gallery">
         <div className="gallery-displayed-image-container">
           <img
@@ -61,28 +64,43 @@ export default class ImagesGallery extends Component {
             alt={images[displayedImageIndex].description}
             className="gallery-displayed-image"
           ></img>
-          {images[displayedImageIndex].description && (
+          {showEditForm ? (
             <div className="image-description">
-              <span>{images[displayedImageIndex].description}</span>
+              <ImageInfoFormContainer
+                resourceType={resourceType}
+                resourceId={resourceId}
+                currentImage={images[displayedImageIndex]}
+                toggleEditForm={this.toggleEditForm}
+              />
             </div>
+          ) : (
+            images[displayedImageIndex].description && (
+              <div className="image-description">
+                <span className="description-text">
+                  {images[displayedImageIndex].description}
+                </span>
+              </div>
+            )
           )}
         </div>
         <div className="gallery-navigation-buttons">
           <button
-            className="big-button"
+            className={`big-button ${showEditForm ? "disabled" : ""}`}
             onClick={this.decrementDisplayedImageIndex}
+            disabled={showEditForm}
           >
-            <span>Previous</span>
+            <span>Prev</span>
           </button>
           {loggedIn && (
-            <button className="big-button">
-              <FontAwesomeIcon icon="edit" />
-              <span>Edit Image Info</span>
+            <button className="big-button" onClick={this.toggleEditForm}>
+              <FontAwesomeIcon icon={showEditForm ? "times" : "edit"} />
+              <span>{showEditForm ? "Cancel" : "Edit Image Info"}</span>
             </button>
           )}
           <button
-            className="big-button"
+            className={`big-button ${showEditForm ? "disabled" : ""}`}
             onClick={this.incrementDisplayedImageIndex}
+            disabled={showEditForm}
           >
             <span>Next</span>
           </button>
