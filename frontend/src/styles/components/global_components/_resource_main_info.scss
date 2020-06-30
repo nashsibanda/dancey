@@ -82,6 +82,23 @@
       button {
         margin-left: 1rem;
       }
+
+      .string-array-select {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+
+        input {
+          margin-bottom: 0.5rem;
+        }
+
+        .string-array-list {
+          display: flex;
+          font-size: 0.7rem;
+          font-weight: 700;
+          flex-wrap: wrap;
+        }
+      }
     }
 
     .details-label {
