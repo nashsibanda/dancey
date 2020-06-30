@@ -79,7 +79,6 @@ router.post(
   passport.authenticate("jwt", { session: false }),
   joiValidator.body(trackListingValidation),
   (req, res, next) => {
-    console.log(req.body);
     const newTrack = new Track({
       ...req.body.track,
     });
@@ -162,16 +161,7 @@ router.delete(
               if (err) return next(err);
               if (!deletedTrack)
                 return next(new RecordNotFoundError("No track found"));
-              Release.updateMany(
-                { "trackListing.trackId": deletedTrack._id },
-                { $set: { "trackListing.$[listing].trackId": null } },
-                { arrayFilters: [{ "elem.trackId": deletedTrack._id }] },
-                (err, updateResponse) => {
-                  if (err) return next(err);
-                  console.log(updateResponse);
-                  return res.json(deletedTrack);
-                }
-              );
+              return res.json(deletedTrack);
             }
           );
         }
