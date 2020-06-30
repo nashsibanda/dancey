@@ -16,7 +16,7 @@ export const getResourceTracksPersonnel = (resourceType, resourceId) =>
 export const postPersonnel = trackPostData =>
   axios.post("/api/personnel/", trackPostData);
 
-export const putPersonnel = (id, trackUpdateData) =>
-  axios.put(`/api/personnel/${id}`, trackUpdateData);
+export const putPersonnel = (id, personnelUpdateData) =>
+  axios.put(`/api/personnel/${id}`, personnelUpdateData);
 
 export const deletePersonnel = id => axios.delete(`/api/personnel/${id}`);

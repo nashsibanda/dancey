@@ -44,12 +44,6 @@ router.get("/search", (req, res, next) => {
 router.get("/:id", (req, res, next) => {
   Personnel.findById(req.params.id)
     .then(personnelRecord => {
-      Release.find({
-        $or: [
-          { "personnel.personnelId": personnelRecord._id },
-          { mainArtists: { $elemMatch: { $eq: personnelRecord._id } } },
-        ],
-      }).then(releases => console.log(releases));
       res.json(personnelRecord);
     })
     .catch(err => next(new RecordNotFoundError("No personnel found")));
@@ -146,7 +140,7 @@ router.put(
   (req, res, next) => {
     Personnel.findById(req.params.id)
       .then(personnelRecord => {
-        if (personnel.deleted)
+        if (personnelRecord.deleted)
           return next(new RecordNotFoundError("Personnel is deleted"));
         Personnel.findOneAndReplace(
           { _id: personnelRecord._id },
