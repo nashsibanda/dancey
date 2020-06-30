@@ -73,6 +73,12 @@ export const fetchOnePersonnel = id => dispatch => {
     });
 };
 
+export const updatePersonnel = (id, personnelUpdateData) => dispatch => {
+  PersonnelAPIUtil.putPersonnel(id, personnelUpdateData)
+    .then(personnel => dispatch(receiveOnePersonnel(personnel.data)))
+    .catch(err => dispatch(receivePersonnelErrors(err.response.data)));
+};
+
 export const fetchQueryPersonnel = query => dispatch => {
   dispatch(personnelLoadingOn());
   PersonnelAPIUtil.getQueryPersonnel(query)

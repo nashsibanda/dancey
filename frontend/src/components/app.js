@@ -11,6 +11,7 @@ import NavBarContainer from "./nav/navbar_container";
 import ReleasesIndexContainer from "./releases/releases_index_container";
 import ReleaseShowContainer from "./releases/release_show_container";
 import Footer from "./footer/footer";
+import PersonnelShowContainer from "./personnel/personnel_show_container";
 
 const App = () => (
   <div>
@@ -23,6 +24,11 @@ const App = () => (
           exact
           path="/releases/:releaseId"
           component={ReleaseShowContainer}
+        />
+        <Route
+          exact
+          path="/personnel/:personnelId"
+          component={PersonnelShowContainer}
         />
         <Route exact path="/releases" component={ReleasesIndexContainer} />
         <Route exact path="/" component={MainPage} />
