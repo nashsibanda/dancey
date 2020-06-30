@@ -20,6 +20,7 @@ export default class TracksIndex extends Component {
       numberOfSides: null,
       letterSides: null,
       sideLabels: [],
+      showDeleted: false,
     };
     this.toggleTrackPersonnel = this.toggleTrackPersonnel.bind(this);
     this.makeIndexTracks = this.makeIndexTracks.bind(this);
@@ -100,15 +101,32 @@ export default class TracksIndex extends Component {
 
   makeIndexTracks(trackListing = this.props.trackListing) {
     const { stateTracks } = this.props;
+    const { showDeleted } = this.state;
     switch (this.state.sortRule) {
       case "trackOrderAsc":
         return trackListing
           .sort((a, b) => a.order - b.order)
-          .map(listingItem => stateTracks[listingItem.trackId]);
+          .map(listingItem => stateTracks[listingItem.trackId])
+          .filter(track => {
+            if (track) {
+              if (!showDeleted) return !track.deleted;
+              return true;
+            } else {
+              return true;
+            }
+          });
       case "trackOrderDesc":
         return trackListing
           .sort((a, b) => b.order - a.order)
-          .map(listingItem => stateTracks[listingItem.trackId]);
+          .map(listingItem => stateTracks[listingItem.trackId])
+          .filter(track => {
+            if (track) {
+              if (!showDeleted) return !track.deleted;
+              return true;
+            } else {
+              return true;
+            }
+          });
       case "alphaAsc":
         return Object.values(stateTracks).sort((a, b) => a.title - b.title);
       case "alphaDesc":
@@ -330,6 +348,16 @@ export default class TracksIndex extends Component {
               </>
             )}
           </ul>
+          {showEditButtons && (
+            <div>
+              <button
+                className="link-button"
+                onClick={this.toggleEditSection("showDeleted")}
+              >
+                Show deleted tracks
+              </button>
+            </div>
+          )}
         </div>
       );
     } else {

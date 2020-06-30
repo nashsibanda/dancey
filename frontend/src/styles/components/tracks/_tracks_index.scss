@@ -112,6 +112,19 @@
           }
         }
       }
+
+      &.deleted {
+        .main-track-details {
+          font-style: italic;
+          font-size: 0.9rem;
+          font-weight: 700;
+        }
+        color: $graylight;
+
+        .track-personnel-label {
+          color: $graylight;
+        }
+      }
     }
   }
 }
