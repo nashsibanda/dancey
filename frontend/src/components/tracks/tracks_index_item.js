@@ -50,7 +50,7 @@ export default class TracksIndexItem extends Component {
       order,
       trackPersonnelLoading,
     } = this.props;
-    const { title, duration } = track;
+    const { title, duration, deleted } = track;
     const { showTrackPersonnel, trackPersonnelLoaded } = this.state;
     const anyCredits =
       track.personnel.length > 0 ||
@@ -58,7 +58,7 @@ export default class TracksIndexItem extends Component {
       track.writers.length > 0;
 
     return (
-      <li className="tracks-index-item tracks-index-track-item">
+      <li className={`tracks-index-item tracks-index-track-item ${deleted ? "deleted" : "" }`}>
         <div className="main-track-details">
           <span className="track-expand-info">
             <button className="icon-button" onClick={this.toggleTrackPersonnel}>
@@ -67,9 +67,9 @@ export default class TracksIndexItem extends Component {
               />
             </button>
           </span>
-          <span className="track-order">{ordered ? order : "*"}</span>
-          <span className="track-title">{title}</span>
-          <span className="track-duration">{makeFriendlyTime(duration)}</span>
+          <span className="track-order">{ordered ? (deleted ? `${order}*` : order) : "*"}</span>
+          <span className="track-title">{title}{deleted ? " [track deleted from database]" : ""}</span>
+          <span className="track-duration">{deleted ? `${makeFriendlyTime(duration)}*` : makeFriendlyTime(duration)}</span>
         </div>
         {showTrackPersonnel &&
           (!trackPersonnelLoading || trackPersonnelLoaded ? (
