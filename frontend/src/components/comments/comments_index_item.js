@@ -14,6 +14,7 @@ export default class CommentsIndexItem extends Component {
       showReplyForm: false,
       deleting: false,
       showEditForm: false,
+      showChildComments: true,
     };
     this.toggleReplyForm = this.toggleReplyForm.bind(this);
     this.toggleEditForm = this.toggleEditForm.bind(this);
@@ -58,7 +59,12 @@ export default class CommentsIndexItem extends Component {
       likes,
       deleted,
     } = comment;
-    const { showReplyForm, deleting, showEditForm } = this.state;
+    const {
+      showReplyForm,
+      deleting,
+      showEditForm,
+      showChildComments,
+    } = this.state;
 
     const liked =
       currentUser && likes ? (likes[currentUser.id] ? true : false) : false;
@@ -153,13 +159,15 @@ export default class CommentsIndexItem extends Component {
           </>
         )}
 
-        <CommentsIndexContainer
-          resourceComments={resourceComments}
-          indentLevel={indentLevel}
-          parentCommentId={comment._id}
-          resourceId={resourceId}
-          resourceType={resourceType}
-        />
+        {showChildComments && (
+          <CommentsIndexContainer
+            resourceComments={resourceComments}
+            indentLevel={indentLevel}
+            parentCommentId={comment._id}
+            resourceId={resourceId}
+            resourceType={resourceType}
+          />
+        )}
       </li>
     );
   }
