@@ -1,5 +1,9 @@
 import axios from "axios";
 import { receiveReleaseErrors, receiveRelease } from "./release_actions";
+import {
+  receivePersonnelErrors,
+  receiveOnePersonnel,
+} from "./personnel_actions";
 
 const resourceSwitch = resourceType => {
   switch (resourceType) {
@@ -7,6 +11,11 @@ const resourceSwitch = resourceType => {
       return {
         errors: receiveReleaseErrors,
         receiveOne: receiveRelease,
+      };
+    case "personnel":
+      return {
+        errors: receivePersonnelErrors,
+        receiveOne: receiveOnePersonnel,
       };
     default:
       break;
