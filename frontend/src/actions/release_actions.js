@@ -46,9 +46,9 @@ export const fetchOneRelease = id => dispatch => {
     });
 };
 
-export const fetchPersonnelReleases = personnelId => dispatch => {
+export const fetchResourceReleases = (resourceType, resourceId) => dispatch => {
   dispatch(releasesLoadingOn());
-  ReleaseAPIUtil.getPersonnelReleases(personnelId)
+  ReleaseAPIUtil.getResourceReleases(resourceType, resourceId)
     .then(releases => {
       dispatch(receiveReleases(releases.data));
       dispatch(releasesLoadingOff());

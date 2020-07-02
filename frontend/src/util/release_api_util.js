@@ -4,8 +4,8 @@ export const getAllReleases = () => axios.get("/api/releases");
 
 export const getOneRelease = id => axios.get(`api/releases/${id}`);
 
-export const getPersonnelReleases = personnelId =>
-  axios.get(`api/releases/personnel/${personnelId}`);
+export const getResourceReleases = (resourceType, resourceId) =>
+  axios.get(`api/releases/${resourceType}/${resourceId}`);
 
 export const postRelease = releasePostData =>
   axios.post("/api/releases", releasePostData);
