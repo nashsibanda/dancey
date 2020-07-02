@@ -103,12 +103,7 @@ router.put(
           { new: true },
           (err, updatedRelease) => {
             if (err) return next(err);
-            updatedRelease
-              .populate("mainArtists")
-              .populate("label")
-              .populate("comments")
-              .execPopulate()
-              .then(updatedRelease => res.json(updatedRelease));
+            res.json(updatedRelease);
           }
         );
       })
