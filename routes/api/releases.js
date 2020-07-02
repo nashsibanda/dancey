@@ -44,6 +44,7 @@ router.get("/personnel/:personnel_id", (req, res, next) => {
         },
       },
       { mainArtists: { $elemMatch: { $eq: req.params.personnel_id } } },
+      { label: { $elemMatch: { $eq: req.params.personnel_id } } },
     ],
   })
     .populate("mainArtists")
