@@ -1,5 +1,5 @@
 import React from "react";
-import plainRecordImage from "../../assets/plain_record.png";
+import plainPersonnelImage from "../../assets/abstract-user-flat-1.svg";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import countries from "../../util/validation/countries";
 import { Helmet } from "react-helmet";
@@ -20,7 +20,7 @@ export default class PersonnelMainInfo extends React.Component {
       editCountry: false,
       alsoKnownAs:
         this.props.personnel.alsoKnownAs.length > 0
-          ? this.props.personnel.alsoKnownAs
+          ? Array.from(this.props.personnel.alsoKnownAs)
           : [],
       editName: false,
       name: this.props.personnel.name || "",
@@ -35,33 +35,6 @@ export default class PersonnelMainInfo extends React.Component {
     this.toggleImageModal = this.toggleImageModal.bind(this);
     this.updateAlsoKnownAs = this.updateAlsoKnownAs.bind(this);
   }
-
-  // componentDidMount() {
-  //   const { fetchResourcePersonnel, resourceType, resourceId } = this.props;
-  //   fetchResourcePersonnel(resourceType, resourceId);
-  // }
-
-  // componentDidUpdate(prevProps) {
-  //   if (
-  //     (prevProps.loadingPersonnel && !this.props.loadingPersonnel) ||
-  //     prevProps.release.alsoKnownAs !== this.props.personnel.alsoKnownAs
-  //   ) {
-  //     const { release, statePersonnel } = this.props;
-  //     const alsoKnownAs = release.alsoKnownAs.map(
-  //       artistId => statePersonnel[artistId]
-  //     );
-  //     this.setState({ alsoKnownAs });
-  //   }
-
-  //   if (
-  //     (prevProps.loadingPersonnel && !this.props.loadingPersonnel) ||
-  //     prevProps.release.label !== this.props.personnel.label
-  //   ) {
-  //     const { release, statePersonnel } = this.props;
-  //     const label = release.label.map(labelId => statePersonnel[labelId]);
-  //     this.setState({ label });
-  //   }
-  // }
 
   toggleForm(toggle) {
     return e =>
@@ -125,12 +98,12 @@ export default class PersonnelMainInfo extends React.Component {
       <div className="resource-main-info">
         <div className="resource-image">
           <img
-            src={mainImage ? mainImage.imageUrl : plainRecordImage}
+            src={mainImage ? mainImage.imageUrl : plainPersonnelImage}
             className={mainImage ? "main-image" : "main-image default-image"}
             alt={
               mainImage
                 ? mainImage.description
-                : "Default album placeholder image - upload a new one!"
+                : "Default placeholder image - upload a new one!"
             }
             onClick={this.toggleImageModal}
           />
@@ -141,7 +114,7 @@ export default class PersonnelMainInfo extends React.Component {
           {showImageModal && (
             <ImagesModalContainer
               toggleImageModal={this.toggleImageModal}
-              resourceType={"release"}
+              resourceType={"personnel"}
               resourceId={_id}
               images={images}
             />
@@ -155,9 +128,9 @@ export default class PersonnelMainInfo extends React.Component {
           <div className="resource-details">
             {alsoKnownAs && (
               <div className="resource-heading">
-                <h2>{name}</h2>
+                <h2>{personnel.name}</h2>
                 <Helmet>
-                  <title>{name}</title>
+                  <title>{personnel.name}</title>
                 </Helmet>
               </div>
             )}
@@ -187,7 +160,9 @@ export default class PersonnelMainInfo extends React.Component {
                 <span className="details-value">
                   {alsoKnownAs && (
                     <span>
-                      {alsoKnownAs.length > 0 ? alsoKnownAs.join(", ") : "N/A"}
+                      {personnel.alsoKnownAs.length > 0
+                        ? personnel.alsoKnownAs.join(", ")
+                        : "N/A"}
                     </span>
                   )}
                   {showEditButtons && (
@@ -236,7 +211,7 @@ export default class PersonnelMainInfo extends React.Component {
                 </form>
               ) : (
                 <span className="details-value">
-                  {countryOfOrigin && <span>{countryOfOrigin}</span>}
+                  {countryOfOrigin && <span>{personnel.countryOfOrigin}</span>}
                   {showEditButtons && (
                     <button
                       className="icon-button"
@@ -275,7 +250,7 @@ export default class PersonnelMainInfo extends React.Component {
               ) : (
                 <span className="details-value">
                   {dateOfBirth && (
-                    <span>{moment(dateOfBirth).format("LL")}</span>
+                    <span>{moment(personnel.dateOfBirth).format("LL")}</span>
                   )}
                   {showEditButtons && (
                     <button
