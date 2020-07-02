@@ -50,6 +50,15 @@
     .resource-heading {
       display: table;
       margin-bottom: 1rem;
+
+      & > span {
+        display: flex;
+        flex-wrap: wrap;
+
+        div {
+          margin-right: 0.5rem;
+        }
+      }
     }
 
     .icon-button {

@@ -33,6 +33,7 @@ export default class ReleaseMainInfo extends React.Component {
       label:
         this.props.release.label.length > 0 ? this.props.release.label : [],
       showImageModal: false,
+      initialLoad: false,
     };
 
     this.toggleForm = this.toggleForm.bind(this);
@@ -45,28 +46,7 @@ export default class ReleaseMainInfo extends React.Component {
   componentDidMount() {
     const { fetchResourcePersonnel, resourceType, resourceId } = this.props;
     fetchResourcePersonnel(resourceType, resourceId);
-  }
-
-  componentDidUpdate(prevProps) {
-    if (
-      (prevProps.loadingPersonnel && !this.props.loadingPersonnel) ||
-      prevProps.release.mainArtists !== this.props.release.mainArtists
-    ) {
-      const { release, statePersonnel } = this.props;
-      const mainArtists = release.mainArtists.map(
-        artistId => statePersonnel[artistId]
-      );
-      this.setState({ mainArtists });
-    }
-
-    if (
-      (prevProps.loadingPersonnel && !this.props.loadingPersonnel) ||
-      prevProps.release.label !== this.props.release.label
-    ) {
-      const { release, statePersonnel } = this.props;
-      const label = release.label.map(labelId => statePersonnel[labelId]);
-      this.setState({ label });
-    }
+    this.setState({ initialLoad: true });
   }
 
   toggleForm(toggle) {
@@ -116,8 +96,13 @@ export default class ReleaseMainInfo extends React.Component {
   }
 
   render() {
-    const { release, showEditButtons, loadingPersonnel } = this.props;
-    const { images, title, _id } = release;
+    const {
+      release,
+      showEditButtons,
+      loadingPersonnel,
+      statePersonnel,
+    } = this.props;
+    const { images, _id } = release;
     const {
       editYear,
       releaseYear,
@@ -129,6 +114,10 @@ export default class ReleaseMainInfo extends React.Component {
       editLabel,
       label,
       showImageModal,
+      editTitle,
+      title,
+      editMainArtists,
+      initialLoad,
     } = this.state;
 
     const mainImage = images.find(({ mainImage }) => mainImage === true);
@@ -159,7 +148,7 @@ export default class ReleaseMainInfo extends React.Component {
             />
           )}
         </div>
-        {loadingPersonnel ? (
+        {loadingPersonnel || !initialLoad ? (
           <div className="resource-details">
             <LoadingSpinner />
           </div>
@@ -167,11 +156,115 @@ export default class ReleaseMainInfo extends React.Component {
           <div className="resource-details">
             {mainArtists && (
               <div className="resource-heading">
-                <h2>
-                  {joinObjectLinks(mainArtists)} — {title}
-                </h2>
+                <span>
+                  <div>
+                    {editMainArtists ? (
+                      <form
+                        className="resource-main-info-form"
+                        onSubmit={this.handleSubmit(
+                          "mainArtists",
+                          "editMainArtists"
+                        )}
+                      >
+                        <PersonnelSearchContainer
+                          formUpdate={this.updateSelectField}
+                          fieldName={"mainArtists"}
+                          placeholderText={"Label(s)..."}
+                          defaultSelected={this.getDefaultPersonnel(
+                            "mainArtists"
+                          )}
+                        />
+                        <button className="icon-button" type="submit">
+                          <FontAwesomeIcon icon="save" />
+                        </button>
+                        <button
+                          className="icon-button"
+                          type="button"
+                          onClick={this.toggleForm("editMainArtists")}
+                        >
+                          <FontAwesomeIcon icon="undo-alt" />
+                        </button>
+                      </form>
+                    ) : (
+                      <span className="resource-title-value">
+                        {mainArtists.length > 0 && (
+                          <h2>
+                            {Object.values(statePersonnel).length > 0 &&
+                              joinObjectLinks(
+                                release.mainArtists.map(
+                                  mainArtistId => statePersonnel[mainArtistId]
+                                )
+                              )}
+                          </h2>
+                        )}
+                        {showEditButtons && (
+                          <button
+                            className="icon-button"
+                            type="button"
+                            onClick={this.toggleForm("editMainArtists")}
+                          >
+                            <FontAwesomeIcon icon="edit" />
+                            <span>Edit Main Artists</span>
+                          </button>
+                        )}
+                      </span>
+                    )}
+                  </div>
+                  <div>
+                    <h2>—</h2>
+                  </div>
+                  <div>
+                    {editTitle ? (
+                      <form
+                        className="resource-main-info-form heading-form"
+                        onSubmit={this.handleSubmit("title", "editTitle")}
+                      >
+                        <input
+                          type="text"
+                          className="resource-title-input"
+                          onChange={this.updateField("title")}
+                          value={title}
+                        />
+                        <div>
+                          <button className="icon-button" type="submit">
+                            <FontAwesomeIcon icon="save" />
+                          </button>
+                          <button
+                            className="icon-button"
+                            type="button"
+                            onClick={this.toggleForm("editTitle")}
+                          >
+                            <FontAwesomeIcon icon="undo-alt" />
+                          </button>
+                        </div>
+                      </form>
+                    ) : (
+                      <span className="resource-title-value">
+                        <h2>{release.title}</h2>
+                        {showEditButtons && (
+                          <button
+                            className="icon-button"
+                            type="button"
+                            onClick={this.toggleForm("editTitle")}
+                          >
+                            <FontAwesomeIcon icon="edit" />
+                            <span>Edit Title</span>
+                          </button>
+                        )}
+                      </span>
+                    )}
+                  </div>
+                </span>
                 <Helmet>
-                  <title>{makeReleaseHtmlTitle(this.state)}</title>
+                  <title>
+                    {Object.values(statePersonnel).length > 0 &&
+                      makeReleaseHtmlTitle(
+                        release.mainArtists.map(
+                          labelId => statePersonnel[labelId]
+                        ),
+                        this.state
+                      )}
+                  </title>
                 </Helmet>
               </div>
             )}
@@ -201,7 +294,14 @@ export default class ReleaseMainInfo extends React.Component {
                 </form>
               ) : (
                 <span className="details-value">
-                  {label.length > 0 && <span>{joinObjectLinks(label)}</span>}
+                  {label.length > 0 && (
+                    <span>
+                      {Object.values(statePersonnel).length > 0 &&
+                        joinObjectLinks(
+                          release.label.map(labelId => statePersonnel[labelId])
+                        )}
+                    </span>
+                  )}
                   {showEditButtons && (
                     <button
                       className="icon-button"
@@ -248,7 +348,7 @@ export default class ReleaseMainInfo extends React.Component {
                 </form>
               ) : (
                 <span className="details-value">
-                  {format && <span>{format}</span>}
+                  {format && <span>{release.format}</span>}
                   {showEditButtons && (
                     <button
                       className="icon-button"
@@ -265,6 +365,7 @@ export default class ReleaseMainInfo extends React.Component {
               <span className="details-label">Release Country:</span>
               {editCountry ? (
                 <form
+                  className="resource-main-info-form"
                   onSubmit={this.handleSubmit("releaseCountry", "editCountry")}
                 >
                   <select
@@ -294,7 +395,7 @@ export default class ReleaseMainInfo extends React.Component {
                 </form>
               ) : (
                 <span className="details-value">
-                  {releaseCountry && <span>{releaseCountry}</span>}
+                  {releaseCountry && <span>{release.releaseCountry}</span>}
                   {showEditButtons && (
                     <button
                       className="icon-button"
@@ -334,7 +435,7 @@ export default class ReleaseMainInfo extends React.Component {
                 </form>
               ) : (
                 <span className="details-value">
-                  {releaseYear && <span>{releaseYear}</span>}
+                  {releaseYear && <span>{release.releaseYear}</span>}
                   {showEditButtons && (
                     <button
                       className="icon-button"
