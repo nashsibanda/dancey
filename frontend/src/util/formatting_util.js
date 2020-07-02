@@ -42,8 +42,8 @@ export const makeFriendlyTime = duration =>
     duration % 60 > 9 ? duration % 60 : "0" + (duration % 60)
   }`;
 
-export const makeReleaseHtmlTitle = release => {
-  const { title, format, releaseYear, mainArtists, releaseCountry } = release;
+export const makeReleaseHtmlTitle = (mainArtists, release) => {
+  const { title, format, releaseYear, releaseCountry } = release;
   const mainArtistsString = mainArtists.map(a => a.name).join(", ");
   const detailsString = [releaseYear, format, releaseCountry]
     .filter(Boolean)
