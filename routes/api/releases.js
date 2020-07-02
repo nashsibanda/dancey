@@ -51,6 +51,20 @@ router.get("/personnel/:personnel_id", (req, res, next) => {
     .catch(err => next(new RecordNotFoundError("No releases found")));
 });
 
+// GET all releases by track
+router.get("/track/:track_id", (req, res, next) => {
+  Release.find({
+    trackListing: {
+      $elemMatch: {
+        trackId: { $eq: req.params.track_id },
+      },
+    },
+  })
+    .populate("mainArtists")
+    .then(releases => res.json(releases))
+    .catch(err => next(new RecordNotFoundError("No releases found")));
+});
+
 // POST a new release
 router.post(
   "/",
