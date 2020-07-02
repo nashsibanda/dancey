@@ -4,10 +4,12 @@ import ReleasesIndex from "./releases_index";
 
 const mapStateToProps = state => ({
   releases: state.entities.releases,
+  loading: state.entities.loading,
+  mainCatalogue: true,
 });
 
 const mapDispatchToProps = dispatch => ({
-  fetchAllReleases: () => dispatch(fetchAllReleases()),
+  fetchReleases: () => dispatch(fetchAllReleases()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ReleasesIndex);
