@@ -34,7 +34,18 @@ router.get("/:id", (req, res, next) => {
 
 // GET all releases by personnel
 router.get("/personnel/:personnel_id", (req, res, next) => {
-  Release.find({ "personnel.personnelId": req.params.personnel_id })
+  Release.find({
+    $or: [
+      {
+        personnel: {
+          $elemMatch: {
+            personnelIds: { $elemMatch: { $eq: req.params.personnel_id } },
+          },
+        },
+      },
+      { mainArtists: { $elemMatch: { $eq: req.params.personnel_id } } },
+    ],
+  })
     .populate("mainArtists")
     .then(releases => res.json(releases))
     .catch(err => next(new RecordNotFoundError("No releases found")));

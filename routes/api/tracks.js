@@ -35,7 +35,13 @@ router.get("/:id", (req, res, next) => {
 router.get("/get/personnel/:personnel_id", (req, res, next) => {
   Track.find({
     $or: [
-      { "personnel.personnelId": req.params.personnel_id },
+      {
+        personnel: {
+          $elemMatch: {
+            personnelIds: { $elemMatch: { $eq: req.params.personnel_id } },
+          },
+        },
+      },
       { mainArtists: { $elemMatch: { $eq: req.params.personnel_id } } },
       { writers: { $elemMatch: { $eq: req.params.personnel_id } } },
     ],
