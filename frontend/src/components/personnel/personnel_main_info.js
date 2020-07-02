@@ -13,8 +13,9 @@ export default class PersonnelMainInfo extends React.Component {
     super(props);
 
     this.state = {
-      dateOfBirth:
-        moment(this.props.personnel.dateOfBirth).format("Y-MM-DD") || "",
+      dateOfBirth: this.props.personnel.dateOfBirth
+        ? moment(this.props.personnel.dateOfBirth).format("Y-MM-DD")
+        : "",
       editDateOfBirth: false,
       countryOfOrigin: this.props.personnel.countryOfOrigin || "",
       editCountry: false,
