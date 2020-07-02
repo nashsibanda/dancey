@@ -83,6 +83,19 @@
         margin-left: 1rem;
       }
 
+      &.heading-form {
+        flex-direction: column;
+
+        div {
+          margin-top: 0.5rem;
+        }
+
+        input {
+          font-size: 2rem;
+          font-family: $serif;
+        }
+      }
+
       .string-array-select {
         display: flex;
         flex-direction: column;

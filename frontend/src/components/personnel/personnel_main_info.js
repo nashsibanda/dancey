@@ -49,14 +49,7 @@ export default class PersonnelMainInfo extends React.Component {
   }
 
   updateField(field) {
-    if (field === "dateOfBirth") {
-      return e =>
-        this.setState({
-          [field]: parseInt(e.currentTarget.value),
-        });
-    } else {
-      return e => this.setState({ [field]: e.currentTarget.value });
-    }
+    return e => this.setState({ [field]: e.currentTarget.value });
   }
 
   updateAlsoKnownAs(array) {
@@ -81,7 +74,7 @@ export default class PersonnelMainInfo extends React.Component {
 
   render() {
     const { personnel, showEditButtons, loadingPersonnel } = this.props;
-    const { images, name, _id } = personnel;
+    const { images, _id } = personnel;
     const {
       editDateOfBirth,
       dateOfBirth,
@@ -90,6 +83,8 @@ export default class PersonnelMainInfo extends React.Component {
       alsoKnownAs,
       showImageModal,
       editAlsoKnownAs,
+      editName,
+      name,
     } = this.state;
 
     const mainImage = images.find(({ mainImage }) => mainImage === true);
@@ -126,14 +121,50 @@ export default class PersonnelMainInfo extends React.Component {
           </div>
         ) : (
           <div className="resource-details">
-            {alsoKnownAs && (
-              <div className="resource-heading">
-                <h2>{personnel.name}</h2>
-                <Helmet>
-                  <title>{personnel.name}</title>
-                </Helmet>
-              </div>
-            )}
+            <div className="resource-heading">
+              {editName ? (
+                <form
+                  className="resource-main-info-form heading-form"
+                  onSubmit={this.handleSubmit("name", "editName")}
+                >
+                  <input
+                    type="text"
+                    className="resource-title-input"
+                    onChange={this.updateField("name")}
+                    value={name}
+                  />
+                  <div>
+                    <button className="icon-button" type="submit">
+                      <FontAwesomeIcon icon="save" />
+                    </button>
+                    <button
+                      className="icon-button"
+                      type="button"
+                      onClick={this.toggleForm("editName")}
+                    >
+                      <FontAwesomeIcon icon="undo-alt" />
+                    </button>
+                  </div>
+                </form>
+              ) : (
+                <span className="resource-title-value">
+                  <h2>{personnel.name}</h2>
+                  {showEditButtons && (
+                    <button
+                      className="icon-button"
+                      type="button"
+                      onClick={this.toggleForm("editName")}
+                    >
+                      <FontAwesomeIcon icon="edit" />
+                      <span>Edit Name</span>
+                    </button>
+                  )}
+                </span>
+              )}
+              <Helmet>
+                <title>{personnel.name}</title>
+              </Helmet>
+            </div>
             <div>
               <span className="details-label">Also Known As:</span>
               {editAlsoKnownAs ? (
