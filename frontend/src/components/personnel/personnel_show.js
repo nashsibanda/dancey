@@ -4,6 +4,7 @@ import CommentsSectionContainer from "../comments/comments_section_container";
 import ReviewsIndexContainer from "../reviews/reviews_index_container";
 import LoadingSpinner from "../loading/loading_spinner";
 import PersonnelMainInfoContainer from "./personnel_main_info_container";
+import ResourceReleaseIndexContainer from "../releases/resource_release_index_container";
 
 export default class PersonnelShow extends Component {
   constructor(props) {
@@ -39,8 +40,6 @@ export default class PersonnelShow extends Component {
     if (currentPersonnel && initialLoad) {
       const { comments, _id } = currentPersonnel;
 
-      console.log(currentPersonnel);
-
       return (
         <div className="resource-show-container">
           {loggedIn && (
@@ -70,7 +69,11 @@ export default class PersonnelShow extends Component {
           />
           <div className="resource-show-body">
             <div className="resource-show-main">
-              <h2>RELEASE INDEX HERE</h2>
+              <ResourceReleaseIndexContainer
+                resourceType={"personnel"}
+                resourceId={_id}
+                indexTitle={"Discography"}
+              />
               <div className="comments-container">
                 <CommentsSectionContainer
                   resourceComments={comments}
