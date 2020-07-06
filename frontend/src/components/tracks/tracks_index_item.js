@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { makeFriendlyTime, joinObjectLinks } from "../../util/formatting_util";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import LoadingSpinner from "../loading/loading_spinner";
+import EditTrackFormContainer from "./edit_track_form_container";
 
 export default class TracksIndexItem extends Component {
   constructor(props) {
@@ -10,8 +11,11 @@ export default class TracksIndexItem extends Component {
     this.state = {
       showTrackPersonnel: this.props.showPersonnel,
       trackPersonnelLoaded: false,
+      editTrack: false,
     };
     this.toggleTrackPersonnel = this.toggleTrackPersonnel.bind(this);
+    this.toggleEditForm = this.toggleEditForm.bind(this);
+    this.closeEditForm = this.closeEditForm.bind(this);
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -42,6 +46,23 @@ export default class TracksIndexItem extends Component {
     }
   }
 
+  toggleEditForm() {
+    const { track, fetchResourcePersonnel, loadedTrackPersonnel } = this.props;
+    const { editTrack, trackPersonnelLoaded } = this.state;
+    if (!trackPersonnelLoaded && !loadedTrackPersonnel) {
+      fetchResourcePersonnel("track", track._id);
+      this.setState({
+        editTrack: !editTrack,
+      });
+    } else {
+      this.setState({ editTrack: !editTrack });
+    }
+  }
+
+  closeEditForm() {
+    this.setState({ editTrack: false, trackPersonnelLoaded: false });
+  }
+
   render() {
     const {
       track,
@@ -49,61 +70,105 @@ export default class TracksIndexItem extends Component {
       ordered,
       order,
       trackPersonnelLoading,
+      showEditButtons,
     } = this.props;
-    const { title, duration, deleted } = track;
-    const { showTrackPersonnel, trackPersonnelLoaded } = this.state;
+    const { title, duration, deleted, personnel, mainArtists, writers } = track;
+    const { showTrackPersonnel, trackPersonnelLoaded, editTrack } = this.state;
     const anyCredits =
-      track.personnel.length > 0 ||
-      track.mainArtists.length > 0 ||
-      track.writers.length > 0;
+      personnel.length > 0 || mainArtists.length > 0 || writers.length > 0;
 
     return (
-      <li className={`tracks-index-item tracks-index-track-item ${deleted ? "deleted" : "" }`}>
-        <div className="main-track-details">
-          <span className="track-expand-info">
-            <button className="icon-button" onClick={this.toggleTrackPersonnel}>
-              <FontAwesomeIcon
-                icon={showTrackPersonnel ? "minus-square" : "plus-square"}
+      <li
+        className={`tracks-index-item tracks-index-track-item ${
+          deleted ? "deleted" : ""
+        }`}
+      >
+        {editTrack ? (
+          !trackPersonnelLoading || trackPersonnelLoaded ? (
+            <div>
+              <button
+                className="big-button white-button"
+                onClick={this.toggleEditForm}
+              >
+                Cancel
+              </button>
+              <EditTrackFormContainer
+                track={track}
+                toggleEditForm={this.closeEditForm}
               />
-            </button>
-          </span>
-          <span className="track-order">{ordered ? (deleted ? `${order}*` : order) : "*"}</span>
-          <span className="track-title">{title}{deleted ? " [track deleted from database]" : ""}</span>
-          <span className="track-duration">{deleted ? `${makeFriendlyTime(duration)}*` : makeFriendlyTime(duration)}</span>
-        </div>
+            </div>
+          ) : (
+            <div className="track-personnel-details">
+              <LoadingSpinner />
+            </div>
+          )
+        ) : (
+          <div className="main-track-details">
+            <span className="track-expand-info">
+              <button
+                className="icon-button"
+                onClick={this.toggleTrackPersonnel}
+              >
+                <FontAwesomeIcon
+                  icon={showTrackPersonnel ? "minus-square" : "plus-square"}
+                />
+              </button>
+            </span>
+            <span className="track-order">
+              {ordered ? (deleted ? `${order}*` : order) : "*"}
+            </span>
+            <span className="track-title">
+              {title}
+              {deleted
+                ? " [track deleted from database]"
+                : showEditButtons && (
+                    <button
+                      className="icon-button"
+                      onClick={this.toggleEditForm}
+                    >
+                      <FontAwesomeIcon icon="edit" />
+                    </button>
+                  )}
+            </span>
+            <span className="track-duration">
+              {deleted
+                ? `${makeFriendlyTime(duration)}*`
+                : makeFriendlyTime(duration)}
+            </span>
+          </div>
+        )}
         {showTrackPersonnel &&
+          !editTrack &&
           (!trackPersonnelLoading || trackPersonnelLoaded ? (
             <div className="track-personnel-details">
               {anyCredits ? (
                 <>
                   <div className="track-personnel-main">
-                    {track.mainArtists.length > 0 && (
+                    {mainArtists.length > 0 && (
                       <span>
                         <span className="track-personnel-label">
                           Performed by:
                         </span>
                         {joinObjectLinks(
-                          track.mainArtists.map(
-                            artist => statePersonnel[artist]
-                          )
+                          mainArtists.map(artist => statePersonnel[artist])
                         )}
                       </span>
                     )}
-                    {track.writers.length > 0 && (
+                    {writers.length > 0 && (
                       <span>
                         <span className="track-personnel-label">
                           Written by:
                         </span>
                         {joinObjectLinks(
-                          track.writers.map(writer => statePersonnel[writer])
+                          writers.map(writer => statePersonnel[writer])
                         )}
                       </span>
                     )}
                   </div>
-                  {track.personnel.length > 0 && (
+                  {personnel.length > 0 && (
                     <div className="track-personnel-credits">
                       <span className="track-personnel-label">Credits:</span>
-                      {track.personnel.map((personnel, index) => {
+                      {personnel.map((personnel, index) => {
                         const personnelObjects = personnel.personnelIds.map(
                           id => statePersonnel[id]
                         );

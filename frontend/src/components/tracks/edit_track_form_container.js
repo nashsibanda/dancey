@@ -1,4 +1,4 @@
-import { createTrackListing } from "../../actions/track_actions";
+import { updateTrack } from "../../actions/track_actions";
 import { connect } from "react-redux";
 import TrackForm from "./track_form";
 
@@ -6,9 +6,9 @@ const mapStateToProps = state => ({
   stateTracks: state.entities.tracks,
   statePersonnel: state.entities.personnel,
   stateReleases: state.entities.releases,
-  getDefaultArtists: (field = "mainArtists", releaseId) => {
+  getDefaultArtists: (field, trackId) => {
     return Object.keys(state.entities.personnel).length > 0
-      ? state.entities.releases[releaseId][field].map(
+      ? state.entities.tracks[trackId][field].map(
           artistId => state.entities.personnel[artistId]
         )
       : [];
@@ -16,8 +16,8 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  submitTrack: (trackData, releaseId) =>
-    dispatch(createTrackListing(trackData, releaseId)),
+  submitTrack: (trackData, trackId) =>
+    dispatch(updateTrack(trackData, trackId)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(TrackForm);

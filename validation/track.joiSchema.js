@@ -20,6 +20,7 @@ const trackValidation = Joi.object({
   duration: Joi.number().integer().label("Duration"),
   writers: Joi.array().items(Joi.objectId()).label("Writer(s)"),
   comments: Joi.array().items(Joi.objectId()).label("Comments"),
+  _id: Joi.objectId().label("Track ID").allow(null),
 });
 
 const newTrackValidation = trackValidation.tailor("new");

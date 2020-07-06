@@ -13,7 +13,7 @@ export const postTrack = trackPostData =>
 export const postTrackToRelease = (trackPostData, releaseId) =>
   axios.post(`api/tracks/post/release/${releaseId}`, trackPostData);
 
-export const putTrack = (id, trackUpdateData) =>
+export const putTrack = (trackUpdateData, id) =>
   axios.put(`/api/tracks/${id}`, trackUpdateData);
 
 export const deleteTrack = id => axios.delete(`/api/tracks/${id}`);
