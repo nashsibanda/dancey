@@ -39,7 +39,6 @@ export default class PersonnelRoleForm extends Component {
     e.preventDefault();
     const { resourceId, submitPersonnel, toggleForm } = this.props;
     const newRelease = Object.assign({}, { personnel: this.state.personnel });
-    // console.log(newRelease);
     submitPersonnel(resourceId, newRelease);
     toggleForm();
   }
