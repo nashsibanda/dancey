@@ -11,6 +11,7 @@ import { Helmet } from "react-helmet";
 import PersonnelSearchContainer from "../search/personnel_search_container";
 import ImagesModalContainer from "../images/images_modal_container";
 import LoadingSpinner from "../loading/loading_spinner";
+import LabelCatalogueNumberFormContainer from "./label_catalogue_number_form_container";
 
 export default class ReleaseMainInfo extends React.Component {
   constructor(props) {
@@ -271,35 +272,24 @@ export default class ReleaseMainInfo extends React.Component {
             <div>
               <span className="details-label">Label:</span>
               {editLabel ? (
-                <form
-                  className="resource-main-info-form"
-                  onSubmit={this.handleSubmit("label", "editLabel")}
-                >
-                  <PersonnelSearchContainer
-                    formUpdate={this.updateSelectField}
-                    fieldName={"label"}
-                    placeholderText={"Label(s)..."}
-                    defaultSelected={this.getDefaultPersonnel("label")}
-                  />
-                  <button className="icon-button" type="submit">
-                    <FontAwesomeIcon icon="save" />
-                  </button>
-                  <button
-                    className="icon-button"
-                    type="button"
-                    onClick={this.toggleForm("editLabel")}
-                  >
-                    <FontAwesomeIcon icon="undo-alt" />
-                  </button>
-                </form>
+                <LabelCatalogueNumberFormContainer
+                  toggleForm={this.toggleForm("editLabel")}
+                  resourceId={_id}
+                  currentLabel={release.label}
+                />
               ) : (
                 <span className="details-value">
                   {label.length > 0 && (
                     <span>
                       {Object.values(statePersonnel).length > 0 &&
-                        joinObjectLinks(
-                          release.label.map(labelId => statePersonnel[labelId])
-                        )}
+                        release.label.map((labelObj, index) => (
+                          <span key={`labelIds-${index}`}>
+                            {joinObjectLinks(
+                              labelObj.labelIds.map(id => statePersonnel[id])
+                            )}{" "}
+                            — {labelObj.catalogueNumber}
+                          </span>
+                        ))}
                     </span>
                   )}
                   {showEditButtons && (

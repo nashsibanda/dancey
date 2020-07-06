@@ -70,14 +70,18 @@ export default class PersonnelRoleFormSelect extends Component {
         <div>
           <input
             type="text"
-            placeholder="Role..."
+            placeholder={
+              this.props.labelCatNoForm ? "Catalogue Number..." : "Role..."
+            }
             onChange={this.updateRoleField}
             value={this.state.role}
           />
           <PersonnelSearchContainer
             formUpdate={this.updatePersonnelSelectField}
             fieldName={"personnelIds"}
-            placeholderText={"Search..."}
+            placeholderText={
+              this.props.labelCatNoForm ? "Label..." : "Search..."
+            }
             key={this.state.randKey}
           />
           <button
