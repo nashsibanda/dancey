@@ -41,8 +41,13 @@ const ReleaseSchema = new Schema(
     ],
     label: [
       {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Personnel",
+        catalogueNumber: String,
+        labelIds: [
+          {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Personnel",
+          },
+        ],
       },
     ],
     description: String,

@@ -20,17 +20,24 @@ const releaseValidation = Joi.object({
       })
       .label("Personnel")
   ),
-  trackListing: Joi.array().items(
-    Joi.object()
-      .keys({
+  trackListing: Joi.array()
+    .items(
+      Joi.object().keys({
         order: Joi.number().integer().min(1),
         sideOrDisc: Joi.number().integer().min(1).allow(null),
         trackId: Joi.objectId().allow(null),
         _id: Joi.objectId(),
       })
-      .label("Track listing")
-  ),
-  label: Joi.array().items(Joi.objectId()).label("Label"),
+    )
+    .label("Track listing"),
+  label: Joi.array()
+    .items(
+      Joi.object().keys({
+        catalogueNumber: Joi.string().max(20).allow(null),
+        labelIds: Joi.array().items(Joi.objectId()),
+      })
+    )
+    .label("Label"),
   description: Joi.string().max(500).label("Description"),
   images: Joi.array().items(
     Joi.object()

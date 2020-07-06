@@ -57,8 +57,12 @@ router.get("/get/release/:release_id", (req, res, next) => {
       release.personnel.forEach(personnel => {
         personnelArrayIds.push(...personnel.personnelIds);
       });
+      const labelArrayIds = [];
+      release.label.forEach(label => {
+        labelArrayIds.push(...label.labelIds);
+      });
       const personnelIds = personnelArrayIds.concat(
-        release.label,
+        labelArrayIds,
         release.mainArtists
       );
       Personnel.find({ _id: { $in: personnelIds } })

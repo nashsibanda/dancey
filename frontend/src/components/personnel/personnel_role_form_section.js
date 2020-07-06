@@ -28,7 +28,6 @@ export default class PersonnelRoleFormSection extends Component {
         personnel[randId] = { role, personnelIds, _id };
         displayPersonnel[randId] = { role, personnelDisplay };
       });
-
       this.setState({ personnel, displayPersonnel });
     }
   }
@@ -88,7 +87,10 @@ export default class PersonnelRoleFormSection extends Component {
     const personnelKeys = Object.keys(personnel);
     return (
       <div className="personnel-role-form-section">
-        <PersonnelRoleFormSelect addToPersonnel={this.addToPersonnel} />
+        <PersonnelRoleFormSelect
+          addToPersonnel={this.addToPersonnel}
+          labelCatNoForm={this.props.labelCatNoForm}
+        />
         <ul className="selected-personnel-list">
           {personnelKeys.length > 0 &&
             personnelKeys.map(key => (
