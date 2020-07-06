@@ -16,7 +16,7 @@ export default class TrackForm extends Component {
       personnel: null,
       writers: null,
       originalVersion: "",
-      _id: null,
+      _id: this.props.track ? this.props.track._id : null,
       showMainArtistsField: true,
       showWritersField: true,
       showPersonnelField: true,
@@ -30,7 +30,6 @@ export default class TrackForm extends Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.updateSelectField = this.updateSelectField.bind(this);
     this.showPersonnelField = this.showPersonnelField.bind(this);
-    this.getDefaultArtists = this.getDefaultArtists.bind(this);
     this.addSide = this.addSide.bind(this);
     this.getSideLabels = this.getSideLabels.bind(this);
     this.updatePersonnelField = this.updatePersonnelField.bind(this);
@@ -122,17 +121,9 @@ export default class TrackForm extends Component {
       };
       this.props.submitTrack(trackReleaseData, this.props.releaseId);
     } else {
-      this.props.submitTrack(trackData, this.props.releaseId);
+      this.props.submitTrack(trackData, _id);
+      this.props.toggleEditForm();
     }
-  }
-
-  getDefaultArtists() {
-    const { statePersonnel, stateReleases, releaseId } = this.props;
-    return releaseId && Object.keys(statePersonnel).length > 0
-      ? stateReleases[releaseId].mainArtists.map(
-          artistId => statePersonnel[artistId]
-        )
-      : [];
   }
 
   addSide() {
@@ -141,6 +132,17 @@ export default class TrackForm extends Component {
       numberOfSides: newSides,
       sideLabels: this.getSideLabels(newSides),
     });
+  }
+
+  makeCurrentPersonnelForFormSection(currentPersonnel) {
+    const sectionPersonnelArray = currentPersonnel.map(personnel => {
+      const { personnelIds } = personnel;
+      const personnelDisplay = personnelIds.map(id => {
+        return this.props.statePersonnel[id]["name"];
+      });
+      return Object.assign({}, personnel, { personnelDisplay });
+    });
+    return sectionPersonnelArray;
   }
 
   render() {
@@ -153,13 +155,15 @@ export default class TrackForm extends Component {
       showMainArtistsField,
       showPersonnelField,
       showWritersField,
+      _id,
     } = this.state;
     const {
       releaseFormat,
+      getDefaultArtists,
+      releaseId,
       //   statePersonnel,
       //   stateTracks,
       //   stateReleases,
-      //   releaseId,
     } = this.props;
 
     return (
@@ -174,46 +178,48 @@ export default class TrackForm extends Component {
             className="title-input"
             onChange={this.updateField("title")}
           />
-          <div className="track-number">
-            <div>Track Number</div>
-            <button
-              className="link-button"
-              type="button"
-              onClick={this.addSide}
-            >
-              <FontAwesomeIcon icon="plus" />
-              <span>Add Side</span>
-            </button>
-            <div>
-              <select
-                className="track-side-input"
-                onChange={this.updateField("sideOrDisc")}
-                defaultValue={""}
+          {!_id && (
+            <div className="track-number">
+              <div>Track Number</div>
+              <button
+                className="link-button"
+                type="button"
+                onClick={this.addSide}
               >
-                <option disabled value="">
-                  Side
-                </option>
-                {sideLabels.length > 0 &&
-                  sideLabels.map((side, index) => (
-                    <option
-                      value={index + 1}
-                      key={`${releaseFormat}${side}${index}`}
-                    >
-                      {side}
-                    </option>
-                  ))}
-              </select>
-              <input
-                type="number"
-                placeholder="No."
-                value={order}
-                min={1}
-                required
-                className="track-number-input"
-                onChange={this.updateField("order")}
-              />
+                <FontAwesomeIcon icon="plus" />
+                <span>Add Side</span>
+              </button>
+              <div>
+                <select
+                  className="track-side-input"
+                  onChange={this.updateField("sideOrDisc")}
+                  defaultValue={""}
+                >
+                  <option disabled value="">
+                    Side
+                  </option>
+                  {sideLabels.length > 0 &&
+                    sideLabels.map((side, index) => (
+                      <option
+                        value={index + 1}
+                        key={`${releaseFormat}${side}${index}`}
+                      >
+                        {side}
+                      </option>
+                    ))}
+                </select>
+                <input
+                  type="number"
+                  placeholder="No."
+                  value={order}
+                  min={1}
+                  required
+                  className="track-number-input"
+                  onChange={this.updateField("order")}
+                />
+              </div>
             </div>
-          </div>
+          )}
           <div>
             <div>Duration</div>
             <div>
@@ -221,7 +227,6 @@ export default class TrackForm extends Component {
                 type="number"
                 placeholder="MM"
                 value={durationMins}
-                min={0}
                 onChange={this.updateField("durationMins")}
                 className="time-input"
               />
@@ -231,7 +236,6 @@ export default class TrackForm extends Component {
                 placeholder="SS"
                 value={durationSecs}
                 required
-                min={1}
                 max={59}
                 className="time-input"
                 onChange={this.updateField("durationSecs")}
@@ -239,7 +243,7 @@ export default class TrackForm extends Component {
             </div>
           </div>
           <button type="submit" className="big-button">
-            Add Track
+            {_id ? "Update Track" : "Add Track"}
           </button>
         </div>
         <div className="form-section add-personnel-menu">
@@ -275,7 +279,11 @@ export default class TrackForm extends Component {
               formUpdate={this.updateSelectField}
               fieldName={"mainArtists"}
               placeholderText={"Main Artist(s)..."}
-              defaultSelected={this.getDefaultArtists()}
+              defaultSelected={
+                _id
+                  ? getDefaultArtists("mainArtists", _id)
+                  : getDefaultArtists("mainArtists", releaseId)
+              }
             />
           </div>
         )}
@@ -286,13 +294,23 @@ export default class TrackForm extends Component {
               formUpdate={this.updateSelectField}
               fieldName={"writers"}
               placeholderText={"Writer(s)..."}
+              defaultSelected={_id ? getDefaultArtists("writers", _id) : ""}
             />
           </div>
         )}
         {showPersonnelField && (
           <div className="form-section personnel-section">
             <span>Other Credit(s):</span>
-            <PersonnelRoleFormSection formUpdate={this.updatePersonnelField} />
+            <PersonnelRoleFormSection
+              currentPersonnel={
+                _id
+                  ? this.makeCurrentPersonnelForFormSection(
+                      this.props.track.personnel
+                    )
+                  : []
+              }
+              formUpdate={this.updatePersonnelField}
+            />
           </div>
         )}
       </form>

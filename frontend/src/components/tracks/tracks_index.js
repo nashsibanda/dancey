@@ -277,6 +277,7 @@ export default class TracksIndex extends Component {
                                 order={index + 1}
                                 showPersonnel={showTrackPersonnel}
                                 loadedTrackPersonnel={loadedTrackPersonnel}
+                                showEditButtons={showEditButtons}
                               />
                             );
                           })}
@@ -314,6 +315,7 @@ export default class TracksIndex extends Component {
                           order={index + 1}
                           showPersonnel={showTrackPersonnel}
                           loadedTrackPersonnel={loadedTrackPersonnel}
+                          showEditButtons={showEditButtons}
                         />
                       );
                     })}

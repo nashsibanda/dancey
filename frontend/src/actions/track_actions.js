@@ -66,6 +66,12 @@ export const createTrack = trackData => dispatch => {
     });
 };
 
+export const updateTrack = (trackData, trackId) => dispatch => {
+  TrackAPIUtil.putTrack(trackData, trackId)
+    .then(updatedTrack => dispatch(receiveTrack(updatedTrack.data)))
+    .catch(err => dispatch(receiveTrackErrors(err.response.data)));
+};
+
 export const createTrackListing = (trackData, releaseId) => dispatch => {
   TrackAPIUtil.postTrackToRelease(trackData, releaseId)
     .then(updatedRelease => {
