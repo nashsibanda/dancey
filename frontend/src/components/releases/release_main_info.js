@@ -280,17 +280,20 @@ export default class ReleaseMainInfo extends React.Component {
               ) : (
                 <span className="details-value">
                   {label.length > 0 && (
-                    <span>
+                    <>
                       {Object.values(statePersonnel).length > 0 &&
                         release.label.map((labelObj, index) => (
-                          <span key={`labelIds-${index}`}>
+                          <div
+                            key={`labelIds-${index}`}
+                            className="label-value-div"
+                          >
                             {joinObjectLinks(
                               labelObj.labelIds.map(id => statePersonnel[id])
                             )}{" "}
                             — {labelObj.catalogueNumber}
-                          </span>
+                          </div>
                         ))}
-                    </span>
+                    </>
                   )}
                   {showEditButtons && (
                     <button
