@@ -34,30 +34,55 @@ router.get("/:id", (req, res, next) => {
 
 // GET all releases by personnel
 router.get("/personnel/:personnel_id", (req, res, next) => {
+  console.log(personnelId);
   Release.find({
     $or: [
       {
         personnel: {
           $elemMatch: {
-            personnelIds: { $elemMatch: { $eq: req.params.personnel_id } },
+            personnelIds: {
+              $elemMatch: {
+                $eq: mongoose.Types.ObjectId(personnelId),
+              },
+            },
           },
         },
       },
-      { mainArtists: { $elemMatch: { $eq: req.params.personnel_id } } },
-      { label: { $elemMatch: { $eq: req.params.personnel_id } } },
+      {
+        mainArtists: {
+          $elemMatch: {
+            $eq: mongoose.Types.ObjectId(personnelId),
+          },
+        },
+      },
+      {
+        label: {
+          $elemMatch: {
+            labelIds: {
+              $elemMatch: {
+                $eq: mongoose.Types.ObjectId(personnelId),
+              },
+            },
+          },
+        },
+      },
     ],
   })
     .populate("mainArtists")
     .then(releases => res.json(releases))
-    .catch(err => next(new RecordNotFoundError("No releases found")));
+    .catch(err => {
+      console.log(err);
+      next(new RecordNotFoundError("No releases found"));
+    });
 });
 
 // GET all releases by track
 router.get("/track/:track_id", (req, res, next) => {
+  const trackId = req.params.track_id;
   Release.find({
     trackListing: {
       $elemMatch: {
-        trackId: { $eq: req.params.track_id },
+        trackId: { $eq: mongoose.Types.ObjectId(trackId) },
       },
     },
   })
