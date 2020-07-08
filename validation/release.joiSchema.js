@@ -49,6 +49,16 @@ const releaseValidation = Joi.object({
       })
       .label("Images")
   ),
+  videos: Joi.array().items(
+    Joi.object()
+      .keys({
+        description: Joi.string().max(200),
+        title: Joi.string().max(100),
+        videoUrl: Joi.string().uri(),
+        _id: Joi.objectId(),
+      })
+      .label("Videos")
+  ),
   releaseYear: Joi.number().min(1880).max(2030).label("Release year"),
   format: Joi.string()
     .valid(...formats)
