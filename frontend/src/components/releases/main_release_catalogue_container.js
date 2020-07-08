@@ -4,7 +4,7 @@ import ReleasesIndex from "./releases_index";
 
 const mapStateToProps = state => ({
   releases: state.entities.releases,
-  loading: state.entities.loading,
+  loading: state.loading.releases,
   mainCatalogue: true,
 });
 
