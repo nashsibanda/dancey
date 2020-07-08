@@ -86,6 +86,7 @@ const countries = {
     name: "Falkland Islands (Malvinas)",
     code: "FK",
   },
+  Europe: { name: "Europe", code: "EU" },
   "Faroe Islands": { name: "Faroe Islands", code: "FO" },
   Fiji: { name: "Fiji", code: "FJ" },
   Finland: { name: "Finland", code: "FI" },
