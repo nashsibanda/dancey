@@ -63,6 +63,13 @@ const ReleaseSchema = new Schema(
         },
       },
     ],
+    videos: [
+      {
+        title: String,
+        videoUrl: String,
+        description: String,
+      },
+    ],
     releaseYear: {
       type: Number,
       min: 1890,
