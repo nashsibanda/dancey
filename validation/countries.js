@@ -82,6 +82,7 @@ const countries = {
   Eritrea: { name: "Eritrea", code: "ER" },
   Estonia: { name: "Estonia", code: "EE" },
   Ethiopia: { name: "Ethiopia", code: "ET" },
+  Europe: { name: "Europe", code: "EU" },
   "Falkland Islands (Malvinas)": {
     name: "Falkland Islands (Malvinas)",
     code: "FK",
