@@ -5,6 +5,7 @@ const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const passport = require("passport");
 const images = require("./routes/api/images");
+const seed = require("./routes/api/seed");
 const fileUpload = require("express-fileupload");
 
 // App Setup
@@ -56,6 +57,7 @@ const reviews = require("./routes/api/reviews");
 app.use("/api/reviews", reviews);
 
 app.use("/api/images", images);
+app.use("/api/seed", seed);
 
 app.use((err, req, res, next) => {
   if (err) {
