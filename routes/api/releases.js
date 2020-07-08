@@ -18,11 +18,22 @@ const Release = require("../../models/Release");
 
 // GET all releases
 router.get("/", (req, res, next) => {
-  Release.find()
-    .populate("mainArtists")
-    .sort({ createdAt: -1 })
-    .then(releases => res.json(releases))
-    .catch(err => next(new RecordNotFoundError("No releases found")));
+  const itemsPerPage = parseInt(req.query.itemsPerPage);
+  const pageNum = parseInt(req.query.pageNum);
+
+  if (req.query.count) {
+    Release.countDocuments()
+      .then(releasesCount => res.json(releasesCount))
+      .catch(err => next(new RecordNotFoundError("No releases found")));
+  } else {
+    Release.find()
+      .sort({ createdAt: -1 })
+      .skip(pageNum > 0 ? (pageNum - 1) * itemsPerPage : 0)
+      .limit(itemsPerPage)
+      .populate("mainArtists")
+      .then(releases => res.json(releases))
+      .catch(err => next(new RecordNotFoundError("No releases found")));
+  }
 });
 
 // GET a single release

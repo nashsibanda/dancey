@@ -3,9 +3,12 @@ import {
   HIDE_SESSION_FORM_MODAL,
   TOGGLE_SESSION_FORM_MODAL,
 } from "../actions/session_actions";
+import { RECEIVE_RELEASES_COUNT } from "../actions/release_actions";
 
 const _initialState = {
   showSessionFormModal: false,
+  releasesIndexCount: 0,
+  personnelIndexCount: 0,
 };
 
 const UiReducer = (state = _initialState, action) => {
@@ -19,6 +22,8 @@ const UiReducer = (state = _initialState, action) => {
       return Object.assign({}, state, {
         showSessionFormModal: !state.showSessionFormModal,
       });
+    case RECEIVE_RELEASES_COUNT:
+      return Object.assign({}, state, { releasesIndexCount: action.count });
     default:
       return state;
   }
