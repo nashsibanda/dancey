@@ -3,6 +3,7 @@ import { releasesLoadingOn, releasesLoadingOff } from "./loading_actions";
 
 export const RECEIVE_RELEASE = "RECEIVE_RELEASE";
 export const RECEIVE_RELEASES = "RECEIVE_RELEASES";
+export const RECEIVE_RELEASES_COUNT = "RECEIVE_RELEASES_COUNT";
 export const RECEIVE_RELEASE_ERRORS = "RECEIVE_RELEASE_ERRORS";
 
 export const receiveRelease = release => ({
@@ -15,14 +16,19 @@ export const receiveReleases = releases => ({
   releases,
 });
 
+export const receiveReleasesCount = count => ({
+  type: RECEIVE_RELEASES_COUNT,
+  count,
+});
+
 export const receiveReleaseErrors = errors => ({
   type: RECEIVE_RELEASE_ERRORS,
   errors,
 });
 
-export const fetchAllReleases = () => dispatch => {
+export const fetchAllReleases = (pageNum, itemsPerPage) => dispatch => {
   dispatch(releasesLoadingOn());
-  ReleaseAPIUtil.getAllReleases()
+  ReleaseAPIUtil.getAllReleases(pageNum, itemsPerPage)
     .then(releases => {
       dispatch(receiveReleases(releases.data));
       dispatch(releasesLoadingOff());
@@ -31,6 +37,12 @@ export const fetchAllReleases = () => dispatch => {
       dispatch(receiveReleaseErrors(err.response.data));
       dispatch(releasesLoadingOff());
     });
+};
+
+export const countAllReleases = () => dispatch => {
+  ReleaseAPIUtil.getAllReleasesCount()
+    .then(count => dispatch(receiveReleasesCount(count.data)))
+    .catch(err => dispatch(receiveReleaseErrors(err.response.data)));
 };
 
 export const fetchOneRelease = id => dispatch => {
@@ -46,9 +58,19 @@ export const fetchOneRelease = id => dispatch => {
     });
 };
 
-export const fetchResourceReleases = (resourceType, resourceId) => dispatch => {
+export const fetchResourceReleases = (
+  pageNum,
+  itemsPerPage,
+  resourceType,
+  resourceId
+) => dispatch => {
   dispatch(releasesLoadingOn());
-  ReleaseAPIUtil.getResourceReleases(resourceType, resourceId)
+  ReleaseAPIUtil.getResourceReleases(
+    pageNum,
+    itemsPerPage,
+    resourceType,
+    resourceId
+  )
     .then(releases => {
       dispatch(receiveReleases(releases.data));
       dispatch(releasesLoadingOff());

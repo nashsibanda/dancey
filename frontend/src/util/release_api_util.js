@@ -1,11 +1,22 @@
 import axios from "axios";
 
-export const getAllReleases = () => axios.get("/api/releases");
+export const getAllReleases = (pageNum, itemsPerPage) =>
+  axios.get(`/api/releases?pageNum=${pageNum}&itemsPerPage=${itemsPerPage}`);
+
+export const getAllReleasesCount = (pageNum, itemsPerPage) =>
+  axios.get(`/api/releases?count=true`);
 
 export const getOneRelease = id => axios.get(`api/releases/${id}`);
 
-export const getResourceReleases = (resourceType, resourceId) =>
-  axios.get(`api/releases/${resourceType}/${resourceId}`);
+export const getResourceReleases = (
+  pageNum,
+  itemsPerPage,
+  resourceType,
+  resourceId
+) =>
+  axios.get(
+    `api/releases/${resourceType}/${resourceId}?pageNum=${pageNum}&itemsPerPage=${itemsPerPage}`
+  );
 
 export const postRelease = releasePostData =>
   axios.post("/api/releases", releasePostData);
