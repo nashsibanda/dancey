@@ -9,6 +9,7 @@ export default class PersonnelIndex extends Component {
     super(props);
     this.state = {
       showPersonnelRoleForm: false,
+      initialLoad: false,
     };
     this.togglePersonnelRoleForm = this.togglePersonnelRoleForm.bind(this);
   }
@@ -16,6 +17,7 @@ export default class PersonnelIndex extends Component {
   componentDidMount() {
     const { fetchResourcePersonnel, resourceType, resourceId } = this.props;
     fetchResourcePersonnel(resourceType, resourceId);
+    this.setState({ initialLoad: true });
   }
 
   componentDidUpdate(prevProps) {
@@ -38,7 +40,7 @@ export default class PersonnelIndex extends Component {
       loading,
       resourceId,
     } = this.props;
-    const { showPersonnelRoleForm } = this.state;
+    const { showPersonnelRoleForm, initialLoad } = this.state;
 
     return (
       <div className="personnel-index-container">
@@ -77,6 +79,7 @@ export default class PersonnelIndex extends Component {
               toggleForm={this.togglePersonnelRoleForm}
             />
           ) : (
+            initialLoad &&
             resourcePersonnel.length > 0 &&
             resourcePersonnel.map((rPersonnel, index) => {
               const itemPersonnel = rPersonnel.personnelIds.map(
