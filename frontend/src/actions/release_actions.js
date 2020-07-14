@@ -58,6 +58,12 @@ export const fetchOneRelease = id => dispatch => {
     });
 };
 
+export const countResourceReleases = (resourceType, resourceId) => dispatch => {
+  ReleaseAPIUtil.getResourceReleasesCount(resourceType, resourceId)
+    .then(count => dispatch(receiveReleasesCount(count.data)))
+    .catch(err => dispatch(receiveReleaseErrors(err.response.data)));
+};
+
 export const fetchResourceReleases = (
   pageNum,
   itemsPerPage,
