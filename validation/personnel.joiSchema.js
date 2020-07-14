@@ -10,6 +10,7 @@ const personnelValidation = Joi.object({
       new: schema => schema.required(),
     }),
   alsoKnownAs: Joi.array().items(Joi.string().max(200)).label("Also known as"),
+  associated: Joi.array().items(Joi.objectId()),
   dateOfBirth: Joi.date()
     .less("now")
     .greater("01-01-1800")
