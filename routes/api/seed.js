@@ -5,6 +5,8 @@ const formats = require("../../validation/formats");
 const countries = require("../../validation/countries");
 const got = require("got");
 const discogReleases = require("../../temp_scratch/most_popular_discogs_releases_ids");
+const artistUrls = require("../../temp_scratch/artist_urls");
+const fs = require("fs");
 
 const Release = require("../../models/Release");
 const Personnel = require("../../models/Personnel");
@@ -262,12 +264,200 @@ router.post("/releases", async (req, res, next) => {
   res.json({
     message: `OK! ${counter} release${counter === 1 ? "" : "s"} added!`,
     errors: errors.length,
-    // errorData: errors,
+  });
+});
+
+router.get("/personnel_resource_urls", async (req, res, next) => {
+  let counter = 0;
+  let errors = [];
+  const personnelIdUrls = {};
+  const releasesLength = discogReleases.length;
+  const chunk = 25;
+  for (let i = 0; i < releasesLength; i += chunk) {
+    const subArr = discogReleases.slice(i, i + chunk);
+    for (const releaseId of subArr) {
+      try {
+        console.log(
+          `Processing: release ${
+            counter + 1
+          } of ${releasesLength}. ID: ${releaseId}`
+        );
+        const thisArray = await getPersonnelResourceUrlsForRelease(releaseId);
+        thisArray.forEach(url => (personnelIdUrls[url] = true));
+        counter++;
+      } catch (error) {
+        console.log(error);
+        errors.push(errors);
+      }
+      await sleeper();
+    }
+    console.log(`${Object.keys(personnelIdUrls).length} personnel URLs added.`);
+    fs.writeFile("temp_scratch/resource_urls.txt", "Start File\n", err => {
+      if (err) throw err;
+    });
+    Object.keys(personnelIdUrls).forEach(url => {
+      fs.appendFile(
+        `temp_scratch/yet_more_resource_urls_${i}.txt`,
+        `${url}\n`,
+        err => {
+          if (err) throw err;
+        }
+      );
+    });
+  }
+  res.json({
+    message: `OK! ${counter} release${counter === 1 ? "" : "s"} added!`,
+    errors: errors.length,
+  });
+});
+
+router.put("/artists", async (req, res, next) => {
+  let counter = 0;
+  let errors = [];
+  let increment;
+  for (const url of artistUrls) {
+    try {
+      increment = await updatePersonnelRecord(url);
+    } catch (error) {
+      increment = 0;
+      console.log(error);
+      errors.push(url);
+    }
+    counter = counter + increment;
+    await sleeper();
+  }
+  console.log(errors);
+  res.json({
+    message: `OK! ${counter} release${counter === 1 ? "" : "s"} added!`,
+    errors: errors.length,
   });
 });
 
 const sleeper = () => {
-  return new Promise(resolve => setTimeout(resolve, 500));
+  return new Promise(resolve => setTimeout(resolve, 1000));
+};
+
+const getPersonnelResourceUrlsForRelease = async function (discogsReleaseId) {
+  // console.log(
+  //   `${discogsReleaseId} - Fetching title...: Retrieving from Discogs API...`
+  // );
+  const { body } = await got(
+    `https://api.discogs.com/releases/${discogsReleaseId}?key=ojkJUdaxGTxoNRzmdENU&secret=TKkEeItRzgeMYOxPEHirJsoZgAQhLfzz`,
+    {
+      responseType: "json",
+    }
+  );
+  const relJson = body;
+
+  const resourceUrlsArray = [];
+
+  if (relJson.artists)
+    relJson.artists.forEach(artist =>
+      resourceUrlsArray.push(artist.resource_url)
+    );
+  if (relJson.labels)
+    relJson.labels.forEach(artist =>
+      resourceUrlsArray.push(artist.resource_url)
+    );
+  if (relJson.extraartists)
+    relJson.extraartists.forEach(artist =>
+      resourceUrlsArray.push(artist.resource_url)
+    );
+  if (relJson.tracklist) {
+    relJson.tracklist.forEach(listing => {
+      if (listing.extraartists) {
+        listing.extraartists.forEach(artist =>
+          resourceUrlsArray.push(artist.resource_url)
+        );
+      }
+    });
+  }
+
+  return resourceUrlsArray;
+};
+
+const updatePersonnelRecord = async function (discogsArtistId) {
+  // console.log(
+  //   `${discogsArtistId} - Fetching artist...: Retrieving from Discogs API...`
+  // );
+  const {
+    body,
+  } = await got(
+    `https://api.discogs.com/${discogsArtistId}?key=ojkJUdaxGTxoNRzmdENU&secret=TKkEeItRzgeMYOxPEHirJsoZgAQhLfzz`,
+    { responseType: "json" }
+  );
+
+  const perJson = body;
+  const currentPersonnel = await Personnel.findOne({ name: perJson.name });
+
+  if (!currentPersonnel) {
+    console.log(`A personnel record does not exist for ${discogsArtistId}`);
+    return 0;
+  }
+
+  const newPersonnel = {
+    name: perJson.name,
+    images: perJson.images
+      ? perJson.images.map(img => {
+          return {
+            imageUrl: img.uri,
+            mainImage: img.type === "primary",
+          };
+        })
+      : [],
+    alsoKnownAs: currentPersonnel.alsoKnownAs
+      ? currentPersonnel.alsoKnownAs
+      : [],
+    associated: currentPersonnel.associated ? currentPersonnel.associated : [],
+  };
+
+  if (perJson.aliases) {
+    newPersonnel.alsoKnownAs = perJson.aliases.map(alias => alias.name);
+    for (const alias of perJson.aliases) {
+      const extantAlias = await Personnel.findOne({ name: alias.name });
+      if (extantAlias) {
+        newPersonnel.associated.push(extantAlias._id);
+      }
+    }
+  }
+
+  if (perJson.groups) {
+    for (const group of perJson.groups) {
+      const extantGroup = await Personnel.findOne({ name: group.name });
+      if (extantGroup) {
+        newPersonnel.associated.push(extantGroup._id);
+      }
+    }
+  }
+
+  if (perJson.namevariations) {
+    newPersonnel.alsoKnownAs.push(...perJson.namevariations);
+  }
+
+  newPersonnel.associated = [...new Set(newPersonnel.associated)].filter(
+    assc => !!assc
+  );
+  newPersonnel.alsoKnownAs = [...new Set(newPersonnel.alsoKnownAs)].filter(
+    aka => !!aka
+  );
+
+  Personnel.findOneAndReplace(
+    { name: currentPersonnel.name },
+    Object.assign({}, currentPersonnel.toObject(), newPersonnel),
+    { new: true },
+    (err, saved) => {
+      if (err) {
+        console.log(err);
+        return 0;
+      } else {
+        console.log(
+          `${saved.name} updated! (${discogsArtistId}) / (danceyId: ${saved._id})`
+        );
+        return 1;
+      }
+    }
+  );
+  return 1;
 };
 
 const addRelease = async function (discogsReleaseId) {
