@@ -9,7 +9,7 @@ class ReleasesIndex extends React.Component {
 
     this.state = {
       initialLoad: false,
-      itemsPerPage: 50,
+      itemsPerPage: this.props.defaultItemsPerPage,
       pageNum: 1,
     };
 
@@ -26,7 +26,7 @@ class ReleasesIndex extends React.Component {
     } = this.props;
     const { pageNum, itemsPerPage } = this.state;
     fetchReleases(pageNum, itemsPerPage, resourceType, resourceId);
-    getReleasesCount();
+    getReleasesCount(resourceType, resourceId);
     this.setState({ initialLoad: true });
   }
 
@@ -92,13 +92,16 @@ class ReleasesIndex extends React.Component {
           <span className="index-page-size-select">
             <label>
               Items Per Page
-              <select onChange={this.changePageSize} defaultValue={50}>
-                <option value={25}>25</option>
-                <option value={50}>50</option>
-                <option value={75}>75</option>
-                <option value={100}>100</option>
-                <option value={150}>150</option>
-                <option value={250}>250</option>
+              <select
+                onChange={this.changePageSize}
+                defaultValue={itemsPerPage}
+              >
+                <option value={12}>12</option>
+                <option value={24}>24</option>
+                <option value={60}>60</option>
+                <option value={96}>96</option>
+                <option value={120}>120</option>
+                <option value={240}>240</option>
               </select>
             </label>
           </span>
@@ -147,14 +150,16 @@ class ReleasesIndex extends React.Component {
               {pageNum !== maxPageNumber &&
                 pageNum + 1 !== maxPageNumber &&
                 pageNum + 2 !== maxPageNumber && <span>...</span>}
-              <button
-                className={`link-button ${
-                  pageNum === maxPageNumber ? "selected" : ""
-                }`}
-                onClick={this.changePageNumber(maxPageNumber)}
-              >
-                {maxPageNumber}
-              </button>
+              {maxPageNumber > 1 && (
+                <button
+                  className={`link-button ${
+                    pageNum === maxPageNumber ? "selected" : ""
+                  }`}
+                  onClick={this.changePageNumber(maxPageNumber)}
+                >
+                  {maxPageNumber}
+                </button>
+              )}
             </ul>
             <button
               className="link-button"

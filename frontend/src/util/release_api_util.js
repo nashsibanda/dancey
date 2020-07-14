@@ -18,6 +18,9 @@ export const getResourceReleases = (
     `api/releases/${resourceType}/${resourceId}?pageNum=${pageNum}&itemsPerPage=${itemsPerPage}`
   );
 
+export const getResourceReleasesCount = (resourceType, resourceId) =>
+  axios.get(`api/releases/${resourceType}/${resourceId}?count=true`);
+
 export const postRelease = releasePostData =>
   axios.post("/api/releases", releasePostData);
 

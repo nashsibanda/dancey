@@ -32,7 +32,10 @@ router.get("/", (req, res, next) => {
       .limit(itemsPerPage)
       .populate("mainArtists")
       .then(releases => res.json(releases))
-      .catch(err => next(new RecordNotFoundError("No releases found")));
+      .catch(err => {
+        console.log(err);
+        next(new RecordNotFoundError("No releases found"));
+      });
   }
 });
 
@@ -45,8 +48,10 @@ router.get("/:id", (req, res, next) => {
 
 // GET all releases by personnel
 router.get("/personnel/:personnel_id", (req, res, next) => {
-  console.log(personnelId);
-  Release.find({
+  const personnelId = req.params.personnel_id;
+  const itemsPerPage = parseInt(req.query.itemsPerPage);
+  const pageNum = parseInt(req.query.pageNum);
+  const query = {
     $or: [
       {
         personnel: {
@@ -78,13 +83,24 @@ router.get("/personnel/:personnel_id", (req, res, next) => {
         },
       },
     ],
-  })
-    .populate("mainArtists")
-    .then(releases => res.json(releases))
-    .catch(err => {
-      console.log(err);
-      next(new RecordNotFoundError("No releases found"));
-    });
+  };
+  console.log(itemsPerPage);
+  if (req.query.count) {
+    Release.countDocuments(query)
+      .then(releasesCount => res.json(releasesCount))
+      .catch(err => next(new RecordNotFoundError("No releases found")));
+  } else {
+    Release.find(query)
+      .sort({ createdAt: -1 })
+      .skip(pageNum > 0 ? (pageNum - 1) * itemsPerPage : 0)
+      .limit(itemsPerPage)
+      .populate("mainArtists")
+      .then(releases => res.json(releases))
+      .catch(err => {
+        console.log(err);
+        next(new RecordNotFoundError("No releases found"));
+      });
+  }
 });
 
 // GET all releases by track

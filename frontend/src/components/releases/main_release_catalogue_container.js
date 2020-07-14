@@ -10,6 +10,7 @@ const mapStateToProps = state => ({
   loading: state.loading.releases,
   mainCatalogue: true,
   releasesIndexCount: state.ui.releasesIndexCount,
+  defaultItemsPerPage: 48,
 });
 
 const mapDispatchToProps = dispatch => ({
