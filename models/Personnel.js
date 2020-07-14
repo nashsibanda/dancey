@@ -10,6 +10,11 @@ const PersonnelSchema = new Schema(
       required: true,
     },
     alsoKnownAs: [{ type: String }],
+    associated: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+      },
+    ],
     dateOfBirth: {
       type: Date,
     },
