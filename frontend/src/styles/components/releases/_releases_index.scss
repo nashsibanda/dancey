@@ -1,30 +1,171 @@
-.releases-index {
-  display: flex;
-  flex-wrap: wrap;
+.releases-index-container {
+  .releases-index-view-options {
+    margin: 1rem 0;
+    display: flex;
+    justify-content: flex-end;
 
-  .release-tile {
-    width: 11rem;
-    padding: 1rem;
-
-    img {
-      width: 100%;
+    & > * {
+      margin-left: 1rem;
     }
 
-    .release-tile-info {
-      margin-top: 0.7rem;
+    .index-view-format-menu {
+      display: flex;
+      align-items: center;
 
-      .release-tile-title {
-        font-weight: 700;
-        font-size: 1.1rem;
-        font-family: $serif;
+      button {
+        padding: 0.3rem 0.5rem;
+        border: 1px solid $graylight;
+        border-radius: 3px;
+        margin-left: 0.5rem;
+        color: $gray;
+
+        &.selected {
+          color: $blue;
+        }
+
+        @media (hover: hover) {
+          &:hover {
+            color: $blue;
+            border-color: $blue;
+          }
+        }
+      }
+    }
+
+    .index-page-size-select {
+      select {
+        margin-left: 0.5rem;
+      }
+    }
+
+    .index-page-navigation {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      min-width: 18rem;
+
+      & > * {
+        margin-right: 0.5rem;
       }
 
-      .release-tile-details {
+      button:disabled {
+        color: $gray;
+      }
+
+      .page-navigation-numbers {
+        display: flex;
+
+        button.selected {
+          font-weight: 700;
+        }
+
+        & > * {
+          margin-left: 0.2rem;
+        }
+      }
+    }
+  }
+
+  .releases-tiles-index {
+    display: flex;
+    flex-wrap: wrap;
+
+    .release-tile {
+      width: 13rem;
+      padding: 1rem;
+      box-sizing: border-box;
+
+      img {
+        width: 100%;
+      }
+
+      .release-tile-info {
+        margin-top: 0.7rem;
+
+        .release-tile-title {
+          font-weight: 700;
+          font-size: 1rem;
+          font-family: $serif;
+
+          a {
+            white-space: nowrap;
+            word-wrap: none;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            // width: 100%;
+            display: block;
+          }
+          color: $blue;
+        }
+
+        .release-tile-artist {
+          font-size: 0.9rem;
+          max-height: 2.6rem;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: pre;
+        }
+
+        .release-tile-details {
+          font-size: 0.8rem;
+          font-weight: 700;
+          color: $graydark;
+
+          div {
+            display: flex;
+            justify-content: space-between;
+          }
+        }
+      }
+    }
+  }
+
+  .releases-list-index {
+    display: flex;
+    flex-direction: column;
+
+    .release-list-item {
+      width: 100%;
+      display: flex;
+      padding: 0.5rem 0;
+      border-top: 1px solid $gray;
+
+      .release-list-item-info {
+        width: 100%;
+        padding-left: 0.5rem;
+        border-left: 1px solid $graylighter;
+
+        .release-list-item-title {
+          font-weight: 700;
+          font-size: 1rem;
+          font-family: $serif;
+
+          a {
+            white-space: nowrap;
+            word-wrap: none;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            // width: 100%;
+            display: block;
+          }
+          color: $blue;
+        }
+      }
+
+      img {
+        width: 4rem;
+        margin-right: 0.5rem;
+      }
+
+      .release-list-item-other-details {
+        display: flex;
+        justify-content: space-between;
         font-size: 0.8rem;
         font-weight: 700;
         color: $graydark;
 
-        div {
+        .release-list-item-details-format-year {
+          min-width: 8rem;
           display: flex;
           justify-content: space-between;
         }
