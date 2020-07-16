@@ -22,6 +22,8 @@ import {
   faCheckSquare,
   faTimes,
   faHeart,
+  faThList,
+  faTh,
 } from "@fortawesome/free-solid-svg-icons";
 
 library.add(
@@ -46,5 +48,7 @@ library.add(
   faCompactDisc,
   faCheckSquare,
   faTimes,
-  faHeart
+  faHeart,
+  faThList,
+  faTh
 );
