@@ -84,7 +84,6 @@ router.get("/personnel/:personnel_id", (req, res, next) => {
       },
     ],
   };
-  console.log(itemsPerPage);
   if (req.query.count) {
     Release.countDocuments(query)
       .then(releasesCount => res.json(releasesCount))
