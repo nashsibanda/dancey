@@ -73,7 +73,7 @@ router.get("/get/release/:release_id", (req, res, next) => {
 });
 
 // GET all personnel from a release's tracks
-router.get("/get/release/:release_id/tracks", (req, res) => {
+router.get("/get/release/:release_id/tracks", (req, res, next) => {
   Release.findById(req.params.release_id)
     .populate("trackListing.trackId")
     .then(release => {
@@ -92,6 +92,7 @@ router.get("/get/release/:release_id/tracks", (req, res) => {
           personnelIdSet.add(writer);
         });
       });
+      const personnelIds = Array.from(personnelIdSet);
       Personnel.find({ _id: { $in: personnelIds } })
         .then(personnelCollection => res.json(personnelCollection))
         .catch(err => next(new RecordNotFoundError("No personnel found")));
