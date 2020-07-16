@@ -23,6 +23,7 @@ export default class PersonnelMainInfo extends React.Component {
         this.props.personnel.alsoKnownAs.length > 0
           ? Array.from(this.props.personnel.alsoKnownAs)
           : [],
+      expandAlsoKnownAs: false,
       editName: false,
       name: this.props.personnel.name || "",
       editLabel: false,
@@ -86,6 +87,7 @@ export default class PersonnelMainInfo extends React.Component {
       editAlsoKnownAs,
       editName,
       name,
+      expandAlsoKnownAs,
     } = this.state;
 
     const mainImage = images.find(({ mainImage }) => mainImage === true);
@@ -190,13 +192,42 @@ export default class PersonnelMainInfo extends React.Component {
                 </form>
               ) : (
                 <span className="details-value">
-                  {alsoKnownAs && (
-                    <span>
-                      {personnel.alsoKnownAs.length > 0
-                        ? personnel.alsoKnownAs.join(", ")
-                        : "N/A"}
-                    </span>
-                  )}
+                  {alsoKnownAs &&
+                    (alsoKnownAs.length < 5 || expandAlsoKnownAs ? (
+                      <span>
+                        {personnel.alsoKnownAs.length > 0
+                          ? personnel.alsoKnownAs.join(", ")
+                          : "N/A"}
+                        {alsoKnownAs.length > 4 && (
+                          <>
+                            {"   "}
+                            <button
+                              className="link-button"
+                              onClick={this.toggleForm("expandAlsoKnownAs")}
+                            >
+                              Less...
+                            </button>
+                          </>
+                        )}
+                      </span>
+                    ) : (
+                      <span className="aka-contracted">
+                        {personnel.alsoKnownAs.length > 0
+                          ? personnel.alsoKnownAs.slice(0, 4).join(", ")
+                          : "N/A"}
+                        {!expandAlsoKnownAs && (
+                          <>
+                            {", "}
+                            <button
+                              className="link-button"
+                              onClick={this.toggleForm("expandAlsoKnownAs")}
+                            >
+                              More...
+                            </button>
+                          </>
+                        )}
+                      </span>
+                    ))}
                   {showEditButtons && (
                     <button
                       className="icon-button"
