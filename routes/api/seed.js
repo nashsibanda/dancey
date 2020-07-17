@@ -847,4 +847,17 @@ const addRelease = async function (discogsReleaseId) {
   return 1;
 };
 
+router.put("/fix_multi_artist", async (req, res, next) => {
+  const releases = await Release.find();
+  for (const release of releases) {
+    const uniqueArtists = release.mainArtists.filter(
+      (v, i, a) => a.indexOf(v) === i
+    );
+    await release.updateOne({ mainArtists: uniqueArtists });
+    console.log(`Updated ${release.title}`);
+  }
+  console.log("DONE!");
+  res.json({ message: "Done!" });
+});
+
 module.exports = router;
