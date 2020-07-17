@@ -12,33 +12,36 @@ import MainReleaseCatalogueContainer from "./releases/main_release_catalogue_con
 import ReleaseShowContainer from "./releases/release_show_container";
 import Footer from "./footer/footer";
 import PersonnelShowContainer from "./personnel/personnel_show_container";
+import ScrollIntoView from "./util/scroll_into_view";
 
 const App = () => (
   <div>
-    <NavBarContainer />
-    <main>
-      <Switch>
-        <AuthRoute exact path="/login" component={LoginFormContainer} />
-        <AuthRoute exact path="/register" component={RegisterFormContainer} />
-        <Route
-          exact
-          path="/releases/:releaseId"
-          component={ReleaseShowContainer}
-        />
-        <Route
-          exact
-          path="/personnel/:personnelId"
-          component={PersonnelShowContainer}
-        />
-        <Route
-          exact
-          path="/releases"
-          component={MainReleaseCatalogueContainer}
-        />
-        <Route exact path="/" component={MainPage} />
-      </Switch>
-    </main>
-    <Footer />
+    <ScrollIntoView>
+      <NavBarContainer />
+      <main>
+        <Switch>
+          <AuthRoute exact path="/login" component={LoginFormContainer} />
+          <AuthRoute exact path="/register" component={RegisterFormContainer} />
+          <Route
+            exact
+            path="/releases/:releaseId"
+            component={ReleaseShowContainer}
+          />
+          <Route
+            exact
+            path="/personnel/:personnelId"
+            component={PersonnelShowContainer}
+          />
+          <Route
+            exact
+            path="/releases"
+            component={MainReleaseCatalogueContainer}
+          />
+          <Route exact path="/" component={MainPage} />
+        </Switch>
+      </main>
+      <Footer />
+    </ScrollIntoView>
   </div>
 );
 
