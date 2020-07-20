@@ -35,7 +35,7 @@ router.get("/search", (req, res, next) => {
   Personnel.find({
     name: { $regex: ".*" + escapedQueryString + ".*", $options: "i" },
   })
-    .sort({ name: -1 })
+    .sort({ name: 1 })
     .then(personnelCollection => res.json(personnelCollection))
     .catch(err => next(new RecordNotFoundError("No personnel found")));
 });
