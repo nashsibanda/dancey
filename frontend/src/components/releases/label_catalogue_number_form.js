@@ -30,13 +30,17 @@ export default class LabelCatalogueNumberForm extends Component {
   }
 
   makeCurrentLabelForFormSection() {
-    const sectionLabelArray = this.state.label.map(label => {
-      const { personnelIds } = label;
-      const personnelDisplay = personnelIds.map(id => {
-        return this.props.statePersonnel[id]["name"];
-      });
-      return Object.assign({}, label, { personnelDisplay: personnelDisplay });
-    });
+    const sectionLabelArray = this.state.label
+      ? this.state.label.map(label => {
+          const { personnelIds } = label;
+          const personnelDisplay = personnelIds.map(id => {
+            return this.props.statePersonnel[id]["name"];
+          });
+          return Object.assign({}, label, {
+            personnelDisplay: personnelDisplay,
+          });
+        })
+      : [];
     return sectionLabelArray;
   }
 
