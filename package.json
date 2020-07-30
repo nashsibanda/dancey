@@ -32,6 +32,7 @@
     "express": "^4.17.1",
     "express-fileupload": "^1.1.7-alpha.3",
     "express-joi-validation": "^4.0.3",
+    "fuzzyset": "^1.0.5",
     "got": "^11.4.0",
     "joi-objectid": "^3.0.1",
     "jsonwebtoken": "^8.5.1",
