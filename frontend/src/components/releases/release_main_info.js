@@ -169,6 +169,7 @@ export default class ReleaseMainInfo extends React.Component {
                       >
                         <PersonnelSearchContainer
                           formUpdate={this.updateSelectField}
+                          multiSelect={true}
                           fieldName={"mainArtists"}
                           placeholderText={"Label(s)..."}
                           defaultSelected={this.getDefaultPersonnel(

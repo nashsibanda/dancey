@@ -43,12 +43,14 @@ export default class SearchAutocomplete extends Component {
       label: object[this.props.labelField],
       moreInfoField1: object[this.props.moreInfoField1],
       moreInfoField2: object[this.props.moreInfoField2],
+      image: object.images ? object.images.find(img => img.mainImage) : null,
     }));
     return options;
   }
 
   fetchData(inputValue) {
     const { receiveResponseErrors, getQueryData } = this.props;
+    if (inputValue.length < 2) return this.setDefaultOptions();
     return getQueryData(inputValue)
       .then(dataCollection => {
         return this.makeOptions(dataCollection.data);
@@ -80,7 +82,7 @@ export default class SearchAutocomplete extends Component {
   render() {
     return (
       <AsyncCreatableSelect
-        isMulti
+        isMulti={this.props.multiSelect}
         cacheOptions
         className="search-autocomplete"
         classNamePrefix="search-autocomplete"

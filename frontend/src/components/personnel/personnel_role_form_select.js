@@ -78,6 +78,7 @@ export default class PersonnelRoleFormSelect extends Component {
           />
           <PersonnelSearchContainer
             formUpdate={this.updatePersonnelSelectField}
+            multiSelect={true}
             fieldName={"personnelIds"}
             placeholderText={
               this.props.labelCatNoForm ? "Label..." : "Search..."
