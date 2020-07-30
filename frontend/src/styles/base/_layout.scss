@@ -150,22 +150,46 @@ select {
   min-width: 10rem;
   width: 100%;
 
-  .search-autocomplete-option {
-    display: flex;
-    flex-direction: column;
-
-    .more-info {
-      font-size: 0.8rem;
-      font-style: italic;
-
-      span {
-        padding-right: 0.2rem;
-      }
+  .search-autocomplete__multi-value {
+    .image {
+      width: 1.5rem;
+      height: 1.5rem;
+      margin-right: 0.5rem;
     }
 
-    & > div {
+    .more-info {
+      display: none;
+    }
+  }
+
+  .search-autocomplete__option {
+    .image {
+      width: 3rem;
+      height: 3rem;
+      margin-right: 0.5rem;
+    }
+  }
+
+  .search-autocomplete-option {
+    display: flex;
+
+    .label-and-details {
       display: flex;
-      justify-content: space-between;
+      flex-direction: column;
+
+      .more-info {
+        font-size: 0.8rem;
+        font-style: italic;
+
+        span {
+          padding-right: 0.2rem;
+        }
+      }
+
+      & > div {
+        display: flex;
+        justify-content: space-between;
+      }
     }
   }
 
