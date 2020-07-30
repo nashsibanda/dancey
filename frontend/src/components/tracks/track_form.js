@@ -277,6 +277,7 @@ export default class TrackForm extends Component {
             <span>Main Artist(s):</span>
             <PersonnelSearchContainer
               formUpdate={this.updateSelectField}
+              multiSelect={true}
               fieldName={"mainArtists"}
               placeholderText={"Main Artist(s)..."}
               defaultSelected={
@@ -292,6 +293,7 @@ export default class TrackForm extends Component {
             <span>Writer(s):</span>
             <PersonnelSearchContainer
               formUpdate={this.updateSelectField}
+              multiSelect={true}
               fieldName={"writers"}
               placeholderText={"Writer(s)..."}
               defaultSelected={_id ? getDefaultArtists("writers", _id) : ""}
