@@ -12,6 +12,7 @@ import {
 import SearchAutocomplete from "./search_autocomplete";
 import moment from "moment";
 import plainPersonnelImage from "../../assets/abstract-user-flat-1.svg";
+import { getSearchRecords } from "../../util/search_api_util";
 
 const formatPersonnelOptionLabel = ({
   value,
@@ -60,7 +61,8 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   fetchQueryEntities: query => dispatch(fetchQueryPersonnel(query)),
-  getQueryData: query => getQueryPersonnel(query),
+  // getQueryData: query => getQueryPersonnel(query),
+  getQueryData: query => getSearchRecords("personnel", query),
   receiveSelectedData: data => dispatch(receiveOnePersonnel(data)),
   receiveResponseErrors: errors => dispatch(receivePersonnelErrors(errors)),
   createNewEntry: name => postPersonnel({ name }),
