@@ -23,6 +23,9 @@ router.get("/", async (req, res, next) => {
     Object.keys(recordsFound["releases"])
   );
 
+  console.log(stringsOnly);
+  if (stringsOnly.length < 1) return res.json([]);
+
   const fuzzyStrings = FuzzySet(
     stringsOnly,
     false,
@@ -40,7 +43,7 @@ router.get("/", async (req, res, next) => {
       outputRecords.push(recordsFound.releases[string]);
   });
 
-  res.json(outputRecords);
+  res.json(outputRecords.slice(0, 25));
 });
 
 const getCombinedRecordsObjectSwitch = async function (recordType, query) {
@@ -48,7 +51,7 @@ const getCombinedRecordsObjectSwitch = async function (recordType, query) {
     case "personnel": {
       const personnelRecords = await Personnel.find({
         name: { $regex: ".*" + query + ".*", $options: "i" },
-      });
+      }).limit(50);
 
       const personnelObject = {};
 
@@ -63,7 +66,7 @@ const getCombinedRecordsObjectSwitch = async function (recordType, query) {
     case "release": {
       const releaseRecords = await Release.find({
         title: { $regex: ".*" + query + ".*", $options: "i" },
-      });
+      }).populate("mainArtists");
 
       const releaseObj = {};
 
@@ -81,7 +84,7 @@ const getCombinedRecordsObjectSwitch = async function (recordType, query) {
       });
       const releaseSubRecords = await Release.find({
         title: { $regex: ".*" + query + ".*", $options: "i" },
-      });
+      }).populate("mainArtists");
 
       const releaseObj = {};
       const personnelObject = {};
