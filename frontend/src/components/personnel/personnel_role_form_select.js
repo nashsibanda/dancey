@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import PersonnelSearchContainer from "../search/personnel_search_container";
+import GlobalSearchContainer from "../search/global_search_container";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { makeRandomId } from "../../util/formatting_util";
 
@@ -76,8 +76,9 @@ export default class PersonnelRoleFormSelect extends Component {
             onChange={this.updateRoleField}
             value={this.state.role}
           />
-          <PersonnelSearchContainer
+          <GlobalSearchContainer
             formUpdate={this.updatePersonnelSelectField}
+            recordType={"personnel"}
             multiSelect={true}
             fieldName={"personnelIds"}
             placeholderText={

@@ -5,10 +5,7 @@ import {
   receivePersonnelErrors,
 } from "../../actions/personnel_actions";
 import { connect } from "react-redux";
-import {
-  getQueryPersonnel,
-  postPersonnel,
-} from "../../util/personnel_api_util";
+import { postPersonnel } from "../../util/personnel_api_util";
 import SearchAutocomplete from "./search_autocomplete";
 import moment from "moment";
 import plainPersonnelImage from "../../assets/abstract-user-flat-1.svg";
@@ -62,7 +59,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   fetchQueryEntities: query => dispatch(fetchQueryPersonnel(query)),
   // getQueryData: query => getQueryPersonnel(query),
-  getQueryData: query => getSearchRecords("personnel", query),
+  getQueryData: (recordType, query) => getSearchRecords(recordType, query),
   receiveSelectedData: data => dispatch(receiveOnePersonnel(data)),
   receiveResponseErrors: errors => dispatch(receivePersonnelErrors(errors)),
   createNewEntry: name => postPersonnel({ name }),
