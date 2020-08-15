@@ -8,7 +8,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import countries from "../../util/validation/countries";
 import formats from "../../util/validation/formats";
 import { Helmet } from "react-helmet";
-import PersonnelSearchContainer from "../search/personnel_search_container";
+import GlobalSearchContainer from "../search/global_search_container";
 import ImagesModalContainer from "../images/images_modal_container";
 import LoadingSpinner from "../loading/loading_spinner";
 import LabelCatalogueNumberFormContainer from "./label_catalogue_number_form_container";
@@ -167,8 +167,9 @@ export default class ReleaseMainInfo extends React.Component {
                           "editMainArtists"
                         )}
                       >
-                        <PersonnelSearchContainer
+                        <GlobalSearchContainer
                           formUpdate={this.updateSelectField}
+                          recordType={"personnel"}
                           multiSelect={true}
                           fieldName={"mainArtists"}
                           placeholderText={"Label(s)..."}

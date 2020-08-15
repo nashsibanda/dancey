@@ -1,5 +1,6 @@
 import React, { Component } from "react";
-import PersonnelSearchContainer from "../search/personnel_search_container";
+import GlobalSearchContainer from "../search/global_search_container";
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import analogSides from "../../util/validation/analog_sides";
 import PersonnelRoleFormSection from "../personnel/personnel_role_form_section";
@@ -275,9 +276,10 @@ export default class TrackForm extends Component {
         {showMainArtistsField && (
           <div className="form-section">
             <span>Main Artist(s):</span>
-            <PersonnelSearchContainer
+            <GlobalSearchContainer
               formUpdate={this.updateSelectField}
               multiSelect={true}
+              recordType={"personnel"}
               fieldName={"mainArtists"}
               placeholderText={"Main Artist(s)..."}
               defaultSelected={
@@ -291,9 +293,10 @@ export default class TrackForm extends Component {
         {showWritersField && (
           <div className="form-section">
             <span>Writer(s):</span>
-            <PersonnelSearchContainer
+            <GlobalSearchContainer
               formUpdate={this.updateSelectField}
               multiSelect={true}
+              recordType={"personnel"}
               fieldName={"writers"}
               placeholderText={"Writer(s)..."}
               defaultSelected={_id ? getDefaultArtists("writers", _id) : ""}
