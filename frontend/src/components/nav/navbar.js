@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import SessionFormModalContainer from "../session/session_form_modal_container";
+import GlobalSearchContainer from "../search/global_search_container";
 
 class NavBar extends React.Component {
   constructor(props) {
@@ -31,6 +32,13 @@ class NavBar extends React.Component {
         <span className="nav-resources-menu">
           <Link to={`/releases`}>Releases</Link>
           <Link to={`/personnel`}>Personnel</Link>
+          <GlobalSearchContainer
+            recordType={"all"}
+            multiSelect={false}
+            placeholderText={"Search..."}
+            optionLinks
+            noCreate
+          />
         </span>
         <span className="nav-session-menu">
           {this.props.loggedIn ? (
