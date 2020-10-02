@@ -24,24 +24,24 @@
   "homepage": "https://github.com/nashsibanda/dancey#readme",
   "dependencies": {
     "@hapi/joi": "^16.1.8",
-    "aws-sdk": "^2.700.0",
+    "aws-sdk": "^2.765.0",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
-    "concurrently": "^5.2.0",
+    "concurrently": "^5.3.0",
     "escape-string-regexp": "^4.0.0",
     "express": "^4.17.1",
-    "express-fileupload": "^1.1.7-alpha.3",
+    "express-fileupload": "^1.2.0",
     "express-joi-validation": "^4.0.3",
     "fuzzyset": "^1.0.5",
-    "got": "^11.4.0",
+    "got": "^11.7.0",
     "joi-objectid": "^3.0.1",
     "jsonwebtoken": "^8.5.1",
-    "mongoose": "^5.9.12",
+    "mongoose": "^5.10.7",
     "passport": "^0.4.1",
     "passport-jwt": "^4.0.0",
-    "validator": "^13.0.0"
+    "validator": "^13.1.17"
   },
   "devDependencies": {
-    "nodemon": "^2.0.3"
+    "nodemon": "^2.0.4"
   }
 }
