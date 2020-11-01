@@ -6,7 +6,7 @@ const bodyParser = require("body-parser");
 const passport = require("passport");
 const images = require("./routes/api/images");
 const search = require("./routes/api/search");
-const seed = require("./routes/api/seed");
+// const seed = require("./routes/api/seed");
 const fileUpload = require("express-fileupload");
 
 // App Setup
@@ -59,7 +59,7 @@ app.use("/api/reviews", reviews);
 
 app.use("/api/search", search);
 app.use("/api/images", images);
-app.use("/api/seed", seed);
+// app.use("/api/seed", seed);
 
 app.use((err, req, res, next) => {
   if (err) {
