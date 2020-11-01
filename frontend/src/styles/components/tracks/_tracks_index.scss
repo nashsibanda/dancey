@@ -3,7 +3,8 @@
     display: flex;
     flex-direction: column;
     border: 1px solid $graylighter;
-    border-radius: 3px;
+    border-radius: 0.5rem;
+    overflow: hidden;
 
     .tracks-index-track-item {
       background-color: $graylightest;
