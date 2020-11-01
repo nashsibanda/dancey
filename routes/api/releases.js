@@ -27,7 +27,7 @@ router.get("/", (req, res, next) => {
       .catch(err => next(new RecordNotFoundError("No releases found")));
   } else {
     Release.find()
-      .sort({ createdAt: -1 })
+      .sort({ createdAt: 1 })
       .skip(pageNum > 0 ? (pageNum - 1) * itemsPerPage : 0)
       .limit(itemsPerPage)
       .populate("mainArtists")
