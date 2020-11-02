@@ -29,6 +29,9 @@ export default class ReleaseShow extends Component {
     if (prevProps.loading && !this.props.loading) {
       this.setState({ initialLoad: true });
     }
+    if (prevProps.releaseId !== this.props.releaseId) {
+      this.setState({ initialLoad: false }, () => this.loadReleaseData());
+    }
   }
 
   toggleEditButtons() {
