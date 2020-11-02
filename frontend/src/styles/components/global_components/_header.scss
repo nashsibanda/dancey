@@ -17,11 +17,19 @@
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    padding: 1rem 0;
+    align-items: center;
+    padding: 1rem 2rem;
     background-color: #2a2a2a;
 
     .nav-resources-menu {
-      margin-left: 2rem;
+      display: flex;
+      align-items: center;
+      width: 80%;
+
+      .search-autocomplete {
+        width: 10rem;
+        flex-grow: 1;
+      }
     }
 
     a,
