@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import SessionFormModalContainer from "../session/session_form_modal_container";
 import GlobalSearchContainer from "../search/global_search_container";
@@ -13,6 +13,7 @@ class NavBar extends React.Component {
     this.logoutUser = this.logoutUser.bind(this);
     this.getLinks = this.getLinks.bind(this);
     this.openSessionForm = this.openSessionForm.bind(this);
+    this.goToResource = this.goToResource.bind(this);
   }
 
   logoutUser(e) {
@@ -24,6 +25,12 @@ class NavBar extends React.Component {
     return e => {
       this.setState({ sessionForm }, this.props.toggleSessionFormModal);
     };
+  }
+
+  goToResource(field, selected) {
+    const { resourceType, value } = selected;
+    this.props.history.push(`/${resourceType}/${value}`);
+    return;
   }
 
   getLinks() {
@@ -38,6 +45,7 @@ class NavBar extends React.Component {
             placeholderText={"Search..."}
             optionLinks
             noCreate
+            formUpdate={this.goToResource}
           />
         </span>
         <span className="nav-session-menu">
@@ -90,4 +98,4 @@ class NavBar extends React.Component {
   }
 }
 
-export default NavBar;
+export default withRouter(NavBar);

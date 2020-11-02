@@ -146,8 +146,9 @@ const getOptionFields = object => {
         : object.name
         ? plainPersonnelImage
         : plainRecordImage,
+    resourceType: object.name ? "personnel" : "releases",
   };
-  console.log(fields);
+  // console.log(fields);
   return fields;
 };
 
