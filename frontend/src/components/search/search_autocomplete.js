@@ -19,15 +19,11 @@ export default class SearchAutocomplete extends Component {
     this.setDefaultOptions = this.setDefaultOptions.bind(this);
     this.handleCreate = this.handleCreate.bind(this);
     this.linkToResource = this.linkToResource.bind(this);
-    // this.typingTimer = false;
-    // this.typingTimerInterval = 1500;
-    // this.timedInput = this.timedInput.bind(this);
   }
 
   componentDidMount() {
     if (this.props.defaultSelected) {
       const { formUpdate, fieldName, defaultSelected } = this.props;
-      console.log("MOUNTED");
 
       this.setState({ selected: this.makeOptions(defaultSelected) }, () =>
         formUpdate(fieldName, this.state.selected)
@@ -45,7 +41,6 @@ export default class SearchAutocomplete extends Component {
   }
 
   makeOptions(data) {
-    console.log("MAKING OPTIONS");
     const options = data.map(object => {
       const objectFields = this.props.getOptionFields(object);
       return {
@@ -57,28 +52,18 @@ export default class SearchAutocomplete extends Component {
         resourceType: objectFields.resourceType,
       };
     });
-    console.log(options);
     return options;
   }
 
-  // timedInput(inputValue) {
-  //   if (inputValue.length < 2) return this.setDefaultOptions();
-  //   if (this.typingTimer) clearTimeout(this.typingTimer);
-  //   console.log(this.typingTimerInterval);
-  //   this.typingTimer = setTimeout(
-  //     this.fetchData(inputValue),
-  //     this.typingTimerInterval
-  //   );
-  // }
-
   fetchData(inputValue) {
     const { receiveResponseErrors, getQueryData } = this.props;
-    console.log(inputValue);
     if (inputValue.length < 2) return this.setDefaultOptions();
     return getQueryData(this.props.recordType, inputValue)
       .then(dataCollection => {
-        // console.log(dataCollection.data);
-        return this.makeOptions(dataCollection.data);
+        const regex = /(?:keyword=)(.+?)(?:[&\s\b])/i;
+        const matches = `${dataCollection.config.url} `.match(regex);
+        if (matches[1] === this.state.inputValue)
+          return this.makeOptions(dataCollection.data);
       })
       .catch(err => receiveResponseErrors(err.response.data));
   }
@@ -121,7 +106,6 @@ export default class SearchAutocomplete extends Component {
           className="search-autocomplete"
           classNamePrefix="search-autocomplete"
           loadOptions={this.fetchData}
-          // defaultOptions={this.setDefaultOptions()}
           placeholder={this.props.placeholderText}
           onInputChange={this.updateInputValue}
           formatOptionLabel={this.props.formatOptionLabel}
@@ -142,7 +126,6 @@ export default class SearchAutocomplete extends Component {
             className="search-autocomplete"
             classNamePrefix="search-autocomplete"
             loadOptions={this.fetchData}
-            // defaultOptions={this.setDefaultOptions()}
             placeholder={this.props.placeholderText}
             onInputChange={this.updateInputValue}
             formatOptionLabel={this.props.formatOptionLabel}
