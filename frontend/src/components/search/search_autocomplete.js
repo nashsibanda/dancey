@@ -54,6 +54,7 @@ export default class SearchAutocomplete extends Component {
         moreInfoField1: objectFields.moreInfoField1,
         moreInfoField2: objectFields.moreInfoField2,
         image: objectFields.image,
+        resourceType: objectFields.resourceType,
       };
     });
     console.log(options);
@@ -76,7 +77,7 @@ export default class SearchAutocomplete extends Component {
     if (inputValue.length < 2) return this.setDefaultOptions();
     return getQueryData(this.props.recordType, inputValue)
       .then(dataCollection => {
-        console.log(dataCollection.data);
+        // console.log(dataCollection.data);
         return this.makeOptions(dataCollection.data);
       })
       .catch(err => receiveResponseErrors(err.response.data));
@@ -104,7 +105,11 @@ export default class SearchAutocomplete extends Component {
   }
 
   linkToResource(selected) {
-    this.setState({ selected });
+    const { formUpdate } = this.props;
+    this.setState({ selected }, () => {
+      formUpdate(null, this.state.selected);
+      this.setState({ selected: [] });
+    });
   }
 
   render() {
