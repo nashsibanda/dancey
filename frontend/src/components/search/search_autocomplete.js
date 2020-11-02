@@ -60,10 +60,7 @@ export default class SearchAutocomplete extends Component {
     if (inputValue.length < 2) return this.setDefaultOptions();
     return getQueryData(this.props.recordType, inputValue)
       .then(dataCollection => {
-        const regex = /(?:keyword=)(.+?)(?:[&\s\b])/i;
-        const matches = `${dataCollection.config.url} `.match(regex);
-        if (matches[1] === this.state.inputValue)
-          return this.makeOptions(dataCollection.data);
+        return this.makeOptions(dataCollection.data);
       })
       .catch(err => receiveResponseErrors(err.response.data));
   }
