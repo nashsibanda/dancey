@@ -28,6 +28,9 @@ export default class PersonnelShow extends Component {
     if (prevProps.loading && !this.props.loading) {
       this.setState({ initialLoad: true });
     }
+    if (prevProps.personnelId !== this.props.personnelId) {
+      this.setState({ initialLoad: false }, () => this.loadPersonnelData());
+    }
   }
 
   toggleEditButtons() {
