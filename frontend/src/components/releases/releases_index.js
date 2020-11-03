@@ -13,7 +13,7 @@ class ReleasesIndex extends React.Component {
       initialLoad: false,
       itemsPerPage: this.props.defaultItemsPerPage,
       pageNum: 1,
-      tileView: false,
+      tileView: true,
     };
 
     this.changePageNumber = this.changePageNumber.bind(this);
@@ -106,12 +106,14 @@ class ReleasesIndex extends React.Component {
             <button
               className={`icon-button ${tileView ? "selected" : ""}`}
               onClick={this.changeIndexViewFormat(true)}
+              title={"Tile view"}
             >
               <FontAwesomeIcon icon="th" />
             </button>
             <button
               className={`icon-button ${tileView ? "" : "selected"}`}
               onClick={this.changeIndexViewFormat(false)}
+              title={"List view"}
             >
               <FontAwesomeIcon icon="th-list" />
             </button>
@@ -137,6 +139,7 @@ class ReleasesIndex extends React.Component {
               className="link-button"
               disabled={pageNum === 1}
               onClick={this.changePageNumber(1)}
+              title={"Go to First Page"}
             >
               First
             </button>
@@ -144,6 +147,7 @@ class ReleasesIndex extends React.Component {
               className="link-button"
               disabled={pageNum === 1}
               onClick={this.changePageNumber(pageNum - 1)}
+              title={"Go to Previous Page"}
             >
               Prev
             </button>
@@ -151,6 +155,7 @@ class ReleasesIndex extends React.Component {
               <button
                 className={`link-button ${pageNum === 1 ? "selected" : ""}`}
                 onClick={this.changePageNumber(1)}
+                title={"Go to Page 1"}
               >
                 1
               </button>
@@ -168,6 +173,7 @@ class ReleasesIndex extends React.Component {
                           page === pageNum ? "selected" : ""
                         }`}
                         onClick={this.changePageNumber(page)}
+                        title={`Go to Page ${page}`}
                       >
                         {page}
                       </button>
@@ -183,6 +189,7 @@ class ReleasesIndex extends React.Component {
                     pageNum === maxPageNumber ? "selected" : ""
                   }`}
                   onClick={this.changePageNumber(maxPageNumber)}
+                  title={`Go to Page ${maxPageNumber}`}
                 >
                   {maxPageNumber}
                 </button>
@@ -192,6 +199,7 @@ class ReleasesIndex extends React.Component {
               className="link-button"
               disabled={pageNum === maxPageNumber}
               onClick={this.changePageNumber(pageNum + 1)}
+              title={"Go to Next Page"}
             >
               Next
             </button>
@@ -199,6 +207,7 @@ class ReleasesIndex extends React.Component {
               className="link-button"
               disabled={pageNum === maxPageNumber}
               onClick={this.changePageNumber(maxPageNumber)}
+              title={"Go to Last Page"}
             >
               Last
             </button>
