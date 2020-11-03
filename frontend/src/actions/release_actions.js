@@ -1,5 +1,9 @@
 import * as ReleaseAPIUtil from "../util/release_api_util";
-import { releasesLoadingOn, releasesLoadingOff } from "./loading_actions";
+import {
+  releasesLoadingOn,
+  releasesLoadingOff,
+  personnelLoadingOn,
+} from "./loading_actions";
 
 export const RECEIVE_RELEASE = "RECEIVE_RELEASE";
 export const RECEIVE_RELEASES = "RECEIVE_RELEASES";
@@ -88,6 +92,14 @@ export const fetchResourceReleases = (
 };
 
 export const updateRelease = (id, releaseUpdateData) => dispatch => {
+  const personnelKeys = ["personnel", "label", "mainArtists"];
+  if (
+    Object.keys(releaseUpdateData).some(updateKey =>
+      personnelKeys.includes(updateKey)
+    )
+  ) {
+    dispatch(personnelLoadingOn());
+  }
   ReleaseAPIUtil.putRelease(id, releaseUpdateData)
     .then(release => {
       dispatch(receiveRelease(release.data));

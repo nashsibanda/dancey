@@ -6,26 +6,31 @@ export default class LabelCatalogueNumberForm extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      label: [],
+      label: this.setCurrentLabel(),
       loaded: false,
+      currentLabelForFormSection: [],
     };
     this.makeCurrentLabelForFormSection = this.makeCurrentLabelForFormSection.bind(
       this
     );
     this.updateLabelField = this.updateLabelField.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.setCurrentLabel = this.setCurrentLabel.bind(this);
   }
 
   componentDidMount() {
-    const componentLabel = this.props.currentLabel.map(labelObj => {
+    this.setState({
+      loaded: true,
+      currentLabelForFormSection: this.makeCurrentLabelForFormSection(),
+    });
+  }
+
+  setCurrentLabel() {
+    return this.props.currentLabel.map(labelObj => {
       return {
         personnelIds: labelObj.labelIds,
         role: labelObj.catalogueNumber,
       };
-    });
-    this.setState({
-      label: componentLabel,
-      loaded: true,
     });
   }
 
@@ -45,7 +50,7 @@ export default class LabelCatalogueNumberForm extends Component {
   }
 
   updateLabelField(value) {
-    this.setState({ label: value.length > 0 ? value : null });
+    this.setState({ label: value.length > 0 ? value : [] });
   }
 
   handleSubmit(e) {
@@ -70,7 +75,7 @@ export default class LabelCatalogueNumberForm extends Component {
           onSubmit={this.handleSubmit}
         >
           <PersonnelRoleFormSection
-            currentPersonnel={this.makeCurrentLabelForFormSection()}
+            currentPersonnel={this.state.currentLabelForFormSection}
             formUpdate={this.updateLabelField}
             labelCatNoForm={true}
           />

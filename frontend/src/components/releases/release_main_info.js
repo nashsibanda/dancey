@@ -103,7 +103,7 @@ export default class ReleaseMainInfo extends React.Component {
       loadingPersonnel,
       statePersonnel,
     } = this.props;
-    const { images, _id } = release;
+    const { images, _id, label } = release;
     const {
       editYear,
       releaseYear,
@@ -113,7 +113,6 @@ export default class ReleaseMainInfo extends React.Component {
       format,
       mainArtists,
       editLabel,
-      label,
       showImageModal,
       editTitle,
       title,
