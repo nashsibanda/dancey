@@ -1,0 +1,54 @@
+.hero-section {
+  background: linear-gradient(to right, #2a2a2a, #fff);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18vh 4rem;
+  border-bottom: 10px solid #2a2a2a;
+
+  > * {
+    background: none;
+  }
+
+  h1 {
+    font-family: $display;
+    color: white;
+    font-size: 10vh;
+    filter: drop-shadow(20px 20px 3px #333);
+  }
+
+  .session-menu {
+    display: flex;
+    justify-content: flex-end;
+    width: 35vw;
+
+    li .big-button {
+      font-size: 1.3rem;
+      margin-left: 1rem;
+      color: white;
+      padding: 0.6rem 1rem;
+
+      &.login {
+        background-color: $blue;
+      }
+
+      &.register {
+        background-color: $green;
+      }
+
+      @media (hover: hover) {
+        &:hover {
+          background-color: $bluelight;
+        }
+      }
+
+      > svg {
+        color: white;
+      }
+    }
+  }
+
+  .user-info {
+    font-size: 1.4rem;
+  }
+}
