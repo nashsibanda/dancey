@@ -43,6 +43,19 @@ export const fetchAllReleases = (pageNum, itemsPerPage) => dispatch => {
     });
 };
 
+export const fetchRandomReleases = (withImage, numberOfRecords) => dispatch => {
+  dispatch(releasesLoadingOn());
+  ReleaseAPIUtil.getRandomReleases(withImage, numberOfRecords)
+    .then(releases => {
+      dispatch(receiveReleases(releases.data));
+      dispatch(releasesLoadingOff());
+    })
+    .catch(err => {
+      dispatch(receiveReleaseErrors(err.response.data));
+      dispatch(releasesLoadingOff());
+    });
+};
+
 export const countAllReleases = () => dispatch => {
   ReleaseAPIUtil.getAllReleasesCount()
     .then(count => dispatch(receiveReleasesCount(count.data)))
