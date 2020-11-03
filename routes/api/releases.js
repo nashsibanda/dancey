@@ -39,6 +39,29 @@ router.get("/", (req, res, next) => {
   }
 });
 
+router.get("/random", (req, res, next) => {
+  if (req.query.with_image) {
+    Release.aggregate([
+      { $match: { "images.0": { $exists: true } } },
+      { $sample: { size: req.query.number ? parseInt(req.query.number) : 5 } },
+    ])
+      .then(releases => res.json(releases))
+      .catch(err => {
+        console.log(err);
+        next(new RecordNotFoundError("No releases found"));
+      });
+  } else {
+    Release.aggregate([
+      { $sample: { size: req.query.number ? parseInt(req.query.number) : 5 } },
+    ])
+      .then(releases => res.json(releases))
+      .catch(err => {
+        console.log(err);
+        next(new RecordNotFoundError("No releases found"));
+      });
+  }
+});
+
 // GET a single release
 router.get("/:id", (req, res, next) => {
   Release.findById(req.params.id)
