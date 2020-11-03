@@ -1,4 +1,9 @@
 .releases-index-container {
+  padding: 0 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
   .releases-index-view-options {
     margin: 1rem 0;
     display: flex;
@@ -66,9 +71,15 @@
     }
   }
 
+  .releases-index-items {
+    width: 100%;
+    max-width: 80rem;
+  }
+
   .releases-tiles-index {
     display: flex;
     flex-wrap: wrap;
+    justify-content: center;
 
     .release-tile {
       width: 13rem;
@@ -123,6 +134,7 @@
   .releases-list-index {
     display: flex;
     flex-direction: column;
+    width: 100%;
 
     .release-list-item {
       width: 100%;
