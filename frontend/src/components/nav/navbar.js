@@ -38,7 +38,7 @@ class NavBar extends React.Component {
       <div className="nav-menu">
         <span className="nav-resources-menu">
           <Link to={`/releases`}>Releases</Link>
-          <Link to={`/personnel`}>Personnel</Link>
+          {/* <Link to={`/personnel`}>Personnel</Link> */}
           <GlobalSearchContainer
             recordType={"all"}
             multiSelect={false}
