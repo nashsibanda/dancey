@@ -1,8 +1,10 @@
 import React from "react";
-import { Link, withRouter } from "react-router-dom";
+import { Link, Route, withRouter } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import SessionFormModalContainer from "../session/session_form_modal_container";
 import GlobalSearchContainer from "../search/global_search_container";
+import HomePage from "../homepage/homepage";
+import HeroSectionContainer from "../homepage/hero_section_container";
 
 class NavBar extends React.Component {
   constructor(props) {
@@ -35,7 +37,7 @@ class NavBar extends React.Component {
 
   getLinks() {
     return (
-      <div className="nav-menu">
+      <nav className="nav-menu">
         <span className="nav-resources-menu">
           <Link to={`/releases`}>Releases</Link>
           {/* <Link to={`/personnel`}>Personnel</Link> */}
@@ -79,7 +81,7 @@ class NavBar extends React.Component {
             </>
           )}
         </span>
-      </div>
+      </nav>
     );
   }
 
@@ -93,6 +95,13 @@ class NavBar extends React.Component {
           {this.getLinks()}
         </header>
         <SessionFormModalContainer form={this.state.sessionForm} />
+        <Route
+          exact
+          path="/"
+          render={props => (
+            <HeroSectionContainer openSessionForm={this.openSessionForm} />
+          )}
+        />
       </>
     );
   }
