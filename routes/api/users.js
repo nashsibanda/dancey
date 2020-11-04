@@ -4,7 +4,7 @@ const bcryptjs = require("bcryptjs");
 const jsonwebtoken = require("jsonwebtoken");
 
 const passport = require("passport");
-const secretOrKey = process.env.SECRET_OR_KEY;
+const secretOrKey = process.env.SECRET;
 const joiValidator = require("express-joi-validation").createValidator({
   passError: true,
 });
