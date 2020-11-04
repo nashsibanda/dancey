@@ -1,6 +1,7 @@
 body {
   font-family: $sans-serif;
   font-weight: 300;
+  background-color: #262626;
 }
 
 h1,
@@ -13,6 +14,7 @@ $main-margins: 2rem;
 
 main {
   min-height: 86vh;
+  background-color: #fff;
 }
 
 a {
