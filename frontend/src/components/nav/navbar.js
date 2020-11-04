@@ -6,7 +6,7 @@ import GlobalSearchContainer from "../search/global_search_container";
 const NavBar = props => {
   const goToResource = (field, selected) => {
     const { resourceType, value } = selected;
-    this.props.history.push(`/${resourceType}/${value}`);
+    props.history.push(`/${resourceType}/${value}`);
     return;
   };
 
