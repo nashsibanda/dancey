@@ -49,6 +49,7 @@ export default class CommentsIndexItem extends Component {
       resourceType,
       resourceId,
       currentUser,
+      loggedIn,
     } = this.props;
     const {
       body,
@@ -110,17 +111,24 @@ export default class CommentsIndexItem extends Component {
               <div className="comment-body">{body}</div>
             )}
             <div className="comment-interactions">
-              <span className="comment-reply">
-                <button className="link-button" onClick={this.toggleReplyForm}>
-                  {showReplyForm ? "Cancel" : "Reply"}
-                </button>
-              </span>
+              {loggedIn && (
+                <span className="comment-reply">
+                  <button
+                    className="link-button"
+                    onClick={this.toggleReplyForm}
+                  >
+                    {showReplyForm ? "Cancel" : "Reply"}
+                  </button>
+                </span>
+              )}
               <span className="comment-like">
                 <button
                   className={`link-button likes-button ${
-                    liked ? "liked" : "unliked"
+                    loggedIn ? (liked ? "liked" : "unliked") : ""
                   }`}
                   onClick={this.handleLike}
+                  title={liked ? "Unlike" : "Like"}
+                  disabled={loggedIn ? false : true}
                 >
                   <FontAwesomeIcon icon="heart" />
                   <span>{likes ? Object.values(likes).length : 0}</span>

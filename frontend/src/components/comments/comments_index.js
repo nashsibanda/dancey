@@ -13,6 +13,7 @@ export default class CommentsIndex extends Component {
       resourceId,
       currentUser,
       deleteComment,
+      loggedIn,
     } = this.props;
     const indexComments = Object.values(stateComments).filter(
       comment =>
@@ -58,6 +59,7 @@ export default class CommentsIndex extends Component {
                     likeComment={likeComment}
                     currentUser={currentUser}
                     deleteComment={deleteComment}
+                    loggedIn={loggedIn}
                   />
                 )
               );

@@ -82,7 +82,7 @@ a {
       color: salmon;
       @media (hover: hover) {
         &:hover::after {
-          content: "Unlike";
+          content: attr(title);
           position: absolute;
           background-color: $graylightest;
           padding: 0.3rem;
@@ -99,7 +99,7 @@ a {
         &:hover {
           color: salmon;
           &::after {
-            content: "Like";
+            content: attr(title);
             position: absolute;
             background-color: $graylightest;
             padding: 0.3rem;
@@ -108,6 +108,12 @@ a {
             border-radius: 5px;
           }
         }
+      }
+    }
+
+    &:disabled {
+      @media (hover: hover) {
+        cursor: not-allowed;
       }
     }
   }

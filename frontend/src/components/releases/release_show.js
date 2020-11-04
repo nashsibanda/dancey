@@ -11,7 +11,7 @@ export default class ReleaseShow extends Component {
   constructor(props) {
     super(props);
 
-    this.state = { showEditButtons: true, initialLoad: false };
+    this.state = { showEditButtons: false, initialLoad: false };
     this.loadReleaseData = this.loadReleaseData.bind(this);
     this.toggleEditButtons = this.toggleEditButtons.bind(this);
   }

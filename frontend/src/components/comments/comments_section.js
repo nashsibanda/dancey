@@ -75,13 +75,15 @@ export default class CommentsSection extends Component {
               <span className="disabled-void-text">No comments...</span>
             )}
 
-            <button
-              className="big-button add-comment-button"
-              onClick={this.toggleCommentForm}
-            >
-              <FontAwesomeIcon icon={"comment"} />
-              <span>{showCommentForm ? "Cancel" : "Add a Comment"}</span>
-            </button>
+            {loggedIn && (
+              <button
+                className="big-button add-comment-button"
+                onClick={this.toggleCommentForm}
+              >
+                <FontAwesomeIcon icon={"comment"} />
+                <span>{showCommentForm ? "Cancel" : "Add a Comment"}</span>
+              </button>
+            )}
           </div>
         ) : (
           <div className="resource-show-section-header">
