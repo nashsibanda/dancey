@@ -65,11 +65,9 @@ router.put(
 
         const blob = file.data;
 
-        const {
-          s3_bucket,
-          aws_secret_access_key,
-          aws_access_key_id,
-        } = require("../../config/keys");
+        const s3_bucket = process.env.AWS_S3_BUCKET;
+        const aws_secret_access_key = process.env.AWS_SECRET_ACCESS_KEY;
+        const aws_access_key_id = process.env.AWS_ACCESS_KEY_ID;
 
         AWS.config.update({
           accessKeyId: aws_access_key_id,

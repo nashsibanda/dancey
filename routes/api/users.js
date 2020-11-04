@@ -4,7 +4,7 @@ const bcryptjs = require("bcryptjs");
 const jsonwebtoken = require("jsonwebtoken");
 
 const passport = require("passport");
-const keys = require("../../config/keys");
+const secretOrKey = process.env.SECRET_OR_KEY;
 const joiValidator = require("express-joi-validation").createValidator({
   passError: true,
 });
@@ -83,7 +83,7 @@ router.post("/register", joiValidator.body(registerValidation), (req, res) => {
 
                   jsonwebtoken.sign(
                     payload,
-                    keys.secretOrKey,
+                    secretOrKey,
                     { expiresIn: 3600 },
                     (err, token) => {
                       res.json({
@@ -131,7 +131,7 @@ router.post("/login", joiValidator.body(loginValidation), (req, res, next) => {
       // Sign in user with jsonwebtoken
       jsonwebtoken.sign(
         payload,
-        keys.secretOrKey,
+        secretOrKey,
         { expiresIn: expiryTime },
         (err, token) => {
           res.json({

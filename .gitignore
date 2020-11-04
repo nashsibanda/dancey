@@ -4,3 +4,4 @@ config/keys.js
 temp_scratch
 .DS_Store
 .idea
+.env
