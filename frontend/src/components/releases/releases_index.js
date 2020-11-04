@@ -121,10 +121,7 @@ class ReleasesIndex extends React.Component {
           <span className="index-page-size-select">
             <label>
               Items Per Page
-              <select
-                onChange={this.changePageSize}
-                defaultValue={itemsPerPage}
-              >
+              <select onChange={this.changePageSize} value={itemsPerPage}>
                 <option value={12}>12</option>
                 <option value={24}>24</option>
                 <option value={60}>60</option>
@@ -253,10 +250,7 @@ class ReleasesIndex extends React.Component {
           <span className="index-page-size-select">
             <label>
               Items Per Page
-              <select
-                onChange={this.changePageSize}
-                defaultValue={itemsPerPage}
-              >
+              <select onChange={this.changePageSize} value={itemsPerPage}>
                 <option value={12}>12</option>
                 <option value={24}>24</option>
                 <option value={60}>60</option>
