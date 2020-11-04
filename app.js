@@ -1,4 +1,5 @@
 // Basic Required Modules
+require("dotenv").config();
 const express = require("express");
 const port = process.env.PORT || 5000;
 const mongoose = require("mongoose");
@@ -11,7 +12,7 @@ const fileUpload = require("express-fileupload");
 
 // App Setup
 const app = express();
-const db = require("./config/keys").mongoURI;
+const db = process.env.MONGODB_URI;
 
 mongoose
   .connect(db, {
@@ -29,10 +30,9 @@ app.use(bodyParser.json());
 app.use(passport.initialize());
 app.use(fileUpload());
 require("./config/passport")(passport);
+app.use(express.static("build"));
 
 // Routes
-app.get("/", (req, res) => res.send("Hello World"));
-
 const users = require("./routes/api/users");
 app.use("/api/users", users);
 
