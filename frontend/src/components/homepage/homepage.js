@@ -1,4 +1,5 @@
 import React from "react";
+import DiscoverReleasesContainer from "./discover_releases_container";
 import HeroSection from "./hero_section";
 
 class HomePage extends React.Component {
@@ -11,6 +12,7 @@ class HomePage extends React.Component {
           loggedIn={this.props.loggedIn}
           user={this.props.user}
         />
+        <DiscoverReleasesContainer />
       </>
     );
   }

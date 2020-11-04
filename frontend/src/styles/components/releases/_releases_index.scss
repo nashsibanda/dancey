@@ -4,6 +4,18 @@
   flex-direction: column;
   align-items: center;
 
+  &.discover {
+    padding-top: 1rem;
+    .resource-show-section-header {
+      width: 100%;
+      max-width: 130rem;
+
+      h2 {
+        font-size: 1.5rem;
+      }
+    }
+  }
+
   .releases-index-view-options {
     margin: 1rem 0;
     display: flex;
@@ -74,61 +86,22 @@
   .releases-index-items {
     width: 100%;
     max-width: 80rem;
+
+    &.discover {
+      max-width: 130rem;
+
+      .releases-tiles-index {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        justify-content: flex-start;
+      }
+    }
   }
 
   .releases-tiles-index {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-
-    .release-tile {
-      width: 13rem;
-      padding: 1rem;
-      box-sizing: border-box;
-
-      img {
-        width: 100%;
-      }
-
-      .release-tile-info {
-        margin-top: 0.7rem;
-
-        .release-tile-title {
-          font-weight: 700;
-          font-size: 1rem;
-          font-family: $serif;
-
-          a {
-            white-space: nowrap;
-            word-wrap: none;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            // width: 100%;
-            display: block;
-          }
-          color: $blue;
-        }
-
-        .release-tile-artist {
-          font-size: 0.9rem;
-          max-height: 2.6rem;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: pre;
-        }
-
-        .release-tile-details {
-          font-size: 0.8rem;
-          font-weight: 700;
-          color: $graydark;
-
-          div {
-            display: flex;
-            justify-content: space-between;
-          }
-        }
-      }
-    }
   }
 
   .releases-list-index {
@@ -181,6 +154,55 @@
           display: flex;
           justify-content: space-between;
         }
+      }
+    }
+  }
+}
+
+.release-tile {
+  width: 13rem;
+  padding: 1rem;
+  box-sizing: border-box;
+
+  img {
+    width: 11rem;
+  }
+
+  .release-tile-info {
+    margin-top: 0.7rem;
+
+    .release-tile-title {
+      font-weight: 700;
+      font-size: 1rem;
+      font-family: $serif;
+
+      a {
+        white-space: nowrap;
+        word-wrap: none;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        // width: 100%;
+        display: block;
+      }
+      color: $blue;
+    }
+
+    .release-tile-artist {
+      font-size: 0.9rem;
+      max-height: 2.6rem;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: pre;
+    }
+
+    .release-tile-details {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: $graydark;
+
+      div {
+        display: flex;
+        justify-content: space-between;
       }
     }
   }
