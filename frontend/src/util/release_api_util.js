@@ -8,7 +8,9 @@ export const getAllReleasesCount = (pageNum, itemsPerPage) =>
 
 export const getRandomReleases = (withImage, numberOfRecords) =>
   axios.get(
-    `/api/releases/random?with_image=${withImage}&number=${numberOfRecords}`
+    `/api/releases/random?${
+      withImage ? `with_image=${withImage}&` : ""
+    }number=${numberOfRecords}`
   );
 
 export const getOneRelease = id => axios.get(`api/releases/${id}`);
