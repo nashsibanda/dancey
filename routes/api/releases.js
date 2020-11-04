@@ -43,7 +43,15 @@ router.get("/random", (req, res, next) => {
   if (req.query.with_image) {
     Release.aggregate([
       { $match: { "images.0": { $exists: true } } },
-      { $sample: { size: req.query.number ? parseInt(req.query.number) : 5 } },
+      {
+        $lookup: {
+          from: "personnels",
+          localField: "mainArtists",
+          foreignField: "_id",
+          as: "mainArtists",
+        },
+      },
+      { $sample: { size: parseInt(req.query.number) } },
     ])
       .then(releases => res.json(releases))
       .catch(err => {
@@ -52,7 +60,15 @@ router.get("/random", (req, res, next) => {
       });
   } else {
     Release.aggregate([
-      { $sample: { size: req.query.number ? parseInt(req.query.number) : 5 } },
+      {
+        $lookup: {
+          from: "personnels",
+          localField: "mainArtists",
+          foreignField: "_id",
+          as: "mainArtists",
+        },
+      },
+      { $sample: { size: parseInt(req.query.number) } },
     ])
       .then(releases => res.json(releases))
       .catch(err => {
