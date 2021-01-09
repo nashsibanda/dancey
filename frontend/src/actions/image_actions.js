@@ -4,6 +4,12 @@ import {
   receivePersonnelErrors,
   receiveOnePersonnel,
 } from "./personnel_actions";
+import {
+  personnelLoadingOff,
+  personnelLoadingOn,
+  releasesLoadingOff,
+  releasesLoadingOn,
+} from "./loading_actions";
 
 const resourceSwitch = resourceType => {
   switch (resourceType) {
@@ -11,11 +17,15 @@ const resourceSwitch = resourceType => {
       return {
         errors: receiveReleaseErrors,
         receiveOne: receiveRelease,
+        loadingOn: releasesLoadingOn,
+        loadingOff: releasesLoadingOff,
       };
     case "personnel":
       return {
         errors: receivePersonnelErrors,
         receiveOne: receiveOnePersonnel,
+        loadingOn: personnelLoadingOn,
+        loadingOff: personnelLoadingOff,
       };
     default:
       break;
@@ -33,14 +43,18 @@ export const addResourceImage = (
     },
   };
 
+  // dispatch(resourceSwitch(resourceType).loadingOn());
   axios
     .put(`/api/images/add/${resourceType}/${resourceId}`, formData, config)
-    .then(resource =>
-      dispatch(resourceSwitch(resourceType).receiveOne(resource.data))
-    )
-    .catch(err =>
-      dispatch(resourceSwitch(resourceType).errors(err.response.data))
-    );
+    .then(resource => {
+      // console.log("RESPONSE", resource);
+      dispatch(resourceSwitch(resourceType).receiveOne(resource.data));
+      // dispatch(resourceSwitch(resourceType).loadingOff());
+    })
+    .catch(err => {
+      dispatch(resourceSwitch(resourceType).errors(err.response.data));
+      // dispatch(resourceSwitch(resourceType).loadingOff());
+    });
 };
 
 export const editResourceImageInfo = (
