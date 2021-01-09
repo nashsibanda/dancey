@@ -9,7 +9,9 @@ export default class ImagesGallery extends Component {
     this.state = {
       displayedImageIndex: this.props.selectedImage
         ? this.props.selectedImage
-        : this.props.images.findIndex(img => img.mainImage),
+        : this.props.images.length > 0
+        ? this.props.images.findIndex(img => img.mainImage)
+        : 0,
       showEditForm: false,
     };
 
