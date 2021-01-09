@@ -2,6 +2,7 @@ dancey.wiki/
 node_modules
 config/keys.js
 temp_scratch
+test_scratch
 .DS_Store
 .idea
 .env
