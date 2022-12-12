@@ -34,7 +34,7 @@
     "concurrently": "^5.3.0",
     "dotenv": "^8.2.0",
     "escape-string-regexp": "^4.0.0",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "express-fileupload": "^1.2.0",
     "express-joi-validation": "^4.0.3",
     "fuzzyset": "^1.0.5",
