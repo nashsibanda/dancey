@@ -40,7 +40,7 @@
     "fuzzyset": "^1.0.5",
     "got": "^11.7.0",
     "joi-objectid": "^3.0.1",
-    "jsonwebtoken": "^8.5.1",
+    "jsonwebtoken": "^9.0.0",
     "mongoose": "^5.10.7",
     "passport": "^0.4.1",
     "passport-jwt": "^4.0.0",
